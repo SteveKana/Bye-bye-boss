@@ -1,0 +1,118 @@
+{
+  "common": {
+    "or": "ou",
+    "email": "Email",
+    "password": "Mot de passe",
+    "email_placeholder": "votre{'@'}email.com",
+    "back_to_login": "Retour à la connexion"
+  },
+  "nav": {
+    "no_account": "Pas encore de compte ?",
+    "create_account": "Créer un compte",
+    "have_account": "Déjà un compte ?",
+    "sign_in": "Se connecter"
+  },
+  "login": {
+    "title": "Bon retour parmi nous 👋",
+    "subtitle": "Connectez-vous à votre compte MatchCareer",
+    "password_placeholder": "Votre mot de passe",
+    "forgot": "Mot de passe oublié ?",
+    "submit": "Se connecter",
+    "error": "Connexion impossible"
+  },
+  "register": {
+    "title": "Créez votre compte",
+    "subtitle": "Commencez votre parcours en quelques secondes.",
+    "password_placeholder": "Créez un mot de passe",
+    "password_hint": "8 caractères minimum.",
+    "submit": "Créer mon compte",
+    "error": "Inscription impossible"
+  },
+  "reset": {
+    "request_title": "Mot de passe oublié ?",
+    "request_subtitle": "Entrez votre email, nous vous enverrons un lien de réinitialisation.",
+    "request_submit": "Envoyer le lien",
+    "requested": "Si un compte correspond à cette adresse, un lien de réinitialisation vient d'être envoyé.",
+    "request_error": "Envoi impossible",
+    "confirm_title": "Nouveau mot de passe",
+    "confirm_subtitle": "Choisissez un nouveau mot de passe pour votre compte.",
+    "new_password": "Nouveau mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "confirm_submit": "Réinitialiser le mot de passe",
+    "success": "Mot de passe mis à jour",
+    "confirm_error": "Lien invalide ou expiré"
+  },
+  "validation": {
+    "email_required": "Email requis",
+    "email_invalid": "Email invalide",
+    "password_required": "Mot de passe requis",
+    "password_min": "8 caractères minimum",
+    "confirm_required": "Confirmation requise",
+    "password_mismatch": "Les mots de passe ne correspondent pas"
+  },
+  "social": {
+    "google": "Continuer avec Google",
+    "linkedin": "Continuer avec LinkedIn",
+    "soon": "Connexion via {provider} bientôt disponible"
+  },
+  "security": {
+    "login": "Vos données sont chiffrées et sécurisées",
+    "register": "Vos informations sont sécurisées et confidentielles. Nous ne partageons jamais vos données avec des tiers."
+  },
+  "brand": {
+    "login": {
+      "headline": "Chaque candidature doit vous rapprocher",
+      "headline_accent": "du bon poste.",
+      "subtitle": "MatchCareer analyse vos candidatures avec l'IA pour vous aider à viser juste et décrocher plus d'entretiens.",
+      "features": {
+        "scores": {
+          "title": "Scores transparents",
+          "text": "ATS, Career, Potential et Regret Index™ pour chaque offre."
+        },
+        "reco": {
+          "title": "Recommandations personnalisées",
+          "text": "Des conseils concrets pour optimiser votre candidature."
+        },
+        "tracking": {
+          "title": "Suivi intelligent",
+          "text": "Suivez vos candidatures et vos meilleures opportunités."
+        },
+        "secure": {
+          "title": "Vos données sécurisées",
+          "text": "Confidentialité garantie, jamais partagées."
+        }
+      },
+      "preview_label": "Votre aperçu",
+      "spark_label": "Évolution de vos opportunités",
+      "spark_sub": "ces 30 derniers jours"
+    },
+    "signup": {
+      "headline": "Créez votre compte et boostez votre",
+      "headline_accent": "carrière.",
+      "subtitle": "L'IA analyse votre CV pour vous trouver les meilleures opportunités et booster votre carrière.",
+      "features": {
+        "cv": {
+          "title": "Analyse intelligente de votre CV",
+          "text": "Notre IA extrait vos compétences, expériences et réalisations clés."
+        },
+        "reco": {
+          "title": "Des opportunités 100% pertinentes",
+          "text": "Recevez des offres qui correspondent vraiment à votre profil."
+        },
+        "time": {
+          "title": "Gagnez du temps",
+          "text": "Concentrez-vous sur les entretiens, pas sur les recherches."
+        },
+        "secure": {
+          "title": "Vos données sont sécurisées",
+          "text": "Vos informations sont confidentielles et jamais partagées."
+        }
+      },
+      "proof_title": "Rejoignez déjà plus de 25k utilisateurs",
+      "proof_sub": "qui ont trouvé leur prochain poste"
+    }
+  },
+  "lang": {
+    "label": "Langue"
+  }
+}

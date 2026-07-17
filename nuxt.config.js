@@ -3,7 +3,22 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/eslint'],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxt/eslint'],
+
+  i18n: {
+    defaultLocale: 'fr',
+    strategy: 'no_prefix',
+    locales: [
+      { code: 'fr', language: 'fr-FR', name: 'Français', file: 'fr.json' },
+      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' },
+    ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'mc_lang',
+      redirectOn: 'root',
+    },
+    bundle: { optimizeTranslationDirective: false },
+  },
 
   css: ['~/assets/css/tokens.css', '~/assets/css/main.css'],
 

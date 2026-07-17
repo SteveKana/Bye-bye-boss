@@ -16,6 +16,13 @@ export default {
         success: { DEFAULT: '#10B981', text: '#16A34A', light: '#DCFCE7' },
         danger: { DEFAULT: '#DC2626', light: '#FEE2E2' },
         warning: { DEFAULT: '#F59E0B', light: '#FFEDD5' },
+        // Score accents used by the auth preview widget (from the mockups).
+        score: {
+          ats: '#5B3FE8',
+          career: '#00C48C',
+          potential: '#22D3EE',
+          regret: '#FF6B6B',
+        },
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
