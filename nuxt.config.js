@@ -35,4 +35,12 @@ export default defineNuxtConfig({
       apiBase: '/api/v1/',
     },
   },
+
+  nitro: {
+    devProxy: {
+      // Dev only: forward API calls to the backend. In prod, set
+      // NUXT_PUBLIC_API_BASE to the API host (or front both with a gateway).
+      '/api': { target: 'http://localhost:8000/api', changeOrigin: true },
+    },
+  },
 })
