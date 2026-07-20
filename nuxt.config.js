@@ -3,7 +3,22 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/eslint'],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vueuse/nuxt', '@nuxtjs/i18n', '@nuxt/eslint'],
+
+  i18n: {
+    defaultLocale: 'fr',
+    strategy: 'no_prefix',
+    locales: [
+      { code: 'fr', language: 'fr-FR', name: 'Français', file: 'fr.json' },
+      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' },
+    ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'mc_lang',
+      redirectOn: 'root',
+    },
+    bundle: { optimizeTranslationDirective: false },
+  },
 
   css: ['~/assets/css/tokens.css', '~/assets/css/main.css'],
 
@@ -33,6 +48,14 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '/api/v1/',
+    },
+  },
+
+  nitro: {
+    devProxy: {
+      // Dev only: forward API calls to the backend. In prod, set
+      // NUXT_PUBLIC_API_BASE to the API host (or front both with a gateway).
+      '/api': { target: 'http://localhost:8000/api', changeOrigin: true },
     },
   },
 })

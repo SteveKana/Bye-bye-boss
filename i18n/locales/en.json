@@ -1,0 +1,118 @@
+{
+  "common": {
+    "or": "or",
+    "email": "Email",
+    "password": "Password",
+    "email_placeholder": "your{'@'}email.com",
+    "back_to_login": "Back to sign in"
+  },
+  "nav": {
+    "no_account": "No account yet?",
+    "create_account": "Create an account",
+    "have_account": "Already have an account?",
+    "sign_in": "Sign in"
+  },
+  "login": {
+    "title": "Welcome back 👋",
+    "subtitle": "Sign in to your MatchCareer account",
+    "password_placeholder": "Your password",
+    "forgot": "Forgot password?",
+    "submit": "Sign in",
+    "error": "Sign in failed"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Start your journey in seconds.",
+    "password_placeholder": "Create a password",
+    "password_hint": "8 characters minimum.",
+    "submit": "Create my account",
+    "error": "Sign up failed"
+  },
+  "reset": {
+    "request_title": "Forgot password?",
+    "request_subtitle": "Enter your email and we'll send you a reset link.",
+    "request_submit": "Send the link",
+    "requested": "If an account matches this address, a reset link has just been sent.",
+    "request_error": "Could not send",
+    "confirm_title": "New password",
+    "confirm_subtitle": "Choose a new password for your account.",
+    "new_password": "New password",
+    "confirm_password": "Confirm password",
+    "confirm_submit": "Reset password",
+    "success": "Password updated",
+    "confirm_error": "Invalid or expired link"
+  },
+  "validation": {
+    "email_required": "Email required",
+    "email_invalid": "Invalid email",
+    "password_required": "Password required",
+    "password_min": "8 characters minimum",
+    "confirm_required": "Confirmation required",
+    "password_mismatch": "Passwords do not match"
+  },
+  "social": {
+    "google": "Continue with Google",
+    "linkedin": "Continue with LinkedIn",
+    "soon": "{provider} sign-in coming soon"
+  },
+  "security": {
+    "login": "Your data is encrypted and secure",
+    "register": "Your information is secure and confidential. We never share your data with third parties."
+  },
+  "brand": {
+    "login": {
+      "headline": "Every application should bring you closer",
+      "headline_accent": "to the right job.",
+      "subtitle": "MatchCareer analyses your applications with AI to help you aim right and land more interviews.",
+      "features": {
+        "scores": {
+          "title": "Transparent scores",
+          "text": "ATS, Career, Potential and Regret Index™ for every offer."
+        },
+        "reco": {
+          "title": "Personalised recommendations",
+          "text": "Concrete tips to optimise your application."
+        },
+        "tracking": {
+          "title": "Smart tracking",
+          "text": "Track your applications and your best opportunities."
+        },
+        "secure": {
+          "title": "Your data secured",
+          "text": "Privacy guaranteed, never shared."
+        }
+      },
+      "preview_label": "Your preview",
+      "spark_label": "Your opportunities trend",
+      "spark_sub": "last 30 days"
+    },
+    "signup": {
+      "headline": "Create your account and boost your",
+      "headline_accent": "career.",
+      "subtitle": "AI analyses your resume to find you the best opportunities and boost your career.",
+      "features": {
+        "cv": {
+          "title": "Smart resume analysis",
+          "text": "Our AI extracts your key skills, experience and achievements."
+        },
+        "reco": {
+          "title": "100% relevant opportunities",
+          "text": "Get offers that truly match your profile."
+        },
+        "time": {
+          "title": "Save time",
+          "text": "Focus on interviews, not on searching."
+        },
+        "secure": {
+          "title": "Your data is secure",
+          "text": "Your information is confidential and never shared."
+        }
+      },
+      "proof_title": "Join 25k+ users already",
+      "proof_sub": "who found their next job"
+    }
+  },
+  "lang": {
+    "label": "Language"
+  }
+}
