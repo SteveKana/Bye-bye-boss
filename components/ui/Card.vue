@@ -13,10 +13,7 @@ const slots = useSlots()
 
 <template>
   <section class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-card">
-    <header
-      v-if="title || subtitle || slots.header"
-      class="border-b border-gray-100 px-5 py-4"
-    >
+    <header v-if="title || subtitle || slots.header" class="border-b border-gray-100 px-5 py-4">
       <slot name="header">
         <h3 v-if="title" class="text-lg font-bold text-gray-900">{{ title }}</h3>
         <p v-if="subtitle" class="mt-0.5 text-sm text-gray-500">{{ subtitle }}</p>

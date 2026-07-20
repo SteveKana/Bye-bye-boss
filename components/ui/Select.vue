@@ -29,8 +29,8 @@ const normalized = computed(() =>
   props.options.map((opt) =>
     typeof opt === 'object' && opt !== null
       ? { label: opt.label ?? String(opt.value), value: opt.value }
-      : { label: String(opt), value: opt },
-  ),
+      : { label: String(opt), value: opt }
+  )
 )
 </script>
 

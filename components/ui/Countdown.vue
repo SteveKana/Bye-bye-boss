@@ -34,7 +34,7 @@ const target = computed(() => {
 })
 
 const remaining = computed(() =>
-  target.value == null ? 0 : Math.max(0, target.value - now.value.getTime()),
+  target.value == null ? 0 : Math.max(0, target.value - now.value.getTime())
 )
 
 const finished = computed(() => remaining.value <= 0)
@@ -50,7 +50,7 @@ const parts = computed(() => {
 
 const pad = (n) => String(n).padStart(2, '0')
 const formatted = computed(
-  () => `${pad(parts.value.hours)}:${pad(parts.value.minutes)}:${pad(parts.value.seconds)}`,
+  () => `${pad(parts.value.hours)}:${pad(parts.value.minutes)}:${pad(parts.value.seconds)}`
 )
 
 // Fire once when the window elapses.
