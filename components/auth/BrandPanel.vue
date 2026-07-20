@@ -46,11 +46,11 @@ const avatars = ['🧑🏾', '👨🏻', '👩🏼', '👨🏽', '👩🏾']
 
     <div class="relative z-10 mb-8 flex items-center gap-2.5">
       <div
-        class="flex h-9 w-9 items-center justify-center rounded-[9px] bg-brand text-[15px] font-black"
+        class="flex h-9 w-9 items-center justify-center rounded-[9px] bg-brand text-[13px] font-black"
       >
-        M
+        BB
       </div>
-      <span class="text-[17px] font-bold">MatchCareer</span>
+      <span class="text-[17px] font-bold">Bye Bye Boss</span>
     </div>
 
     <h1 class="relative z-10 mb-3.5 text-3xl font-extrabold leading-tight">

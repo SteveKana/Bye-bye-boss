@@ -14,7 +14,7 @@
   },
   "login": {
     "title": "Welcome back 👋",
-    "subtitle": "Sign in to your MatchCareer account",
+    "subtitle": "Sign in to your Bye Bye Boss account",
     "password_placeholder": "Your password",
     "forgot": "Forgot password?",
     "submit": "Sign in",
@@ -63,7 +63,7 @@
     "login": {
       "headline": "Every application should bring you closer",
       "headline_accent": "to the right job.",
-      "subtitle": "MatchCareer analyses your applications with AI to help you aim right and land more interviews.",
+      "subtitle": "Bye Bye Boss analyses your applications with AI to help you aim right and land more interviews.",
       "features": {
         "scores": {
           "title": "Transparent scores",
@@ -114,5 +114,138 @@
   },
   "lang": {
     "label": "Language"
+  },
+  "landing": {
+    "nav": {
+      "how": "How it works",
+      "features": "Features",
+      "preview": "Preview",
+      "faq": "FAQ",
+      "cta": "Join the waitlist"
+    },
+    "hero": {
+      "badge": "Coming soon — sign up to be notified at launch",
+      "title": "Stop searching for job offers.",
+      "title_accent": "They come to you.",
+      "sub": "Bye Bye Boss is under development. At launch: upload your resume once, our AI analyses your profile, explores thousands of offers and sends you a 100% relevant selection every day. Leave your email to be notified when we open.",
+      "social_proof": "850+ people already on the waitlist",
+      "press_label": "Soon featured on",
+      "preview_badge": "Preview of the future product",
+      "annotation": "Every morning, get the best opportunities for you.",
+      "dash_greeting": "Hi Thomas 👋",
+      "dash_meta": "Top opportunities ranked by fit with your profile",
+      "dash_link": "See all offers →",
+      "compat_high": "Very strong fit",
+      "compat_good": "Strong fit"
+    },
+    "waitlist": {
+      "placeholder": "Your email address",
+      "submit": "Notify me at launch",
+      "success": "You're in. You'll be among the first to know. 👋",
+      "error": "Something went wrong. Please try again in a moment.",
+      "note": "Free. No commitment. Your email is only used to notify you of the opening.",
+      "note_cta": "Free. No commitment. Nothing sent before we open."
+    },
+    "why": {
+      "eyebrow": "WHY YOU DON'T GET INTERVIEWS, OR REGRET YOUR CHOICES",
+      "title": "The problem isn't always your profile.",
+      "cards": {
+        "profile": {
+          "title": "Good profile",
+          "text": "You have the required skills and experience."
+        },
+        "ats": {
+          "title": "Poor ATS score",
+          "text": "Your resume doesn't highlight your strengths enough."
+        },
+        "targeting": {
+          "title": "Poor targeting",
+          "text": "You apply to offers too far from your goals."
+        },
+        "regret": {
+          "title": "Regret risk",
+          "text": "The company or role could disappoint you mid-term."
+        }
+      }
+    },
+    "how": {
+      "title": "How it will work at launch",
+      "steps": {
+        "upload": {
+          "title": "Upload your resume",
+          "text": "Import your resume as a PDF. It takes 30 seconds."
+        },
+        "analyse": {
+          "title": "Our AI understands your profile",
+          "text": "We analyse your skills, experience and goals in depth."
+        },
+        "explore": {
+          "title": "We analyse the offers",
+          "text": "Our AI continuously explores thousands of offers across sources."
+        },
+        "receive": {
+          "title": "You get your selection",
+          "text": "Every morning, by email, the best opportunities that match you."
+        }
+      }
+    },
+    "features": {
+      "title": "One email every morning.",
+      "title2": "Not another platform to check.",
+      "p1": "Your daily selection lands straight in your inbox, with each offer's scores and the reasoning behind them. You open, you decide, that's it.",
+      "p2": "The dashboard is only there when you need it: apply with a resume tailored to the offer, and track your applications.",
+      "mail_label": "Example of the daily email you will receive",
+      "mail_greeting": "Hi Thomas, here is your selection of the day 👋",
+      "mail_sub": "3 new opportunities match your profile.",
+      "mail_cta": "View offer"
+    },
+    "comparison": {
+      "eyebrow": "JOB PLATFORMS SHOW YOU OFFERS.",
+      "title": "We show you your chances… and the regret risk.",
+      "feature": "Feature",
+      "exclusive": "EXCLUSIVE",
+      "rows": {
+        "search": "Job search",
+        "ats": "ATS score",
+        "career": "Career fit",
+        "potential": "ATS Potential (improvement headroom)",
+        "cv": "Resume auto-tailored to the offer",
+        "regret": "6-month regret index (employee & ex-employee reviews)",
+        "advice": "Personalised optimisation tips"
+      }
+    },
+    "stats": {
+      "funnel_title": "We'll do the sorting for you",
+      "funnel": {
+        "found": "offers found",
+        "relevant": "relevant",
+        "strong": "strong opportunities",
+        "excellent": "excellent opportunities"
+      },
+      "funnel_note": "Example selection on a typical profile. Save hours of searching.",
+      "ats_title": "Your resume may not be the problem.",
+      "ats_sub": "Sometimes a few adjustments change everything.",
+      "ats_current": "Current ATS",
+      "ats_potential": "Potential ATS",
+      "ats_btn": "Improvements suggested automatically",
+      "regret_title": "Don't miss out… or miss yourself.",
+      "regret_sub": "Our regret index will be based on real reviews from employees and ex-employees.",
+      "regret_level": "Regret risk:",
+      "regret_high": "HIGH",
+      "regret_desc": "Many negative reports about management, turnover and internal growth.",
+      "regret_source": "Data collected via Reddit and analysed by our AI"
+    },
+    "cta": {
+      "badge": "WAITLIST",
+      "title": "Everyone on the list gets",
+      "title_strong": "priority access at launch.",
+      "title_end": "Get in before everyone else."
+    },
+    "footer": {
+      "copy": "© 2026 Bye Bye Boss – All rights reserved.",
+      "legal": "Legal notice",
+      "privacy": "Privacy",
+      "contact": "Contact"
+    }
   }
 }

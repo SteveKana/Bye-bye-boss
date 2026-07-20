@@ -4,7 +4,7 @@ import * as yup from 'yup'
 
 definePageMeta({ layout: 'auth' })
 const { t } = useI18n()
-useHead({ title: computed(() => `${t('reset.request_title')} · MatchCareer`) })
+useHead({ title: computed(() => `${t('reset.request_title')} · Bye Bye Boss`) })
 
 const auth = useAuthStore()
 const route = useRoute()
