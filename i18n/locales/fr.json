@@ -131,7 +131,7 @@
       "social_proof": "Déjà +850 personnes sur la liste d'attente",
       "press_label": "Ils parlent de nous bientôt sur",
       "preview_badge": "Aperçu du futur produit",
-      "annotation": "Chaque matin, recevez les meilleures opportunités pour vous.",
+      "annotation": "Chaque soir, recevez les meilleures opportunités pour vous.",
       "dash_greeting": "Bonjour Thomas 👋",
       "dash_meta": "Top opportunités classées par compatibilité avec votre profil",
       "dash_link": "Voir toutes les offres →",
@@ -185,12 +185,12 @@
         },
         "receive": {
           "title": "Vous recevez votre sélection",
-          "text": "Chaque matin, par email, les meilleures opportunités qui vous correspondent."
+          "text": "Chaque soir, par email, les meilleures opportunités qui vous correspondent."
         }
       }
     },
     "features": {
-      "title": "Chaque matin, un email.",
+      "title": "Chaque soir, un email.",
       "title2": "Pas une plateforme de plus à consulter.",
       "p1": "Votre sélection du jour arrive directement dans votre boîte mail, avec les scores de chaque offre et leur explication. Vous ouvrez, vous décidez, c'est tout.",
       "p2": "Le dashboard n'est là que quand vous en avez besoin : postuler avec un CV adapté à l'offre, et suivre vos candidatures.",

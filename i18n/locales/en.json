@@ -131,7 +131,7 @@
       "social_proof": "850+ people already on the waitlist",
       "press_label": "Soon featured on",
       "preview_badge": "Preview of the future product",
-      "annotation": "Every morning, get the best opportunities for you.",
+      "annotation": "Every night, get the best opportunities for you.",
       "dash_greeting": "Hi Thomas 👋",
       "dash_meta": "Top opportunities ranked by fit with your profile",
       "dash_link": "See all offers →",
@@ -185,12 +185,12 @@
         },
         "receive": {
           "title": "You get your selection",
-          "text": "Every morning, by email, the best opportunities that match you."
+          "text": "Every night, by email, the best opportunities that match you."
         }
       }
     },
     "features": {
-      "title": "One email every morning.",
+      "title": "One email every night.",
       "title2": "Not another platform to check.",
       "p1": "Your daily selection lands straight in your inbox, with each offer's scores and the reasoning behind them. You open, you decide, that's it.",
       "p2": "The dashboard is only there when you need it: apply with a resume tailored to the offer, and track your applications.",
