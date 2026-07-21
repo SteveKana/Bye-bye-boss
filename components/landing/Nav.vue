@@ -6,8 +6,10 @@ const links = [
   { href: '#faq', key: 'landing.nav.faq' },
 ]
 
-function focusWaitlist() {
-  document.getElementById('waitlist-email')?.focus()
+const { scrollToElement } = useScrollTo()
+
+function goToWaitlist() {
+  scrollToElement('waitlist-email', { focus: true })
 }
 </script>
 
@@ -32,7 +34,7 @@ function focusWaitlist() {
 
     <div class="flex items-center gap-3">
       <UiLangSwitcher />
-      <UiButton variant="primary" size="sm" class="hidden sm:inline-flex" @click="focusWaitlist">
+      <UiButton variant="primary" size="sm" class="hidden sm:inline-flex" @click="goToWaitlist">
         {{ $t('landing.nav.cta') }}
       </UiButton>
     </div>

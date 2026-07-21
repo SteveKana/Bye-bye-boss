@@ -43,7 +43,8 @@ async function onSubmit() {
   <div>
     <form class="flex flex-col gap-2.5 sm:flex-row" novalidate @submit.prevent="onSubmit">
       <div
-        class="flex flex-1 items-center gap-2 rounded-md border-[1.5px] border-gray-200 bg-white px-3.5 focus-within:border-brand"
+        data-highlight
+        class="flex flex-1 items-center gap-2 rounded-md border-[1.5px] border-gray-200 bg-white px-3.5 transition-colors focus-within:border-brand"
       >
         <span class="text-sm text-gray-400" aria-hidden="true">✉</span>
         <input
