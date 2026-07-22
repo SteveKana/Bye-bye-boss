@@ -113,7 +113,7 @@ const scoreColors = {
       </div>
 
       <!-- Press -->
-      <div class="border-t border-gray-100 pt-[18px]">
+      <div v-if="false" class="border-t border-gray-100 pt-[18px]">
         <div class="mb-3 text-xs text-gray-400">{{ $t('landing.hero.press_label') }}</div>
         <div class="flex flex-wrap items-center gap-7 opacity-55 grayscale">
           <span class="text-base font-medium italic text-navy">Maddyness</span>
