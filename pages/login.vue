@@ -9,17 +9,10 @@ useHead({ title: computed(() => `${t('login.submit')} · Bye Bye Boss`) })
 const auth = useAuthStore()
 const route = useRoute()
 const toast = useToast()
+const v = useValidators()
 const loading = ref(false)
 
-const schema = computed(() =>
-  yup.object({
-    email: yup
-      .string()
-      .required(t('validation.email_required'))
-      .email(t('validation.email_invalid')),
-    password: yup.string().required(t('validation.password_required')),
-  })
-)
+const schema = computed(() => yup.object({ email: v.email(), password: v.passwordRequired() }))
 const { defineField, handleSubmit, errors } = useForm({ validationSchema: schema })
 const [email] = defineField('email')
 const [password] = defineField('password')

@@ -9,6 +9,7 @@ useHead({ title: computed(() => `${t('reset.request_title')} · Bye Bye Boss`) }
 const auth = useAuthStore()
 const route = useRoute()
 const toast = useToast()
+const v = useValidators()
 const loading = ref(false)
 const requested = ref(false)
 
@@ -17,14 +18,7 @@ const token = computed(() => (typeof route.query.token === 'string' ? route.quer
 const isConfirm = computed(() => Boolean(token.value))
 
 // Request mode: ask for the email to send a reset link to.
-const requestSchema = computed(() =>
-  yup.object({
-    email: yup
-      .string()
-      .required(t('validation.email_required'))
-      .email(t('validation.email_invalid')),
-  })
-)
+const requestSchema = computed(() => yup.object({ email: v.email() }))
 const {
   defineField: defineRequestField,
   handleSubmit: handleRequest,
@@ -46,16 +40,7 @@ const onRequest = handleRequest(async (values) => {
 
 // Confirm mode: set a new password using the token from the link.
 const confirmSchema = computed(() =>
-  yup.object({
-    password: yup
-      .string()
-      .required(t('validation.password_required'))
-      .min(8, t('validation.password_min')),
-    confirm: yup
-      .string()
-      .required(t('validation.confirm_required'))
-      .oneOf([yup.ref('password')], t('validation.password_mismatch')),
-  })
+  yup.object({ password: v.password(), confirm: v.passwordConfirm('password') })
 )
 const {
   defineField: defineConfirmField,
