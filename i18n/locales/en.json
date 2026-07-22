@@ -43,8 +43,8 @@
     "confirm_error": "Invalid or expired link"
   },
   "validation": {
-    "email_required": "Email required",
-    "email_invalid": "Invalid email",
+    "email_required": "Email address required",
+    "email_invalid": "Invalid email address",
     "password_required": "Password required",
     "password_min": "8 characters minimum",
     "confirm_required": "Confirmation required",

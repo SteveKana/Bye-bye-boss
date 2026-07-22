@@ -8,20 +8,10 @@ useHead({ title: computed(() => `${t('register.submit')} · Bye Bye Boss`) })
 
 const auth = useAuthStore()
 const toast = useToast()
+const v = useValidators()
 const loading = ref(false)
 
-const schema = computed(() =>
-  yup.object({
-    email: yup
-      .string()
-      .required(t('validation.email_required'))
-      .email(t('validation.email_invalid')),
-    password: yup
-      .string()
-      .required(t('validation.password_required'))
-      .min(8, t('validation.password_min')),
-  })
-)
+const schema = computed(() => yup.object({ email: v.email(), password: v.password() }))
 const { defineField, handleSubmit, errors } = useForm({ validationSchema: schema })
 const [email] = defineField('email')
 const [password] = defineField('password')
