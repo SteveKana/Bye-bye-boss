@@ -14,7 +14,7 @@
   },
   "login": {
     "title": "Bon retour parmi nous 👋",
-    "subtitle": "Connectez-vous à votre compte MatchCareer",
+    "subtitle": "Connectez-vous à votre compte Bye Bye Boss",
     "password_placeholder": "Votre mot de passe",
     "forgot": "Mot de passe oublié ?",
     "submit": "Se connecter",
@@ -63,7 +63,7 @@
     "login": {
       "headline": "Chaque candidature doit vous rapprocher",
       "headline_accent": "du bon poste.",
-      "subtitle": "MatchCareer analyse vos candidatures avec l'IA pour vous aider à viser juste et décrocher plus d'entretiens.",
+      "subtitle": "Bye Bye Boss analyse vos candidatures avec l'IA pour vous aider à viser juste et décrocher plus d'entretiens.",
       "features": {
         "scores": {
           "title": "Scores transparents",
@@ -114,5 +114,138 @@
   },
   "lang": {
     "label": "Langue"
+  },
+  "landing": {
+    "nav": {
+      "how": "Comment ça marche",
+      "features": "Fonctionnalités",
+      "preview": "Aperçu",
+      "faq": "FAQ",
+      "cta": "Rejoindre la liste d'attente"
+    },
+    "hero": {
+      "badge": "Bientôt disponible — inscrivez-vous pour être prévenu du lancement",
+      "title": "Ne cherchez plus les offres d'emploi.",
+      "title_accent": "Elles viennent à vous.",
+      "sub": "Bye Bye Boss est en cours de développement. Au lancement : vous déposez votre CV une seule fois, notre IA analyse votre profil, explore des milliers d'offres et vous envoie chaque jour une sélection 100% pertinente. Laissez votre email pour être prévenu de l'ouverture.",
+      "social_proof": "Déjà +850 personnes sur la liste d'attente",
+      "press_label": "Ils parlent de nous bientôt sur",
+      "preview_badge": "Aperçu du futur produit",
+      "annotation": "Chaque soir, recevez les meilleures opportunités pour vous.",
+      "dash_greeting": "Bonjour Thomas 👋",
+      "dash_meta": "Top opportunités classées par compatibilité avec votre profil",
+      "dash_link": "Voir toutes les offres →",
+      "compat_high": "Très forte compatibilité",
+      "compat_good": "Forte compatibilité"
+    },
+    "waitlist": {
+      "placeholder": "Votre adresse e-mail",
+      "submit": "Me prévenir au lancement",
+      "success": "C'est noté. Vous serez parmi les premiers prévenus. 👋",
+      "error": "Une erreur est survenue. Réessayez dans un instant.",
+      "note": "Gratuit. Sans engagement. Votre email ne sert qu'à vous prévenir de l'ouverture.",
+      "note_cta": "Gratuit. Sans engagement. Aucune offre envoyée avant l'ouverture."
+    },
+    "why": {
+      "eyebrow": "POURQUOI VOUS N'OBTENEZ PAS D'ENTRETIENS OU VOUS REGRETTEZ VOS CHOIX",
+      "title": "Le problème n'est pas toujours votre profil.",
+      "cards": {
+        "profile": {
+          "title": "Bon profil",
+          "text": "Vous avez les compétences et l'expérience nécessaires."
+        },
+        "ats": {
+          "title": "Mauvais ATS",
+          "text": "Votre CV ne met pas assez en valeur vos atouts."
+        },
+        "targeting": {
+          "title": "Mauvais ciblage",
+          "text": "Vous postulez à des offres trop éloignées de vos objectifs."
+        },
+        "regret": {
+          "title": "Risque de regret",
+          "text": "L'entreprise ou le poste pourrait vous décevoir à moyen terme."
+        }
+      }
+    },
+    "how": {
+      "title": "Comment ça marchera au lancement",
+      "steps": {
+        "upload": {
+          "title": "Déposez votre CV",
+          "text": "Importez votre CV en PDF. Ça prend 30 secondes."
+        },
+        "analyse": {
+          "title": "Notre IA comprend votre profil",
+          "text": "Nous analysons vos compétences, expériences et objectifs en profondeur."
+        },
+        "explore": {
+          "title": "Nous analysons les offres",
+          "text": "Notre IA explore des milliers d'offres sur plusieurs sources en continu."
+        },
+        "receive": {
+          "title": "Vous recevez votre sélection",
+          "text": "Chaque soir, par email, les meilleures opportunités qui vous correspondent."
+        }
+      }
+    },
+    "features": {
+      "title": "Chaque soir, un email.",
+      "title2": "Pas une plateforme de plus à consulter.",
+      "p1": "Votre sélection du jour arrive directement dans votre boîte mail, avec les scores de chaque offre et leur explication. Vous ouvrez, vous décidez, c'est tout.",
+      "p2": "Le dashboard n'est là que quand vous en avez besoin : postuler avec un CV adapté à l'offre, et suivre vos candidatures.",
+      "mail_label": "Exemple de l'email quotidien que vous recevrez",
+      "mail_greeting": "Bonjour Thomas, voici votre sélection du jour 👋",
+      "mail_sub": "3 nouvelles opportunités correspondent à votre profil.",
+      "mail_cta": "Voir l'offre"
+    },
+    "comparison": {
+      "eyebrow": "LES PLATEFORMES D'EMPLOI VOUS MONTRENT DES OFFRES.",
+      "title": "Nous vous montrons vos chances… et le risque de regret.",
+      "feature": "Fonctionnalité",
+      "exclusive": "EXCLUSIF",
+      "rows": {
+        "search": "Recherche d'offres",
+        "ats": "Score ATS",
+        "career": "Compatibilité carrière",
+        "potential": "ATS Potential (potentiel d'amélioration)",
+        "cv": "CV mis à jour automatiquement selon l'offre",
+        "regret": "Indice de regret à 6 mois (avis salariés & ex-salariés)",
+        "advice": "Conseils d'optimisation personnalisés"
+      }
+    },
+    "stats": {
+      "funnel_title": "Nous ferons le tri pour vous",
+      "funnel": {
+        "found": "offres trouvées",
+        "relevant": "pertinentes",
+        "strong": "fortes opportunités",
+        "excellent": "excellentes opportunités"
+      },
+      "funnel_note": "Exemple de sélection sur un profil type. Gagnez des heures de recherche.",
+      "ats_title": "Votre CV n'est peut-être pas le problème.",
+      "ats_sub": "Parfois, quelques ajustements suffisent à tout changer.",
+      "ats_current": "ATS actuel",
+      "ats_potential": "ATS potentiel",
+      "ats_btn": "Améliorations suggérées automatiquement",
+      "regret_title": "Ne passez pas à côté… ni à côté de vous-même.",
+      "regret_sub": "Notre indice de regret sera basé sur les avis réels des salariés et ex-salariés.",
+      "regret_level": "Risque de regret :",
+      "regret_high": "ÉLEVÉ",
+      "regret_desc": "De nombreux retours négatifs sur le management, le turn-over et l'évolution interne.",
+      "regret_source": "Données collectées via Reddit et analysées par notre IA"
+    },
+    "cta": {
+      "badge": "LISTE D'ATTENTE",
+      "title": "Les inscrits bénéficient d'un",
+      "title_strong": "accès prioritaire au lancement.",
+      "title_end": "Entrez avant tout le monde."
+    },
+    "footer": {
+      "copy": "© 2026 Bye Bye Boss – Tous droits réservés.",
+      "legal": "Mentions légales",
+      "privacy": "Confidentialité",
+      "contact": "Contact"
+    }
   }
 }

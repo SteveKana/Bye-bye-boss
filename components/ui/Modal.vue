@@ -40,7 +40,7 @@ watch(
     if (import.meta.client) {
       document.body.style.overflow = open ? 'hidden' : ''
     }
-  },
+  }
 )
 
 onBeforeUnmount(() => {

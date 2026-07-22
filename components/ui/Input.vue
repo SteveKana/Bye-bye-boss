@@ -24,7 +24,7 @@ const uid = useId()
 const inputId = computed(() => props.id || uid)
 const isPassword = computed(() => props.type === 'password')
 const resolvedType = computed(() =>
-  isPassword.value ? (showPassword.value ? 'text' : 'password') : props.type,
+  isPassword.value ? (showPassword.value ? 'text' : 'password') : props.type
 )
 const describedBy = computed(() => {
   if (props.error) return `${inputId.value}-error`

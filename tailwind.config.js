@@ -23,9 +23,19 @@ export default {
           potential: '#22D3EE',
           regret: '#FF6B6B',
         },
+        // Landing product-preview accents (the landing mockup uses its own
+        // score palette, different from the auth panel above).
+        preview: {
+          ats: '#00C48C',
+          career: '#2D9CDB',
+          potential: '#9B51E0',
+          regret: '#FFB547',
+        },
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        // Handwritten annotations on the landing (mockup uses Caveat).
+        cursive: ['Caveat', 'cursive'],
       },
       fontSize: {
         xs: '12px',

@@ -1,4 +1,4 @@
-# MatchCareer — Frontend
+# Bye Bye Boss — Frontend
 
 Application Nuxt 3 (Vue 3, JavaScript, SSR).
 

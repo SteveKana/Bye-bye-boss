@@ -1,11 +1,25 @@
+<script setup>
+// Public landing page (marketing). Self-contained: it carries its own nav and
+// footer, so it does not use the app layout.
+definePageMeta({ layout: false })
+
+const { t } = useI18n()
+useHead({
+  title: computed(() => `Bye Bye Boss — ${t('landing.hero.title_accent')}`),
+  meta: [{ name: 'description', content: computed(() => t('landing.hero.sub')) }],
+})
+</script>
+
 <template>
-  <section
-    class="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center gap-4 px-6 text-center"
-  >
-    <span class="rounded-full bg-brand-light px-4 py-1 text-sm font-semibold text-brand">
-      MatchCareer
-    </span>
-    <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">Bienvenue</h1>
-    <p class="max-w-prose text-gray-600">L'application est en cours de construction.</p>
-  </section>
+  <div class="min-h-screen bg-brand-light/40">
+    <LandingNav />
+    <LandingHero />
+    <LandingWhy />
+    <LandingHow />
+    <LandingFeatures />
+    <LandingComparison />
+    <LandingStats />
+    <LandingCta />
+    <LandingFooter />
+  </div>
 </template>
