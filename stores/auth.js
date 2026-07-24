@@ -40,9 +40,17 @@ export const useAuthStore = defineStore('auth', () => {
     await fetchMe()
   }
 
-  async function register(payload) {
-    await useApi()('auth/register', { method: 'POST', body: payload }, false)
-    await login(payload.email, payload.password)
+  // Register does NOT log in: the account must confirm its email first.
+  function register(payload) {
+    return useApi()('auth/register', { method: 'POST', body: payload }, false)
+  }
+
+  function verifyEmail(token) {
+    return useApi()('auth/verify-email', { method: 'POST', body: { token } }, false)
+  }
+
+  function resendVerification(email, locale) {
+    return useApi()('auth/resend-verification', { method: 'POST', body: { email, locale } }, false)
   }
 
   // Called by useApi on a 401. Returns whether a fresh access token was obtained.
@@ -62,8 +70,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function requestPasswordReset(email) {
-    return useApi()('auth/reset-password/request', { method: 'POST', body: { email } }, false)
+  function requestPasswordReset(email, locale) {
+    return useApi()(
+      'auth/reset-password/request',
+      { method: 'POST', body: { email, locale } },
+      false,
+    )
   }
 
   function confirmPasswordReset(token, newPassword) {
@@ -72,6 +84,18 @@ export const useAuthStore = defineStore('auth', () => {
       { method: 'POST', body: { token, new_password: newPassword } },
       false
     )
+  }
+
+  async function updateProfile(payload) {
+    user.value = await useApi()('auth/me', { method: 'PATCH', body: payload })
+    return user.value
+  }
+
+  function changePassword(currentPassword, newPassword) {
+    return useApi()('auth/change-password', {
+      method: 'POST',
+      body: { current_password: currentPassword, new_password: newPassword },
+    })
   }
 
   function logout() {
@@ -90,6 +114,10 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     requestPasswordReset,
     confirmPasswordReset,
+    verifyEmail,
+    resendVerification,
+    updateProfile,
+    changePassword,
     setTokens,
     clear,
   }

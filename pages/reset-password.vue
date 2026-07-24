@@ -3,7 +3,7 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 
 definePageMeta({ layout: 'auth' })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 useHead({ title: computed(() => `${t('reset.request_title')} · Bye Bye Boss`) })
 
 const auth = useAuthStore()
@@ -29,7 +29,7 @@ const [email] = defineRequestField('email')
 const onRequest = handleRequest(async (values) => {
   loading.value = true
   try {
-    await auth.requestPasswordReset(values.email)
+    await auth.requestPasswordReset(values.email, locale.value)
     requested.value = true
   } catch (err) {
     toast.error(err.message || t('reset.request_error'))

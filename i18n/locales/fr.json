@@ -4,7 +4,10 @@
     "email": "Email",
     "password": "Mot de passe",
     "email_placeholder": "votre{'@'}email.com",
-    "back_to_login": "Retour à la connexion"
+    "back_to_login": "Retour à la connexion",
+    "undo": "Annuler",
+    "first_name": "Prénom",
+    "last_name": "Nom"
   },
   "nav": {
     "no_account": "Pas encore de compte ?",
@@ -18,7 +21,8 @@
     "password_placeholder": "Votre mot de passe",
     "forgot": "Mot de passe oublié ?",
     "submit": "Se connecter",
-    "error": "Connexion impossible"
+    "error": "Connexion impossible",
+    "not_verified": "Votre adresse email n'est pas encore vérifiée."
   },
   "register": {
     "title": "Créez votre compte",
@@ -26,7 +30,20 @@
     "password_placeholder": "Créez un mot de passe",
     "password_hint": "8 caractères minimum.",
     "submit": "Créer mon compte",
-    "error": "Inscription impossible"
+    "error": "Inscription impossible",
+    "email_taken": "Cette adresse email est déjà utilisée.",
+    "check_email_title": "Vérifiez votre email",
+    "check_email_sub": "Nous avons envoyé un lien de confirmation à {email}. Cliquez dessus pour activer votre compte.",
+    "resend": "Renvoyer l'email",
+    "resent": "Email de confirmation renvoyé"
+  },
+  "verify": {
+    "title": "Vérification de l'email",
+    "verifying": "Vérification en cours…",
+    "success_title": "Email vérifié",
+    "success_sub": "Votre compte est activé. Vous pouvez maintenant vous connecter.",
+    "error_title": "Lien invalide ou expiré",
+    "error_sub": "Ce lien de confirmation n'est plus valide. Connectez-vous pour en recevoir un nouveau."
   },
   "reset": {
     "request_title": "Mot de passe oublié ?",
@@ -45,6 +62,8 @@
   "validation": {
     "email_required": "Adresse email requise",
     "email_invalid": "Adresse email invalide",
+    "first_name_required": "Prénom requis",
+    "last_name_required": "Nom requis",
     "password_required": "Mot de passe requis",
     "password_min": "8 caractères minimum",
     "confirm_required": "Confirmation requise",
@@ -114,6 +133,50 @@
   },
   "lang": {
     "label": "Langue"
+  },
+  "app": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "opportunities": "Opportunités",
+      "applications": "Candidatures",
+      "profile": "Profil",
+      "settings": "Paramètres"
+    },
+    "soon": "bientôt",
+    "soon_full": "Bientôt disponible.",
+    "logout": "Déconnexion"
+  },
+  "dashboard": {
+    "greeting": "Bonjour {name}",
+    "greeting_sub": "Voici les meilleures opportunités détectées pour vous aujourd'hui.",
+    "alerts": "Activer les alertes",
+    "your_search": "Votre recherche :",
+    "edit": "Modifier",
+    "top_title": "Top opportunités pour vous",
+    "top_sub": "Offres classées par compatibilité avec votre profil · Mis à jour aujourd'hui à 06:12",
+    "fit_strong": "Très forte compatibilité",
+    "fit_good": "Forte compatibilité",
+    "reject": "Rejeter cette offre",
+    "see_all": "Voir toutes les opportunités",
+    "offer_hidden": "Offre masquée",
+    "empty": "Aucune opportunité pour le moment."
+  },
+  "profile": {
+    "subtitle": "Vos informations personnelles, utilisées pour le matching.",
+    "save": "Enregistrer",
+    "saved": "Profil mis à jour",
+    "save_error": "Enregistrement impossible",
+    "no_name": "Sans nom",
+    "readonly": "lecture seule",
+    "plan": "Abonnement",
+    "security": "Sécurité",
+    "current_password": "Mot de passe actuel",
+    "new_password": "Nouveau mot de passe",
+    "change_password": "Changer le mot de passe",
+    "password_changed": "Mot de passe modifié",
+    "wrong_password": "Mot de passe actuel incorrect",
+    "preferences": "Préférences",
+    "language_hint": "Langue de l'interface."
   },
   "landing": {
     "nav": {
