@@ -74,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     return useApi()(
       'auth/reset-password/request',
       { method: 'POST', body: { email, locale } },
-      false,
+      false
     )
   }
 
