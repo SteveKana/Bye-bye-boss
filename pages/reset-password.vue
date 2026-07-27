@@ -12,6 +12,7 @@ const toast = useToast()
 const v = useValidators()
 const loading = ref(false)
 const requested = ref(false)
+const requestedEmail = ref('')
 
 // A token in the URL means the user followed a reset link → confirm mode.
 const token = computed(() => (typeof route.query.token === 'string' ? route.query.token : ''))
@@ -30,6 +31,7 @@ const onRequest = handleRequest(async (values) => {
   loading.value = true
   try {
     await auth.requestPasswordReset(values.email, locale.value)
+    requestedEmail.value = values.email
     requested.value = true
   } catch (err) {
     toast.error(err.message || t('reset.request_error'))
@@ -105,7 +107,8 @@ const onConfirm = handleConfirm(async (values) => {
       <p class="mb-7 text-gray-500">{{ $t('reset.request_subtitle') }}</p>
 
       <div v-if="requested" class="rounded-md bg-success-light px-4 py-3 text-sm text-success-text">
-        {{ $t('reset.requested') }}
+        <p>{{ $t('reset.requested') }}</p>
+        <p class="mt-1 break-all font-semibold">{{ requestedEmail }}</p>
       </div>
 
       <form v-else novalidate @submit.prevent="onRequest">

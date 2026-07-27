@@ -71,11 +71,9 @@ async function resend() {
       <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
         {{ $t('register.check_email_title') }}
       </h1>
-      <i18n-t keypath="register.check_email_sub" tag="p" class="mb-6 text-gray-500" scope="global">
-        <template #email>
-          <strong class="text-gray-900">{{ registeredEmail }}</strong>
-        </template>
-      </i18n-t>
+      <p class="mb-1 text-gray-500">{{ $t('register.check_email_sub') }}</p>
+      <p class="mb-4 break-all font-semibold text-gray-900">{{ registeredEmail }}</p>
+      <p class="mb-6 text-sm text-gray-500">{{ $t('register.check_email_hint') }}</p>
 
       <UiButton variant="secondary" block :loading="resending" @click="resend">
         {{ $t('register.resend') }}

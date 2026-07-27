@@ -33,7 +33,8 @@
     "error": "Inscription impossible",
     "email_taken": "Cette adresse email est déjà utilisée.",
     "check_email_title": "Vérifiez votre email",
-    "check_email_sub": "Nous avons envoyé un lien de confirmation à {email}. Cliquez dessus pour activer votre compte.",
+    "check_email_sub": "Nous avons envoyé un lien de confirmation à :",
+    "check_email_hint": "Cliquez sur le lien reçu pour activer votre compte.",
     "resend": "Renvoyer l'email",
     "resent": "Email de confirmation renvoyé"
   },
@@ -49,7 +50,7 @@
     "request_title": "Mot de passe oublié ?",
     "request_subtitle": "Entrez votre email, nous vous enverrons un lien de réinitialisation.",
     "request_submit": "Envoyer le lien",
-    "requested": "Si un compte correspond à cette adresse, un lien de réinitialisation vient d'être envoyé.",
+    "requested": "Si un compte existe pour cette adresse, un lien de réinitialisation vient d'être envoyé à :",
     "request_error": "Envoi impossible",
     "confirm_title": "Nouveau mot de passe",
     "confirm_subtitle": "Choisissez un nouveau mot de passe pour votre compte.",
