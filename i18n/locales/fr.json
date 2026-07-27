@@ -144,7 +144,9 @@
     },
     "soon": "bientôt",
     "soon_full": "Bientôt disponible.",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "menu": "Menu",
+    "close": "Fermer"
   },
   "dashboard": {
     "greeting": "Bonjour {name}",

@@ -144,7 +144,9 @@
     },
     "soon": "soon",
     "soon_full": "Coming soon.",
-    "logout": "Log out"
+    "logout": "Log out",
+    "menu": "Menu",
+    "close": "Close"
   },
   "dashboard": {
     "greeting": "Hi {name}",
