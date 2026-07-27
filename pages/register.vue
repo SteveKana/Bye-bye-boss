@@ -71,9 +71,11 @@ async function resend() {
       <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
         {{ $t('register.check_email_title') }}
       </h1>
-      <p class="mb-1 text-gray-500">{{ $t('register.check_email_sub') }}</p>
-      <p class="mb-4 break-all font-semibold text-gray-900">{{ registeredEmail }}</p>
-      <p class="mb-6 text-sm text-gray-500">{{ $t('register.check_email_hint') }}</p>
+      <p class="mb-6 text-gray-500">
+        {{ $t('register.check_email_intro')
+        }}<strong class="break-all text-gray-900">{{ registeredEmail }}</strong
+        >{{ $t('register.check_email_end') }}
+      </p>
 
       <UiButton variant="secondary" block :loading="resending" @click="resend">
         {{ $t('register.resend') }}

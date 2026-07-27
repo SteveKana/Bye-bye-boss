@@ -107,8 +107,8 @@ const onConfirm = handleConfirm(async (values) => {
       <p class="mb-7 text-gray-500">{{ $t('reset.request_subtitle') }}</p>
 
       <div v-if="requested" class="rounded-md bg-success-light px-4 py-3 text-sm text-success-text">
-        <p>{{ $t('reset.requested') }}</p>
-        <p class="mt-1 break-all font-semibold">{{ requestedEmail }}</p>
+        {{ $t('reset.requested_intro') }}<strong class="break-all">{{ requestedEmail }}</strong
+        >{{ $t('reset.requested_end') }}
       </div>
 
       <form v-else novalidate @submit.prevent="onRequest">
