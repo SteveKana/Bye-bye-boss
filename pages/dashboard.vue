@@ -91,6 +91,10 @@ function reject(offer) {
 }
 
 const soon = () => toast.info(t('app.soon_full'))
+
+// Each offer row links to the opportunity detail — a later phase, so for now
+// clicking (or activating with the keyboard) shows a generic "coming soon".
+const openOffer = () => toast.info(t('app.soon_full'))
 </script>
 
 <template>
@@ -138,7 +142,16 @@ const soon = () => toast.info(t('app.soon_full'))
       </template>
 
       <ul class="divide-y divide-gray-100">
-        <li v-for="offer in offers" :key="offer.id" class="flex items-center gap-4 py-3.5">
+        <li
+          v-for="offer in offers"
+          :key="offer.id"
+          class="group -mx-2 flex cursor-pointer items-center gap-4 rounded-lg px-2 py-3.5 transition hover:bg-gray-50"
+          role="button"
+          tabindex="0"
+          @click="openOffer(offer)"
+          @keydown.enter="openOffer(offer)"
+          @keydown.space.prevent="openOffer(offer)"
+        >
           <span class="w-4 shrink-0 text-center text-sm font-extrabold text-gray-400">
             {{ offer.rank }}
           </span>
@@ -174,7 +187,7 @@ const soon = () => toast.info(t('app.soon_full'))
           <button
             class="shrink-0 rounded-md p-1.5 text-gray-300 transition hover:bg-danger-light hover:text-danger"
             :aria-label="$t('dashboard.reject')"
-            @click="reject(offer)"
+            @click.stop="reject(offer)"
           >
             <svg
               viewBox="0 0 24 24"
@@ -189,6 +202,20 @@ const soon = () => toast.info(t('app.soon_full'))
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
+
+          <!-- Affordance that the row opens the offer detail -->
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4 shrink-0 text-gray-300 transition group-hover:text-brand"
+            aria-hidden="true"
+          >
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
         </li>
       </ul>
 
