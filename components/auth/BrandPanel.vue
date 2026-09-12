@@ -9,6 +9,7 @@ const props = defineProps({
 const featureKeys = {
   login: ['scores', 'reco', 'tracking', 'secure'],
   signup: ['cv', 'reco', 'time', 'secure'],
+  onboarding: ['extract', 'verify', 'match'],
 }
 const icons = {
   scores: '📊',
@@ -17,6 +18,9 @@ const icons = {
   secure: '🛡',
   cv: '✦',
   time: '📈',
+  extract: '✨',
+  verify: '🛡',
+  match: '🎯',
 }
 const keys = computed(() => featureKeys[props.variant] || featureKeys.login)
 
@@ -130,7 +134,7 @@ const avatars = ['🧑🏾', '👨🏻', '👩🏼', '👨🏽', '👩🏾']
     </div>
 
     <!-- Signup widget: social proof -->
-    <div v-else class="relative z-10 mt-auto pt-6">
+    <div v-else-if="variant === 'signup'" class="relative z-10 mt-auto pt-6">
       <div class="rounded-2xl border border-white/10 bg-white/[0.07] p-4">
         <h4 class="text-[13px] font-bold">{{ $t('brand.signup.proof_title') }}</h4>
         <p class="mt-0.5 text-[11.5px] text-white/40">{{ $t('brand.signup.proof_sub') }}</p>
