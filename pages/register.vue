@@ -20,7 +20,7 @@ const onSubmit = handleSubmit(async (values) => {
   loading.value = true
   try {
     await auth.register({ email: values.email, password: values.password })
-    await navigateTo('/')
+    await navigateTo('/onboarding/upload')
   } catch (err) {
     toast.error(err.message || t('register.error'))
   } finally {

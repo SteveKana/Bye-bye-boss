@@ -110,6 +110,25 @@
       },
       "proof_title": "Join 25k+ users already",
       "proof_sub": "who found their next job"
+    },
+    "onboarding": {
+      "headline": "A new CV, new",
+      "headline_accent": "opportunities to discover.",
+      "subtitle": "Import your up-to-date CV and our AI will re-analyze your profile to refine your matches.",
+      "features": {
+        "extract": {
+          "title": "Smart extraction",
+          "text": "Our AI automatically detects your skills, experience and education."
+        },
+        "verify": {
+          "title": "Easy verification",
+          "text": "You'll be able to correct the information before validating."
+        },
+        "match": {
+          "title": "Up-to-date matching",
+          "text": "Your opportunities are recalculated from your most recent profile."
+        }
+      }
     }
   },
   "lang": {
@@ -246,6 +265,102 @@
       "legal": "Legal notice",
       "privacy": "Privacy",
       "contact": "Contact"
+    }
+  },
+  "onboarding": {
+    "steps": {
+      "upload": "Import CV",
+      "verification": "Verification",
+      "preferences": "Preferences"
+    },
+    "upload": {
+      "title": "Import your CV",
+      "subtitle": "Accepted formats: PDF, DOCX. 5 MB max.",
+      "dropzone_title": "Drag and drop your CV here",
+      "browse": "Browse my files",
+      "hint": "PDF or Word, 5 MB max",
+      "remove": "Remove file",
+      "analyzing": "Analyzing your CV…",
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "error_required": "Please import a CV before continuing.",
+      "error_unsupported": "This format isn't supported. Use a PDF or DOCX file.",
+      "error_too_large": "The file exceeds 5 MB.",
+      "error_generic": "Importing the CV failed. Please try again."
+    },
+    "verification": {
+      "title": "Review the extracted information",
+      "subtitle": "We extracted the following information from your CV. Correct anything if needed.",
+      "personal_info": "Personal information",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "Email",
+      "experience": "Experience",
+      "total_experience": "Total experience",
+      "add_experience": "+ Add an experience",
+      "job_title": "Job title",
+      "company": "Company",
+      "period": "Period",
+      "description": "Description",
+      "tools": "Skills & tools used",
+      "add_tool": "+ Add",
+      "remove": "Remove",
+      "skills": "Skills",
+      "formation": "Education",
+      "add_formation": "+ Add an education",
+      "formation_title": "Degree title",
+      "formation_school_period": "School • Period",
+      "languages": "Languages",
+      "add_language": "+ Add a language",
+      "language_name": "Language",
+      "language_level": "Level",
+      "certifications": "Certifications",
+      "add_certification": "+ Add a certification",
+      "certification_title": "Title",
+      "certification_issuer_period": "Issuer • Year",
+      "location": "Location",
+      "availability": "Availability",
+      "previous": "Previous",
+      "continue": "Continue",
+      "error_generic": "Updating the profile failed. Please try again."
+    },
+    "preferences": {
+      "title": "Your preferences",
+      "subtitle": "These criteria refine your job matches. Editable at any time.",
+      "contract_type_title": "Contract type",
+      "contract_type_subtitle": "The contract type you're looking for",
+      "multi_choice": "Multiple choices possible",
+      "remote_title": "Desired remote work",
+      "remote_subtitle": "Your remote work preference",
+      "mobility_title": "Geographic mobility",
+      "mobility_subtitle": "The geographic area you'd like to work in",
+      "single_choice": "One choice only — \"Anywhere in France\" already covers all areas",
+      "salary_title": "Target salary (optional)",
+      "salary_subtitle": "Your desired gross annual salary",
+      "salary_placeholder": "E.g. 55000",
+      "salary_suffix": "€ gross / year",
+      "salary_hint": "You can change this at any time",
+      "note": "No worries, you'll be able to change all these preferences at any time from your profile.",
+      "previous": "Previous",
+      "continue": "Continue",
+      "error_required": "Please select at least one option for each required category.",
+      "error_generic": "Saving your preferences failed. Please try again."
+    },
+    "contract_types": {
+      "CDI": "Permanent (CDI)",
+      "CDD": "Fixed-term (CDD)",
+      "Freelance": "Freelance",
+      "Intérim": "Temporary"
+    },
+    "remote_options": {
+      "Sur site": "On-site",
+      "Hybride": "Hybrid",
+      "Full remote": "Full remote"
+    },
+    "mobility_options": {
+      "France entière": "Anywhere in France",
+      "Région uniquement": "Region only",
+      "Ville uniquement": "City only"
     }
   }
 }
