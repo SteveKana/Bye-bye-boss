@@ -19,9 +19,7 @@ const STEPS = [
       <div class="flex items-center gap-2">
         <div
           class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-          :class="
-            item.step <= current ? 'bg-brand text-white' : 'bg-gray-100 text-gray-400'
-          "
+          :class="item.step <= current ? 'bg-brand text-white' : 'bg-gray-100 text-gray-400'"
         >
           <span v-if="item.step < current" aria-hidden="true">✓</span>
           <span v-else>{{ item.step }}</span>
