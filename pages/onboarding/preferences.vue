@@ -56,7 +56,7 @@ async function onContinue() {
       mobility: mobility.value,
       salary_target: salaryTarget.value || null,
     })
-    await navigateTo('/')
+    await navigateTo('/dashboard')
   } catch (err) {
     toast.error(err.message || t('onboarding.preferences.error_generic'))
   } finally {

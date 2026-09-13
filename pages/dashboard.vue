@@ -5,6 +5,7 @@ useHead({ title: computed(() => `${t('app.nav.dashboard')} · Bye Bye Boss`) })
 
 const toast = useToast()
 const { firstName } = useUserDisplay()
+const onboarding = useOnboardingStore()
 
 // Static demo data (the matching engine is not built yet — Phase 1 shows the
 // shell with placeholder offers). Full class names so Tailwind keeps them.
@@ -16,65 +17,31 @@ const scoreColors = {
 }
 const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential', regret: 'Regret' }
 
-const criteria = ['CDI', 'Hybride', 'France entière', '60 000 € brut / an']
+// Real search criteria, pulled from the profile saved at the end of
+// onboarding. Empty until the profile has loaded.
+const criteria = ref([])
 
-const offers = ref([
-  {
-    id: 1,
-    rank: 1,
-    logo: 'D.',
-    bg: '#000000',
-    title: 'Product Owner',
-    company: 'Doctolib',
-    loc: 'Paris · Hybride',
-    strong: true,
-    scores: { ats: 92, career: 95, potential: 97, regret: 18 },
-  },
-  {
-    id: 2,
-    rank: 2,
-    logo: 'alan',
-    bg: '#0057FF',
-    title: 'Product Owner',
-    company: 'Alan',
-    loc: 'Paris · Hybride',
-    strong: true,
-    scores: { ats: 90, career: 91, potential: 94, regret: 22 },
-  },
-  {
-    id: 3,
-    rank: 3,
-    logo: 'M',
-    bg: '#009975',
-    title: 'Senior Product Owner',
-    company: 'ManoMano',
-    loc: 'Nantes · Hybride',
-    strong: false,
-    scores: { ats: 88, career: 89, potential: 92, regret: 25 },
-  },
-  {
-    id: 4,
-    rank: 4,
-    logo: 'Back',
-    bg: '#111111',
-    title: 'Product Owner',
-    company: 'Back Market',
-    loc: 'Paris · Remote',
-    strong: false,
-    scores: { ats: 85, career: 86, potential: 88, regret: 29 },
-  },
-  {
-    id: 5,
-    rank: 5,
-    logo: 'bon',
-    bg: '#FF6E14',
-    title: 'Product Owner',
-    company: 'Leboncoin',
-    loc: 'Paris · Hybride',
-    strong: false,
-    scores: { ats: 83, career: 84, potential: 86, regret: 31 },
-  },
-])
+onMounted(async () => {
+  try {
+    const profile = onboarding.profile || (await onboarding.fetchProfile())
+    const salary = profile.salary_target
+      ? `${profile.salary_target.toLocaleString('fr-FR')} € brut / an`
+      : null
+    criteria.value = [
+      ...(profile.contract_types || []),
+      ...(profile.remote_preferences || []),
+      profile.mobility,
+      salary,
+    ].filter(Boolean)
+  } catch {
+    // No profile yet (onboarding not completed) — leave the criteria bar empty
+    // rather than showing anything misleading.
+  }
+})
+
+// The matching engine isn't wired in yet, so there are no real offers to
+// show — an honest empty state beats fabricated placeholder listings.
+const offers = ref([])
 
 // Reject with a short undo window — mirrors the spec (a real reject is permanent).
 function reject(offer) {
@@ -111,8 +78,8 @@ const openOffer = () => toast.info(t('app.soon_full'))
       >
     </div>
 
-    <!-- Search criteria (static) -->
-    <div class="mb-6 flex flex-wrap items-center gap-2 text-sm">
+    <!-- Search criteria, from the saved preferences -->
+    <div v-if="criteria.length" class="mb-6 flex flex-wrap items-center gap-2 text-sm">
       <span class="font-semibold text-gray-500">{{ $t('dashboard.your_search') }}</span>
       <span
         v-for="c in criteria"

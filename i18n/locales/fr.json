@@ -171,18 +171,18 @@
   },
   "dashboard": {
     "greeting": "Bonjour {name}",
-    "greeting_sub": "Voici les meilleures opportunités détectées pour vous aujourd'hui.",
+    "greeting_sub": "Votre profil est en cours d'analyse — vos premières opportunités arrivent bientôt.",
     "alerts": "Activer les alertes",
     "your_search": "Votre recherche :",
     "edit": "Modifier",
     "top_title": "Top opportunités pour vous",
-    "top_sub": "Offres classées par compatibilité avec votre profil · Mis à jour aujourd'hui à 06:12",
+    "top_sub": "Offres classées par compatibilité avec votre profil.",
     "fit_strong": "Très forte compatibilité",
     "fit_good": "Forte compatibilité",
     "reject": "Rejeter cette offre",
     "see_all": "Voir toutes les opportunités",
     "offer_hidden": "Offre masquée",
-    "empty": "Aucune opportunité pour le moment."
+    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres."
   },
   "profile": {
     "subtitle": "Vos informations personnelles, utilisées pour le matching.",
