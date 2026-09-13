@@ -203,26 +203,42 @@
   },
   "landing": {
     "nav": {
-      "how": "Comment ça marche",
-      "features": "Fonctionnalités",
-      "preview": "Aperçu",
-      "faq": "FAQ",
-      "cta": "Rejoindre la liste d'attente"
+      "cta": "Importer mon CV",
+      "why": "Pourquoi Bye Bye Boss",
+      "comparison": "Comparatif",
+      "login": "Se connecter"
     },
     "hero": {
-      "badge": "Bientôt disponible — inscrivez-vous pour être prévenu du lancement",
-      "title": "Ne cherchez plus les offres d'emploi.",
-      "title_accent": "Et les offres viennent à vous.",
-      "sub": "Bye Bye Boss est en cours de développement. Au lancement : vous déposez votre CV une seule fois, notre IA analyse votre profil, explore des milliers d'offres et vous envoie chaque jour une sélection 100% pertinente. Laissez votre email pour être prévenu de l'ouverture.",
-      "social_proof": "Déjà +850 personnes sur la liste d'attente",
-      "press_label": "Ils parlent de nous bientôt sur",
-      "preview_badge": "Aperçu du futur produit",
-      "annotation": "Chaque soir, recevez les meilleures opportunités pour vous.",
-      "dash_greeting": "Bonjour Thomas 👋",
-      "dash_meta": "Top opportunités classées par compatibilité avec votre profil",
-      "dash_link": "Voir toutes les offres →",
-      "compat_high": "Très forte compatibilité",
-      "compat_good": "Forte compatibilité"
+      "badge": "L'IA au service de vos décisions de carrière",
+      "title": "Trouvez les offres qui vous correspondent vraiment.",
+      "title_accent": "Évitez celles que vous regretterez.",
+      "sub": "Nous analysons des centaines d'offres et des milliers d'avis de salariés pour vous montrer vos chances… et le risque de regretter ce poste après l'avoir accepté.",
+      "cta_primary": "Importer mon CV",
+      "cta_primary_note": "Gratuit & sécurisé",
+      "cta_secondary": "Voir un exemple",
+      "trust_1": "Analyse en 2 minutes",
+      "trust_2": "100% confidentiel",
+      "trust_3": "Aucune carte bancaire",
+      "preview_label": "Exemple d'analyse",
+      "preview_offer_title": "Product Owner",
+      "preview_offer_meta": "SaaS · Paris",
+      "preview_view_link": "Voir l'offre ↗",
+      "preview_badge": "Bonne opportunité",
+      "ats_label": "ATS Score",
+      "ats_sub": "Bonne compatibilité avec les ATS",
+      "career_label": "Career Score",
+      "career_sub": "Fort potentiel d'évolution",
+      "potential_label": "ATS Potential",
+      "potential_sub": "+18 points possibles avec quelques optimisations",
+      "regret_label": "Indice de regret à 12 mois",
+      "regret_badge": "Élevé",
+      "regret_sub": "Risque élevé de regret selon les retours des salariés",
+      "why_regret_title": "Pourquoi cet indice de regret ?",
+      "why_regret_1": "Management souvent critiqué sur Reddit (micro-management)",
+      "why_regret_2": "Peu d'opportunités d'évolution en interne",
+      "why_regret_3": "Turn-over élevé dans l'équipe Product",
+      "why_regret_4": "Écart entre les promesses de l'offre et la réalité",
+      "see_more": "Voir l'analyse complète et les recommandations →"
     },
     "waitlist": {
       "placeholder": "Votre adresse e-mail",
@@ -296,7 +312,7 @@
         "career": "Compatibilité carrière",
         "potential": "ATS Potential (potentiel d'amélioration)",
         "cv": "CV mis à jour automatiquement selon l'offre",
-        "regret": "Indice de regret à 6 mois (avis salariés & ex-salariés)",
+        "regret": "Indice de regret à 12 mois (avis salariés & ex-salariés)",
         "advice": "Conseils d'optimisation personnalisés"
       }
     },
@@ -315,23 +331,36 @@
       "ats_potential": "ATS potentiel",
       "ats_btn": "Améliorations suggérées automatiquement",
       "regret_title": "Ne passez pas à côté… ni à côté de vous-même.",
-      "regret_sub": "Notre indice de regret sera basé sur les avis réels des salariés et ex-salariés.",
+      "regret_sub": "Notre indice de regret est basé sur les avis réels des salariés et ex-salariés.",
       "regret_level": "Risque de regret :",
       "regret_high": "ÉLEVÉ",
       "regret_desc": "De nombreux retours négatifs sur le management, le turn-over et l'évolution interne.",
       "regret_source": "Données collectées via Reddit et analysées par notre IA"
     },
     "cta": {
-      "badge": "LISTE D'ATTENTE",
-      "title": "Les inscrits bénéficient d'un",
-      "title_strong": "accès prioritaire au lancement.",
-      "title_end": "Entrez avant tout le monde."
+      "title": "Découvrez les offres qui valent votre temps.",
+      "title2": "Évitez celles que vous pourriez regretter.",
+      "sub": "Importez votre CV et laissez notre IA analyser des centaines d'offres et des milliers d'avis pour vous.",
+      "button": "Importer mon CV gratuitement",
+      "trust_1": "100% confidentiel",
+      "trust_2": "Vos données ne sont jamais partagées",
+      "trust_3": "Supprimez votre compte à tout moment"
     },
     "footer": {
       "copy": "© 2026 Bye Bye Boss – Tous droits réservés.",
       "legal": "Mentions légales",
       "privacy": "Confidentialité",
       "contact": "Contact"
+    },
+    "social": {
+      "stat1_num": "2 384",
+      "stat1_label": "CV analysés",
+      "stat2_num": "96%",
+      "stat2_label": "des utilisateurs ont découvert des opportunités pertinentes",
+      "stat3_num": "+3,7×",
+      "stat3_label": "plus d'entretiens obtenus en moyenne",
+      "stat4_num": "↻",
+      "stat4_label": "Mise à jour quotidienne des offres et des avis"
     }
   },
   "onboarding": {

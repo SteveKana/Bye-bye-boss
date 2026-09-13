@@ -8,7 +8,7 @@ const cards = [
 </script>
 
 <template>
-  <section class="bg-white px-6 py-16 lg:px-12">
+  <section id="pourquoi" class="bg-white px-6 py-16 lg:px-12">
     <div class="mx-auto max-w-6xl text-center">
       <div class="mb-3 text-[11px] font-bold uppercase tracking-wider text-brand">
         {{ $t('landing.why.eyebrow') }}
