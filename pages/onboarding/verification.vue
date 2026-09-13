@@ -104,192 +104,196 @@ async function onContinue() {
 <template>
   <NuxtLayout name="onboarding">
     <div v-if="ready">
-    <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
-      {{ $t('onboarding.verification.title') }}
-    </h1>
-    <p class="mb-7 text-gray-500">{{ $t('onboarding.verification.subtitle') }}</p>
+      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
+        {{ $t('onboarding.verification.title') }}
+      </h1>
+      <p class="mb-7 text-gray-500">{{ $t('onboarding.verification.subtitle') }}</p>
 
-    <div class="flex flex-col gap-5">
-      <!-- Informations personnelles -->
-      <UiCard :title="$t('onboarding.verification.personal_info')">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <UiInput v-model="form.first_name" :label="$t('onboarding.verification.first_name')" />
-          <UiInput v-model="form.last_name" :label="$t('onboarding.verification.last_name')" />
-          <UiInput v-model="form.email" type="email" :label="$t('onboarding.verification.email')" />
-        </div>
-      </UiCard>
-
-      <!-- Expérience -->
-      <UiCard :title="$t('onboarding.verification.experience')">
-        <UiInput
-          v-model="form.total_experience"
-          :label="$t('onboarding.verification.total_experience')"
-          class="mb-5"
-        />
-
-        <div class="flex flex-col gap-4">
-          <div
-            v-for="(exp, i) in form.experiences"
-            :key="i"
-            class="relative rounded-lg border border-gray-100 bg-gray-50 p-4"
-          >
-            <button
-              type="button"
-              class="absolute right-3 top-3 text-gray-400 hover:text-danger"
-              :aria-label="$t('onboarding.verification.remove')"
-              @click="removeExperience(i)"
-            >
-              ✕
-            </button>
-            <div class="mb-3 grid grid-cols-1 gap-3 pr-6 sm:grid-cols-2">
-              <UiInput v-model="exp.title" :label="$t('onboarding.verification.job_title')" />
-              <UiInput v-model="exp.company" :label="$t('onboarding.verification.company')" />
-              <UiInput
-                v-model="exp.period"
-                :label="$t('onboarding.verification.period')"
-                class="sm:col-span-2"
-              />
-            </div>
-            <UiTextarea
-              v-model="exp.description"
-              :label="$t('onboarding.verification.description')"
-              :rows="3"
-              class="mb-3"
-            />
-            <div>
-              <p class="mb-1.5 text-sm font-semibold text-gray-900">
-                {{ $t('onboarding.verification.tools') }}
-              </p>
-              <OnboardingTagInput
-                v-model="exp.tools"
-                :add-label="$t('onboarding.verification.add_tool')"
-              />
-            </div>
-          </div>
-        </div>
-
-        <UiButton variant="secondary" size="sm" class="mt-4" type="button" @click="addExperience">
-          {{ $t('onboarding.verification.add_experience') }}
-        </UiButton>
-      </UiCard>
-
-      <!-- Compétences -->
-      <UiCard :title="$t('onboarding.verification.skills')">
-        <OnboardingTagInput
-          v-model="form.skills"
-          :add-label="$t('onboarding.verification.add_tool')"
-        />
-      </UiCard>
-
-      <!-- Formation -->
-      <UiCard :title="$t('onboarding.verification.formation')">
-        <div class="flex flex-col gap-3">
-          <div
-            v-for="(f, i) in form.formations"
-            :key="i"
-            class="relative grid grid-cols-1 gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 pr-10 sm:grid-cols-2"
-          >
-            <button
-              type="button"
-              class="absolute right-3 top-3 text-gray-400 hover:text-danger"
-              :aria-label="$t('onboarding.verification.remove')"
-              @click="removeFormation(i)"
-            >
-              ✕
-            </button>
-            <UiInput v-model="f.title" :label="$t('onboarding.verification.formation_title')" />
+      <div class="flex flex-col gap-5">
+        <!-- Informations personnelles -->
+        <UiCard :title="$t('onboarding.verification.personal_info')">
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <UiInput v-model="form.first_name" :label="$t('onboarding.verification.first_name')" />
+            <UiInput v-model="form.last_name" :label="$t('onboarding.verification.last_name')" />
             <UiInput
-              v-model="f.school_period"
-              :label="$t('onboarding.verification.formation_school_period')"
+              v-model="form.email"
+              type="email"
+              :label="$t('onboarding.verification.email')"
             />
           </div>
-        </div>
-        <UiButton variant="secondary" size="sm" class="mt-4" type="button" @click="addFormation">
-          {{ $t('onboarding.verification.add_formation') }}
-        </UiButton>
-      </UiCard>
+        </UiCard>
 
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <!-- Langues -->
-        <UiCard :title="$t('onboarding.verification.languages')">
-          <div class="flex flex-col gap-3">
+        <!-- Expérience -->
+        <UiCard :title="$t('onboarding.verification.experience')">
+          <UiInput
+            v-model="form.total_experience"
+            :label="$t('onboarding.verification.total_experience')"
+            class="mb-5"
+          />
+
+          <div class="flex flex-col gap-4">
             <div
-              v-for="(lang, i) in form.languages"
+              v-for="(exp, i) in form.experiences"
               :key="i"
-              class="relative flex items-end gap-2 rounded-lg border border-gray-100 bg-gray-50 p-3 pr-9"
+              class="relative rounded-lg border border-gray-100 bg-gray-50 p-4"
             >
               <button
                 type="button"
-                class="absolute right-2 top-2 text-gray-400 hover:text-danger"
+                class="absolute right-3 top-3 text-gray-400 hover:text-danger"
                 :aria-label="$t('onboarding.verification.remove')"
-                @click="removeLanguage(i)"
+                @click="removeExperience(i)"
               >
                 ✕
               </button>
-              <UiInput v-model="lang.name" :label="$t('onboarding.verification.language_name')" />
-              <UiSelect
-                v-model="lang.level"
-                :label="$t('onboarding.verification.language_level')"
-                :options="LANGUAGE_LEVELS"
+              <div class="mb-3 grid grid-cols-1 gap-3 pr-6 sm:grid-cols-2">
+                <UiInput v-model="exp.title" :label="$t('onboarding.verification.job_title')" />
+                <UiInput v-model="exp.company" :label="$t('onboarding.verification.company')" />
+                <UiInput
+                  v-model="exp.period"
+                  :label="$t('onboarding.verification.period')"
+                  class="sm:col-span-2"
+                />
+              </div>
+              <UiTextarea
+                v-model="exp.description"
+                :label="$t('onboarding.verification.description')"
+                :rows="3"
+                class="mb-3"
               />
+              <div>
+                <p class="mb-1.5 text-sm font-semibold text-gray-900">
+                  {{ $t('onboarding.verification.tools') }}
+                </p>
+                <OnboardingTagInput
+                  v-model="exp.tools"
+                  :add-label="$t('onboarding.verification.add_tool')"
+                />
+              </div>
             </div>
           </div>
-          <UiButton variant="secondary" size="sm" class="mt-4" type="button" @click="addLanguage">
-            {{ $t('onboarding.verification.add_language') }}
+
+          <UiButton variant="secondary" size="sm" class="mt-4" type="button" @click="addExperience">
+            {{ $t('onboarding.verification.add_experience') }}
           </UiButton>
         </UiCard>
 
-        <!-- Certifications -->
-        <UiCard :title="$t('onboarding.verification.certifications')">
+        <!-- Compétences -->
+        <UiCard :title="$t('onboarding.verification.skills')">
+          <OnboardingTagInput
+            v-model="form.skills"
+            :add-label="$t('onboarding.verification.add_tool')"
+          />
+        </UiCard>
+
+        <!-- Formation -->
+        <UiCard :title="$t('onboarding.verification.formation')">
           <div class="flex flex-col gap-3">
             <div
-              v-for="(cert, i) in form.certifications"
+              v-for="(f, i) in form.formations"
               :key="i"
-              class="relative rounded-lg border border-gray-100 bg-gray-50 p-3 pr-9"
+              class="relative grid grid-cols-1 gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 pr-10 sm:grid-cols-2"
             >
               <button
                 type="button"
-                class="absolute right-2 top-2 text-gray-400 hover:text-danger"
+                class="absolute right-3 top-3 text-gray-400 hover:text-danger"
                 :aria-label="$t('onboarding.verification.remove')"
-                @click="removeCertification(i)"
+                @click="removeFormation(i)"
               >
                 ✕
               </button>
+              <UiInput v-model="f.title" :label="$t('onboarding.verification.formation_title')" />
               <UiInput
-                v-model="cert.title"
-                :label="$t('onboarding.verification.certification_title')"
-                class="mb-2"
-              />
-              <UiInput
-                v-model="cert.issuer_period"
-                :label="$t('onboarding.verification.certification_issuer_period')"
+                v-model="f.school_period"
+                :label="$t('onboarding.verification.formation_school_period')"
               />
             </div>
           </div>
-          <UiButton
-            variant="secondary"
-            size="sm"
-            class="mt-4"
-            type="button"
-            @click="addCertification"
-          >
-            {{ $t('onboarding.verification.add_certification') }}
+          <UiButton variant="secondary" size="sm" class="mt-4" type="button" @click="addFormation">
+            {{ $t('onboarding.verification.add_formation') }}
           </UiButton>
+        </UiCard>
+
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <!-- Langues -->
+          <UiCard :title="$t('onboarding.verification.languages')">
+            <div class="flex flex-col gap-3">
+              <div
+                v-for="(lang, i) in form.languages"
+                :key="i"
+                class="relative flex items-end gap-2 rounded-lg border border-gray-100 bg-gray-50 p-3 pr-9"
+              >
+                <button
+                  type="button"
+                  class="absolute right-2 top-2 text-gray-400 hover:text-danger"
+                  :aria-label="$t('onboarding.verification.remove')"
+                  @click="removeLanguage(i)"
+                >
+                  ✕
+                </button>
+                <UiInput v-model="lang.name" :label="$t('onboarding.verification.language_name')" />
+                <UiSelect
+                  v-model="lang.level"
+                  :label="$t('onboarding.verification.language_level')"
+                  :options="LANGUAGE_LEVELS"
+                />
+              </div>
+            </div>
+            <UiButton variant="secondary" size="sm" class="mt-4" type="button" @click="addLanguage">
+              {{ $t('onboarding.verification.add_language') }}
+            </UiButton>
+          </UiCard>
+
+          <!-- Certifications -->
+          <UiCard :title="$t('onboarding.verification.certifications')">
+            <div class="flex flex-col gap-3">
+              <div
+                v-for="(cert, i) in form.certifications"
+                :key="i"
+                class="relative rounded-lg border border-gray-100 bg-gray-50 p-3 pr-9"
+              >
+                <button
+                  type="button"
+                  class="absolute right-2 top-2 text-gray-400 hover:text-danger"
+                  :aria-label="$t('onboarding.verification.remove')"
+                  @click="removeCertification(i)"
+                >
+                  ✕
+                </button>
+                <UiInput
+                  v-model="cert.title"
+                  :label="$t('onboarding.verification.certification_title')"
+                  class="mb-2"
+                />
+                <UiInput
+                  v-model="cert.issuer_period"
+                  :label="$t('onboarding.verification.certification_issuer_period')"
+                />
+              </div>
+            </div>
+            <UiButton
+              variant="secondary"
+              size="sm"
+              class="mt-4"
+              type="button"
+              @click="addCertification"
+            >
+              {{ $t('onboarding.verification.add_certification') }}
+            </UiButton>
+          </UiCard>
+        </div>
+
+        <!-- Localisation -->
+        <UiCard>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <UiInput v-model="form.location" :label="$t('onboarding.verification.location')" />
+            <UiInput
+              v-model="form.availability"
+              :label="$t('onboarding.verification.availability')"
+            />
+          </div>
         </UiCard>
       </div>
-
-      <!-- Localisation -->
-      <UiCard>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <UiInput v-model="form.location" :label="$t('onboarding.verification.location')" />
-          <UiInput
-            v-model="form.availability"
-            :label="$t('onboarding.verification.availability')"
-          />
-        </div>
-      </UiCard>
     </div>
-  </div>
 
     <template #actions>
       <UiButton

@@ -171,18 +171,18 @@
   },
   "dashboard": {
     "greeting": "Hi {name}",
-    "greeting_sub": "Here are the best opportunities we found for you today.",
+    "greeting_sub": "Your profile is being analyzed — your first matches are on their way.",
     "alerts": "Enable alerts",
     "your_search": "Your search:",
     "edit": "Edit",
     "top_title": "Top opportunities for you",
-    "top_sub": "Offers ranked by fit with your profile · Updated today at 06:12",
+    "top_sub": "Offers ranked by compatibility with your profile.",
     "fit_strong": "Very strong fit",
     "fit_good": "Strong fit",
     "reject": "Reject this offer",
     "see_all": "See all opportunities",
     "offer_hidden": "Offer hidden",
-    "empty": "No opportunities yet."
+    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you."
   },
   "profile": {
     "subtitle": "Your personal information, used for matching.",
