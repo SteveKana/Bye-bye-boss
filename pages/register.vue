@@ -41,6 +41,7 @@ const onSubmit = handleSubmit(async (values) => {
       locale: locale.value,
     })
     registeredEmail.value = values.email
+    await navigateTo('/onboarding/upload')
   } catch (err) {
     toast.error(
       err?.code === 'conflict' ? t('register.email_taken') : err?.message || t('register.error')

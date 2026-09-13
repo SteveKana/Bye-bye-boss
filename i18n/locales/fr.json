@@ -131,6 +131,25 @@
       },
       "proof_title": "Rejoignez déjà plus de 25k utilisateurs",
       "proof_sub": "qui ont trouvé leur prochain poste"
+    },
+    "onboarding": {
+      "headline": "Un nouveau CV, de nouvelles",
+      "headline_accent": "opportunités à découvrir.",
+      "subtitle": "Importez votre CV à jour et notre IA réanalysera votre profil pour affiner vos correspondances.",
+      "features": {
+        "extract": {
+          "title": "Extraction intelligente",
+          "text": "Notre IA détecte automatiquement vos compétences, expériences et formations."
+        },
+        "verify": {
+          "title": "Vérification simple",
+          "text": "Vous pourrez corriger les informations avant de valider."
+        },
+        "match": {
+          "title": "Un matching à jour",
+          "text": "Vos opportunités sont recalculées à partir de votre profil le plus récent."
+        }
+      }
     }
   },
   "lang": {
@@ -313,6 +332,102 @@
       "legal": "Mentions légales",
       "privacy": "Confidentialité",
       "contact": "Contact"
+    }
+  },
+  "onboarding": {
+    "steps": {
+      "upload": "Import CV",
+      "verification": "Vérification",
+      "preferences": "Préférences"
+    },
+    "upload": {
+      "title": "Importez votre CV",
+      "subtitle": "Formats acceptés : PDF, DOCX. 5 Mo maximum.",
+      "dropzone_title": "Glissez-déposez votre CV ici",
+      "browse": "Parcourir mes fichiers",
+      "hint": "PDF ou Word, 5 Mo maximum",
+      "remove": "Retirer le fichier",
+      "analyzing": "Analyse de votre CV en cours…",
+      "cancel": "Annuler",
+      "continue": "Continuer",
+      "error_required": "Merci d'importer un CV avant de continuer.",
+      "error_unsupported": "Ce format n'est pas supporté. Utilisez un PDF ou un DOCX.",
+      "error_too_large": "Le fichier dépasse 5 Mo.",
+      "error_generic": "L'import du CV a échoué. Merci de réessayer."
+    },
+    "verification": {
+      "title": "Vérifiez les informations extraites",
+      "subtitle": "Nous avons extrait les informations suivantes depuis votre CV. Corrigez si besoin.",
+      "personal_info": "Informations personnelles",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "email": "Email",
+      "experience": "Expérience",
+      "total_experience": "Expérience totale",
+      "add_experience": "+ Ajouter une expérience",
+      "job_title": "Intitulé du poste",
+      "company": "Entreprise",
+      "period": "Période",
+      "description": "Description",
+      "tools": "Compétences & outils utilisés",
+      "add_tool": "+ Ajouter",
+      "remove": "Supprimer",
+      "skills": "Compétences",
+      "formation": "Formation",
+      "add_formation": "+ Ajouter une formation",
+      "formation_title": "Intitulé du diplôme",
+      "formation_school_period": "École • Période",
+      "languages": "Langues",
+      "add_language": "+ Ajouter une langue",
+      "language_name": "Langue",
+      "language_level": "Niveau",
+      "certifications": "Certifications",
+      "add_certification": "+ Ajouter une certification",
+      "certification_title": "Intitulé",
+      "certification_issuer_period": "Organisme • Année",
+      "location": "Localisation",
+      "availability": "Disponibilité",
+      "previous": "Précédent",
+      "continue": "Continuer",
+      "error_generic": "La mise à jour du profil a échoué. Merci de réessayer."
+    },
+    "preferences": {
+      "title": "Vos préférences",
+      "subtitle": "Ces critères affinent vos correspondances d'offres. Modifiables à tout moment.",
+      "contract_type_title": "Type de contrat",
+      "contract_type_subtitle": "Le type de contrat que vous recherchez",
+      "multi_choice": "Plusieurs choix possibles",
+      "remote_title": "Télétravail souhaité",
+      "remote_subtitle": "Votre préférence de travail à distance",
+      "mobility_title": "Mobilité géographique",
+      "mobility_subtitle": "La zone géographique où vous souhaitez travailler",
+      "single_choice": "Un seul choix — « France entière » couvre déjà toutes les zones",
+      "salary_title": "Salaire cible (facultatif)",
+      "salary_subtitle": "Votre salaire brut annuel souhaité",
+      "salary_placeholder": "Ex : 55000",
+      "salary_suffix": "€ brut / an",
+      "salary_hint": "Vous pourrez le modifier à tout moment",
+      "note": "Pas d'inquiétude, vous pourrez modifier toutes ces préférences à tout moment depuis votre profil.",
+      "previous": "Précédent",
+      "continue": "Continuer",
+      "error_required": "Veuillez sélectionner au moins une option pour chaque catégorie obligatoire.",
+      "error_generic": "L'enregistrement de vos préférences a échoué. Merci de réessayer."
+    },
+    "contract_types": {
+      "CDI": "CDI",
+      "CDD": "CDD",
+      "Freelance": "Freelance",
+      "Intérim": "Intérim"
+    },
+    "remote_options": {
+      "Sur site": "Sur site",
+      "Hybride": "Hybride",
+      "Full remote": "Full remote"
+    },
+    "mobility_options": {
+      "France entière": "France entière",
+      "Région uniquement": "Région uniquement",
+      "Ville uniquement": "Ville uniquement"
     }
   }
 }
