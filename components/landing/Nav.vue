@@ -1,16 +1,11 @@
 <script setup>
+// Only links to sections that actually exist on the page (Why, Comparison) --
+// the mockup's own nav has placeholder links (Tarifs, Ressources) with no
+// real destination, which we don't want to ship as dead links.
 const links = [
-  { href: '#comment', key: 'landing.nav.how' },
-  { href: '#fonctionnalites', key: 'landing.nav.features' },
-  { href: '#apercu', key: 'landing.nav.preview' },
-  { href: '#faq', key: 'landing.nav.faq' },
+  { href: '#pourquoi', key: 'landing.nav.why' },
+  { href: '#comparatif', key: 'landing.nav.comparison' },
 ]
-
-const { scrollToElement } = useScrollTo()
-
-function goToWaitlist() {
-  scrollToElement('waitlist-email', { focus: true })
-}
 </script>
 
 <template>
@@ -34,7 +29,13 @@ function goToWaitlist() {
 
     <div class="flex items-center gap-3">
       <UiLangSwitcher />
-      <UiButton variant="primary" size="sm" class="hidden sm:inline-flex" @click="goToWaitlist">
+      <NuxtLink
+        to="/login"
+        class="hidden text-sm font-semibold text-gray-600 hover:text-brand sm:inline"
+      >
+        {{ $t('landing.nav.login') }}
+      </NuxtLink>
+      <UiButton variant="primary" size="sm" @click="navigateTo('/register')">
         {{ $t('landing.nav.cta') }}
       </UiButton>
     </div>

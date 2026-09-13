@@ -203,26 +203,42 @@
   },
   "landing": {
     "nav": {
-      "how": "How it works",
-      "features": "Features",
-      "preview": "Preview",
-      "faq": "FAQ",
-      "cta": "Join the waitlist"
+      "cta": "Import my CV",
+      "why": "Why Bye Bye Boss",
+      "comparison": "Comparison",
+      "login": "Log in"
     },
     "hero": {
-      "badge": "Coming soon — sign up to be notified at launch",
-      "title": "Stop searching for job offers.",
-      "title_accent": "And offers come to you.",
-      "sub": "Bye Bye Boss is under development. At launch: upload your resume once, our AI analyses your profile, explores thousands of offers and sends you a 100% relevant selection every day. Leave your email to be notified when we open.",
-      "social_proof": "850+ people already on the waitlist",
-      "press_label": "Soon featured on",
-      "preview_badge": "Preview of the future product",
-      "annotation": "Every night, get the best opportunities for you.",
-      "dash_greeting": "Hi Thomas 👋",
-      "dash_meta": "Top opportunities ranked by fit with your profile",
-      "dash_link": "See all offers →",
-      "compat_high": "Very strong fit",
-      "compat_good": "Strong fit"
+      "badge": "AI-powered career decisions",
+      "title": "Find the jobs that truly fit you.",
+      "title_accent": "Skip the ones you'd regret.",
+      "sub": "We analyze hundreds of job postings and thousands of employee reviews to show you your odds… and the risk of regretting this role after accepting it.",
+      "cta_primary": "Import my CV",
+      "cta_primary_note": "Free & secure",
+      "cta_secondary": "See an example",
+      "trust_1": "Analysis in 2 minutes",
+      "trust_2": "100% confidential",
+      "trust_3": "No credit card",
+      "preview_label": "Example analysis",
+      "preview_offer_title": "Product Owner",
+      "preview_offer_meta": "SaaS · Paris",
+      "preview_view_link": "View offer ↗",
+      "preview_badge": "Good opportunity",
+      "ats_label": "ATS Score",
+      "ats_sub": "Good ATS compatibility",
+      "career_label": "Career Score",
+      "career_sub": "Strong growth potential",
+      "potential_label": "ATS Potential",
+      "potential_sub": "+18 points possible with a few tweaks",
+      "regret_label": "12-month regret index",
+      "regret_badge": "High",
+      "regret_sub": "High risk of regret based on employee feedback",
+      "why_regret_title": "Why this regret index?",
+      "why_regret_1": "Management often criticized on Reddit (micro-management)",
+      "why_regret_2": "Few internal growth opportunities",
+      "why_regret_3": "High turnover in the Product team",
+      "why_regret_4": "Gap between the job posting's promises and reality",
+      "see_more": "See the full analysis and recommendations →"
     },
     "waitlist": {
       "placeholder": "Your email address",
@@ -296,7 +312,7 @@
         "career": "Career fit",
         "potential": "ATS Potential (improvement headroom)",
         "cv": "Resume auto-tailored to the offer",
-        "regret": "6-month regret index (employee & ex-employee reviews)",
+        "regret": "12-month regret index (employee & former-employee reviews)",
         "advice": "Personalised optimisation tips"
       }
     },
@@ -315,23 +331,36 @@
       "ats_potential": "Potential ATS",
       "ats_btn": "Improvements suggested automatically",
       "regret_title": "Don't miss out… or miss yourself.",
-      "regret_sub": "Our regret index will be based on real reviews from employees and ex-employees.",
+      "regret_sub": "Our regret index is based on real reviews from employees and former employees.",
       "regret_level": "Regret risk:",
       "regret_high": "HIGH",
       "regret_desc": "Many negative reports about management, turnover and internal growth.",
       "regret_source": "Data collected via Reddit and analysed by our AI"
     },
     "cta": {
-      "badge": "WAITLIST",
-      "title": "Everyone on the list gets",
-      "title_strong": "priority access at launch.",
-      "title_end": "Get in before everyone else."
+      "title": "Discover the offers worth your time.",
+      "title2": "Skip the ones you might regret.",
+      "sub": "Import your CV and let our AI analyze hundreds of job postings and thousands of reviews for you.",
+      "button": "Import my CV for free",
+      "trust_1": "100% confidential",
+      "trust_2": "Your data is never shared",
+      "trust_3": "Delete your account anytime"
     },
     "footer": {
       "copy": "© 2026 Bye Bye Boss – All rights reserved.",
       "legal": "Legal notice",
       "privacy": "Privacy",
       "contact": "Contact"
+    },
+    "social": {
+      "stat1_num": "2,384",
+      "stat1_label": "CVs analyzed",
+      "stat2_num": "96%",
+      "stat2_label": "of users discovered relevant opportunities",
+      "stat3_num": "+3.7×",
+      "stat3_label": "more interviews obtained on average",
+      "stat4_num": "↻",
+      "stat4_label": "Jobs and reviews updated daily"
     }
   },
   "onboarding": {

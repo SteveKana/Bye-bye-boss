@@ -15,10 +15,9 @@ useHead({
     <LandingNav />
     <LandingHero />
     <LandingWhy />
-    <LandingHow />
-    <LandingFeatures />
     <LandingComparison />
     <LandingStats />
+    <LandingSocial />
     <LandingCta />
     <LandingFooter />
   </div>
