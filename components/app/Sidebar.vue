@@ -11,7 +11,7 @@ const items = [
   { key: 'app.nav.applications', icon: 'file', disabled: true },
   { divider: true },
   { key: 'app.nav.profile', to: '/profile', icon: 'user' },
-  { key: 'app.nav.settings', icon: 'gear', disabled: true },
+  { key: 'app.nav.settings', to: '/settings', icon: 'gear' },
 ]
 
 async function logout() {
