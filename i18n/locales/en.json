@@ -458,5 +458,46 @@
       "Région uniquement": "Region only",
       "Ville uniquement": "City only"
     }
+  },
+  "profileCv": {
+    "title": "Profile",
+    "subtitle": "Your personal information and CV, as used for matching.",
+    "email": "Email",
+    "location": "Location",
+    "availability": "Availability",
+    "your_cv": "Your CV",
+    "download": "Download",
+    "reupload": "Import a new CV",
+    "analyzing": "Analyzing {filename}… you'll be redirected to verification.",
+    "last_update": "Last update",
+    "total_experience": "Total experience",
+    "edit_fields": "Or edit the existing fields directly",
+    "updated_today": "Today",
+    "updated_yesterday": "Yesterday",
+    "updated_days": "{days} days ago",
+    "saved": "Saved",
+    "save_error": "The update failed. Please try again.",
+    "upload_error": "Importing the CV failed. Please try again."
+  },
+  "settings": {
+    "subtitle": "Subscription, notifications, and account information.",
+    "subscription": "Subscription",
+    "subscription_sub": "CV rescoring is limited to once every rolling 24h on the free plan.",
+    "plan_free": "Free plan",
+    "current_plan": "Current plan",
+    "plan_detail": "Manual CV rescoring limited to once / 24h",
+    "upgrade": "Go Premium",
+    "notifications": "Notifications",
+    "notifications_sub": "Get alerted when a new job matches your profile well.",
+    "alerts_label": "New opportunity alerts",
+    "alerts_sub": "Get notified when a high-compatibility offer is detected.",
+    "channel_label": "Channel",
+    "channel_sub": "Where to receive these alerts.",
+    "channel_email": "Email",
+    "frequency_label": "Frequency",
+    "frequency_sub": "How often to group alerts.",
+    "frequency_daily": "Daily digest",
+    "account": "Account",
+    "delete_account": "Delete my account"
   }
 }

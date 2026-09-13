@@ -458,5 +458,46 @@
       "Région uniquement": "Région uniquement",
       "Ville uniquement": "Ville uniquement"
     }
+  },
+  "profileCv": {
+    "title": "Profil",
+    "subtitle": "Vos informations personnelles et votre CV, tels qu'utilisés pour le matching.",
+    "email": "Email",
+    "location": "Localisation",
+    "availability": "Disponibilité",
+    "your_cv": "Votre CV",
+    "download": "Télécharger",
+    "reupload": "Importer un nouveau CV",
+    "analyzing": "Analyse de {filename} en cours… vous allez être redirigé vers la vérification.",
+    "last_update": "Dernière mise à jour",
+    "total_experience": "Expérience totale",
+    "edit_fields": "Ou modifier directement les champs existants",
+    "updated_today": "Aujourd'hui",
+    "updated_yesterday": "Hier",
+    "updated_days": "Il y a {days} jours",
+    "saved": "Enregistré",
+    "save_error": "La mise à jour a échoué. Merci de réessayer.",
+    "upload_error": "L'import du CV a échoué. Merci de réessayer."
+  },
+  "settings": {
+    "subtitle": "Abonnement, notifications et informations de compte.",
+    "subscription": "Abonnement",
+    "subscription_sub": "Le rescoring de votre CV est limité à 1 fois toutes les 24h glissantes en formule gratuite.",
+    "plan_free": "Formule Gratuite",
+    "current_plan": "Plan actuel",
+    "plan_detail": "Rescoring manuel du CV limité à 1 fois / 24h",
+    "upgrade": "Passer Premium",
+    "notifications": "Notifications",
+    "notifications_sub": "Soyez alerté quand une nouvelle offre correspond bien à votre profil.",
+    "alerts_label": "Alertes nouvelles opportunités",
+    "alerts_sub": "Recevoir une notification quand une offre à forte compatibilité est détectée.",
+    "channel_label": "Canal",
+    "channel_sub": "Où recevoir ces alertes.",
+    "channel_email": "E-mail",
+    "frequency_label": "Fréquence",
+    "frequency_sub": "À quelle cadence regrouper les alertes.",
+    "frequency_daily": "Résumé quotidien",
+    "account": "Compte",
+    "delete_account": "Supprimer mon compte"
   }
 }
