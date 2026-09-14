@@ -2,6 +2,11 @@
 // Free, no-key French government API for commune lookup -- a good fit since
 // the product targets the French market exclusively. Debounced client-side
 // fetch; no backend involvement needed.
+//
+// Only a value picked from the suggestion list can be committed -- typing
+// free text that doesn't match a real commune (e.g. a typo) reverts to the
+// last valid value on blur, rather than silently saving a place that
+// doesn't exist.
 const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: '' },
@@ -24,7 +29,7 @@ async function search(term) {
     return
   }
   try {
-    const url = `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=6`
+    const url = `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=8`
     const res = await fetch(url)
     if (!res.ok) throw new Error('geo api error')
     const data = await res.json()
@@ -33,8 +38,9 @@ async function search(term) {
       postal: c.codesPostaux?.[0] || '',
     }))
   } catch {
-    // Network hiccup or the public API being down shouldn't block typing --
-    // the field still works as free text, just without suggestions.
+    // Network hiccup or the public API being down -- suggestions stay
+    // empty, and the blur-revert rule below still protects against saving
+    // an unverified place name.
     suggestions.value = []
   }
 }
@@ -42,7 +48,6 @@ async function search(term) {
 function onInput(event) {
   const value = event.target.value
   query.value = value
-  emit('update:modelValue', value)
   open.value = true
   clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => search(value), 250)
@@ -60,13 +65,21 @@ function onBlur() {
   // Slight delay so a click on a suggestion registers before the list closes.
   setTimeout(() => {
     open.value = false
-    if (query.value !== props.modelValue) emit('commit', query.value)
+    // Anything other than clearing the field or the value already saved
+    // isn't a real, chosen commune -- discard it instead of persisting a
+    // typo like "Pari".
+    if (query.value !== props.modelValue && query.value.trim() !== '') {
+      query.value = props.modelValue
+    } else if (query.value.trim() === '' && props.modelValue) {
+      emit('update:modelValue', '')
+      emit('commit', '')
+    }
   }, 150)
 }
 </script>
 
 <template>
-  <div class="relative">
+  <div class="relative max-w-xs">
     <input
       type="text"
       :value="query"
