@@ -10,6 +10,7 @@ const loading = ref(true)
 const reuploading = ref(false)
 const reuploadFilename = ref('')
 const fileInput = ref(null)
+const editingAvailability = ref(false)
 
 const profile = computed(() => onboarding.profile)
 
@@ -33,8 +34,18 @@ const updatedAgo = computed(() => {
   return t('profileCv.updated_days', { days })
 })
 
-const visibleSkills = computed(() => profile.value?.skills?.slice(0, 5) || [])
-const extraSkillsCount = computed(() => Math.max(0, (profile.value?.skills?.length || 0) - 5))
+const availabilityLabel = computed(() => {
+  if (!profile.value) return ''
+  const status = profile.value.availability_status || 'immediate'
+  if (status === 'date' && profile.value.availability_date) {
+    const formatted = new Date(profile.value.availability_date).toLocaleDateString('fr-FR')
+    return t('availability.display.date', { date: formatted })
+  }
+  if (status === 'notice') {
+    return t('availability.display.notice', { months: profile.value.notice_period_months })
+  }
+  return t(`availability.display.${status}`)
+})
 
 onMounted(async () => {
   try {
@@ -52,6 +63,19 @@ onMounted(async () => {
 async function saveField(field, value) {
   try {
     await onboarding.updateProfile({ [field]: value })
+    toast.success(t('profileCv.saved'))
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.save_error'))
+  }
+}
+
+async function saveAvailability({ status, date, noticeMonths }) {
+  try {
+    await onboarding.updateProfile({
+      availability_status: status,
+      availability_date: date,
+      notice_period_months: noticeMonths,
+    })
     toast.success(t('profileCv.saved'))
   } catch (err) {
     toast.error(err?.message || t('profileCv.save_error'))
@@ -114,22 +138,44 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
         </div>
       </div>
 
-      <div class="mt-4 grid gap-4 sm:grid-cols-3">
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
         <ProfileEditableField
           :label="$t('profileCv.email')"
           :model-value="profile.email || ''"
           @commit="(v) => saveField('email', v)"
         />
-        <ProfileEditableField
-          :label="$t('profileCv.location')"
-          :model-value="profile.location || ''"
-          @commit="(v) => saveField('location', v)"
+        <div>
+          <div class="mb-1 text-[11px] text-gray-400">{{ $t('profileCv.location') }}</div>
+          <ProfileCityAutocomplete
+            :model-value="profile.location || ''"
+            @commit="(v) => saveField('location', v)"
+          />
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="mb-1 text-[11px] text-gray-400">{{ $t('profileCv.availability') }}</div>
+        <ProfileAvailabilityField
+          v-if="editingAvailability"
+          :status="profile.availability_status"
+          :date="profile.availability_date"
+          :notice-months="profile.notice_period_months"
+          @commit="saveAvailability"
         />
-        <ProfileEditableField
-          :label="$t('profileCv.availability')"
-          :model-value="profile.availability || ''"
-          @commit="(v) => saveField('availability', v)"
-        />
+        <span
+          v-else
+          class="inline-flex cursor-pointer items-center gap-1.5 text-[13.5px] font-semibold text-gray-900"
+          @click="editingAvailability = true"
+        >
+          {{ availabilityLabel }}
+          <button
+            type="button"
+            class="flex h-5 w-5 items-center justify-center rounded text-gray-300 hover:bg-brand-light hover:text-brand"
+            :aria-label="$t('profileCv.edit_fields')"
+          >
+            ✎
+          </button>
+        </span>
       </div>
     </UiCard>
 
@@ -139,7 +185,7 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
         <h2 class="text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
         <div class="flex gap-2.5">
           <UiButton variant="secondary" size="sm" @click="downloadSoon">
-            ⬇ {{ $t('profileCv.download') }}
+            ⬇ {{ $t('profileCv.download_full') }}
           </UiButton>
           <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
             ⬆ {{ $t('profileCv.reupload') }}
@@ -169,19 +215,13 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
         </div>
       </div>
 
-      <div v-if="visibleSkills.length" class="flex flex-wrap gap-2">
+      <div v-if="profile.skills?.length" class="flex flex-wrap gap-2">
         <span
-          v-for="s in visibleSkills"
+          v-for="s in profile.skills"
           :key="s"
           class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
         >
           {{ s }}
-        </span>
-        <span
-          v-if="extraSkillsCount"
-          class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500"
-        >
-          +{{ extraSkillsCount }}
         </span>
       </div>
 

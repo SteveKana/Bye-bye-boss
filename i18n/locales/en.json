@@ -477,7 +477,8 @@
     "updated_days": "{days} days ago",
     "saved": "Saved",
     "save_error": "The update failed. Please try again.",
-    "upload_error": "Importing the CV failed. Please try again."
+    "upload_error": "Importing the CV failed. Please try again.",
+    "download_full": "Download your CV"
   },
   "settings": {
     "subtitle": "Subscription, notifications, and account information.",
@@ -499,5 +500,22 @@
     "frequency_daily": "Daily digest",
     "account": "Account",
     "delete_account": "Delete my account"
+  },
+  "availability": {
+    "opt_immediate": "Immediately",
+    "opt_date": "Starting on",
+    "opt_notice": "Currently employed (notice period of)",
+    "opt_unavailable": "Not available",
+    "months": "{count} month(s)",
+    "info_immediate": "You're available immediately.",
+    "info_date": "You're available starting on {date}.",
+    "info_notice": "You're currently employed, with a {months}-month notice period.",
+    "info_unavailable": "You're not available at the moment.",
+    "display": {
+      "immediate": "Available immediately",
+      "date": "Available from {date}",
+      "notice": "Currently employed ({months}-month notice)",
+      "unavailable": "Not available"
+    }
   }
 }

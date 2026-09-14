@@ -477,7 +477,8 @@
     "updated_days": "Il y a {days} jours",
     "saved": "Enregistré",
     "save_error": "La mise à jour a échoué. Merci de réessayer.",
-    "upload_error": "L'import du CV a échoué. Merci de réessayer."
+    "upload_error": "L'import du CV a échoué. Merci de réessayer.",
+    "download_full": "Télécharger votre CV"
   },
   "settings": {
     "subtitle": "Abonnement, notifications et informations de compte.",
@@ -499,5 +500,22 @@
     "frequency_daily": "Résumé quotidien",
     "account": "Compte",
     "delete_account": "Supprimer mon compte"
+  },
+  "availability": {
+    "opt_immediate": "Immédiatement",
+    "opt_date": "À partir du",
+    "opt_notice": "En poste (avec préavis de)",
+    "opt_unavailable": "Non disponible",
+    "months": "{count} mois",
+    "info_immediate": "Vous êtes disponible immédiatement.",
+    "info_date": "Vous êtes disponible à partir du {date}.",
+    "info_notice": "Vous êtes actuellement en poste, avec un préavis de {months} mois.",
+    "info_unavailable": "Vous n'êtes pas disponible pour le moment.",
+    "display": {
+      "immediate": "Disponible immédiatement",
+      "date": "Disponible à partir du {date}",
+      "notice": "En poste (préavis de {months} mois)",
+      "unavailable": "Non disponible"
+    }
   }
 }
