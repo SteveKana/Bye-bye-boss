@@ -61,12 +61,7 @@ function onNoticeChange(value) {
 <template>
   <div>
     <div class="flex flex-col gap-2.5">
-      <div
-        v-for="opt in OPTIONS"
-        :key="opt.value"
-        class="flex items-center gap-3 rounded-lg border-l-[3px] py-1.5 pl-2.5"
-        :class="status === opt.value ? 'border-brand' : 'border-transparent'"
-      >
+      <div v-for="opt in OPTIONS" :key="opt.value" class="flex items-center gap-3 py-1.5">
         <button
           type="button"
           role="radio"
