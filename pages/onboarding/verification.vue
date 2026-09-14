@@ -26,7 +26,9 @@ const form = reactive({
   last_name: '',
   email: '',
   location: '',
-  availability: '',
+  availability_status: 'immediate',
+  availability_date: null,
+  notice_period_months: null,
   total_experience: '',
   experiences: [],
   skills: [],
@@ -40,7 +42,9 @@ function applyProfile(profile) {
   form.last_name = profile.last_name || ''
   form.email = profile.email || ''
   form.location = profile.location || ''
-  form.availability = profile.availability || ''
+  form.availability_status = profile.availability_status || 'immediate'
+  form.availability_date = profile.availability_date || null
+  form.notice_period_months = profile.notice_period_months || null
   form.total_experience = profile.total_experience || ''
   form.experiences = (profile.experiences || []).map((e) => ({ ...e, tools: [...(e.tools || [])] }))
   form.skills = [...(profile.skills || [])]
@@ -284,11 +288,20 @@ async function onContinue() {
 
         <!-- Localisation -->
         <UiCard>
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <UiInput v-model="form.location" :label="$t('onboarding.verification.location')" />
-            <UiInput
-              v-model="form.availability"
-              :label="$t('onboarding.verification.availability')"
+          <div class="mb-4">
+            <label class="mb-1.5 block text-sm font-semibold text-gray-900">
+              {{ $t('onboarding.verification.location') }}
+            </label>
+            <ProfileCityAutocomplete v-model="form.location" />
+          </div>
+          <div>
+            <label class="mb-1.5 block text-sm font-semibold text-gray-900">
+              {{ $t('onboarding.verification.availability') }}
+            </label>
+            <ProfileAvailabilityField
+              v-model:status="form.availability_status"
+              v-model:date="form.availability_date"
+              v-model:notice-months="form.notice_period_months"
             />
           </div>
         </UiCard>
