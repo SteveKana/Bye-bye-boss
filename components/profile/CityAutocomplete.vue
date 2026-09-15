@@ -23,29 +23,63 @@ watch(
   (v) => (query.value = v)
 )
 
+// Paris, Lyon and Marseille are the only French cities split into
+// arrondissements. Fuzzy-searching arrondissements by name (as originally
+// tried) only surfaces whichever ones the API's relevance ranking deems
+// closest -- an incomplete, inconsistent list. Fetching the full,
+// deterministic set for the matching department (each department contains
+// only that city's arrondissements once filtered by type) and then
+// filtering by any number the user typed is both complete and reliable.
+// Cached per department so retyping doesn't refetch the same ~20 rows.
+const ARRONDISSEMENT_CITIES = { paris: '75', lyon: '69', marseille: '13' }
+const arrondissementCache = {}
+
+function matchArrondissementCity(term) {
+  const leading = term
+    .trim()
+    .toLowerCase()
+    .match(/^[a-zàâäéèêëïîôöùûüç-]+/)?.[0]
+  if (!leading) return null
+  return Object.keys(ARRONDISSEMENT_CITIES).find(
+    (city) => city.startsWith(leading) || leading.startsWith(city)
+  )
+}
+
+async function fetchArrondissements(cityKey) {
+  if (arrondissementCache[cityKey]) return arrondissementCache[cityKey]
+  const dept = ARRONDISSEMENT_CITIES[cityKey]
+  const res = await fetch(
+    `https://geo.api.gouv.fr/communes?type=arrondissement-municipal&codeDepartement=${dept}&fields=nom,codesPostaux`
+  )
+  const data = res.ok ? await res.json() : []
+  arrondissementCache[cityKey] = data
+  return data
+}
+
 async function search(term) {
   if (term.trim().length < 2) {
     suggestions.value = []
     return
   }
   try {
-    const params = `nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=8`
-    // Paris, Lyon and Marseille are split into arrondissements, which the
-    // API treats as a separate type -- fetched alongside the regular
-    // commune search so e.g. "Paris 15" resolves to a real match instead
-    // of just falling back to plain "Paris".
-    const [communes, arrondissements] = await Promise.all([
-      fetch(`https://geo.api.gouv.fr/communes?${params}`),
-      fetch(`https://geo.api.gouv.fr/communes?${params}&type=arrondissement-municipal`),
-    ])
-    if (!communes.ok) throw new Error('geo api error')
-    const communesData = await communes.json()
-    const arrondissementsData = arrondissements.ok ? await arrondissements.json() : []
+    const communesRes = await fetch(
+      `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=8`
+    )
+    if (!communesRes.ok) throw new Error('geo api error')
+    let results = await communesRes.json()
+
+    const cityKey = matchArrondissementCity(term)
+    if (cityKey) {
+      const number = term.match(/(\d+)/)?.[1]
+      const all = await fetchArrondissements(cityKey)
+      const filtered = number ? all.filter((c) => c.nom.toLowerCase().includes(number)) : all
+      results = [...results, ...filtered]
+    }
 
     const seen = new Set()
-    suggestions.value = [...communesData, ...arrondissementsData]
+    suggestions.value = results
       .filter((c) => (seen.has(c.nom) ? false : seen.add(c.nom)))
-      .slice(0, 8)
+      .slice(0, 20)
       .map((c) => ({ label: c.nom, postal: c.codesPostaux?.[0] || '' }))
   } catch {
     // Network hiccup or the public API being down -- suggestions stay
@@ -101,7 +135,7 @@ function onBlur() {
     />
     <ul
       v-if="open && suggestions.length"
-      class="absolute z-10 mt-1 w-full overflow-hidden rounded-md border border-gray-200 bg-white shadow-card"
+      class="absolute z-10 mt-1 max-h-64 w-full overflow-y-auto rounded-md border border-gray-200 bg-white shadow-card"
     >
       <li
         v-for="s in suggestions"
