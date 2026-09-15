@@ -29,14 +29,24 @@ async function search(term) {
     return
   }
   try {
-    const url = `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=8`
-    const res = await fetch(url)
-    if (!res.ok) throw new Error('geo api error')
-    const data = await res.json()
-    suggestions.value = data.map((c) => ({
-      label: c.nom,
-      postal: c.codesPostaux?.[0] || '',
-    }))
+    const params = `nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=8`
+    // Paris, Lyon and Marseille are split into arrondissements, which the
+    // API treats as a separate type -- fetched alongside the regular
+    // commune search so e.g. "Paris 15" resolves to a real match instead
+    // of just falling back to plain "Paris".
+    const [communes, arrondissements] = await Promise.all([
+      fetch(`https://geo.api.gouv.fr/communes?${params}`),
+      fetch(`https://geo.api.gouv.fr/communes?${params}&type=arrondissement-municipal`),
+    ])
+    if (!communes.ok) throw new Error('geo api error')
+    const communesData = await communes.json()
+    const arrondissementsData = arrondissements.ok ? await arrondissements.json() : []
+
+    const seen = new Set()
+    suggestions.value = [...communesData, ...arrondissementsData]
+      .filter((c) => (seen.has(c.nom) ? false : seen.add(c.nom)))
+      .slice(0, 8)
+      .map((c) => ({ label: c.nom, postal: c.codesPostaux?.[0] || '' }))
   } catch {
     // Network hiccup or the public API being down -- suggestions stay
     // empty, and the blur-revert rule below still protects against saving
