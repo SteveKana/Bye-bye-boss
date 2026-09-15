@@ -516,6 +516,9 @@
       "date": "Disponible à partir du {date}",
       "notice": "En poste (préavis de {months} mois)",
       "unavailable": "Non disponible"
-    }
+    },
+    "info_date_pending": "Choisissez une date pour continuer.",
+    "info_notice_pending": "Choisissez la durée de votre préavis pour continuer.",
+    "months_placeholder": "Choisir…"
   }
 }
