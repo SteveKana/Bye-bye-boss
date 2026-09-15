@@ -418,7 +418,8 @@
       "availability": "Availability",
       "previous": "Previous",
       "continue": "Continue",
-      "error_generic": "Updating the profile failed. Please try again."
+      "error_generic": "Updating the profile failed. Please try again.",
+      "headline": "Headline / current title"
     },
     "preferences": {
       "title": "Your preferences",

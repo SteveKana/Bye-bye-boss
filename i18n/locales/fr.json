@@ -418,7 +418,8 @@
       "availability": "Disponibilité",
       "previous": "Précédent",
       "continue": "Continuer",
-      "error_generic": "La mise à jour du profil a échoué. Merci de réessayer."
+      "error_generic": "La mise à jour du profil a échoué. Merci de réessayer.",
+      "headline": "Titre / poste actuel"
     },
     "preferences": {
       "title": "Vos préférences",
