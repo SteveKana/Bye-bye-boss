@@ -14,12 +14,6 @@ const editingAvailability = ref(false)
 
 const profile = computed(() => onboarding.profile)
 
-// The role shown under the name has no dedicated field in the data model --
-// it's read from the most recent experience (CVs list jobs most-recent-first),
-// and shown plainly rather than as an editable field, since there is nothing
-// to persist an edit to.
-const headline = computed(() => profile.value?.experiences?.[0]?.title || '')
-
 const initials = computed(() => {
   const f = profile.value?.first_name?.[0] || ''
   const l = profile.value?.last_name?.[0] || ''
@@ -134,7 +128,12 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
               }
             "
           />
-          <p v-if="headline" class="mt-0.5 text-[13px] text-gray-500">{{ headline }}</p>
+          <ProfileEditableField
+            :model-value="profile.headline || ''"
+            text-class="text-[13px] text-gray-500"
+            class="mt-0.5"
+            @commit="(v) => saveField('headline', v)"
+          />
         </div>
       </div>
 

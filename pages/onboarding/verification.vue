@@ -24,6 +24,7 @@ const saving = ref(false)
 const form = reactive({
   first_name: '',
   last_name: '',
+  headline: '',
   email: '',
   location: '',
   availability_status: 'immediate',
@@ -40,6 +41,7 @@ const form = reactive({
 function applyProfile(profile) {
   form.first_name = profile.first_name || ''
   form.last_name = profile.last_name || ''
+  form.headline = profile.headline || ''
   form.email = profile.email || ''
   form.location = profile.location || ''
   form.availability_status = profile.availability_status || 'immediate'
@@ -123,6 +125,11 @@ async function onContinue() {
               v-model="form.email"
               type="email"
               :label="$t('onboarding.verification.email')"
+            />
+            <UiInput
+              v-model="form.headline"
+              class="sm:col-span-3"
+              :label="$t('onboarding.verification.headline')"
             />
           </div>
         </UiCard>

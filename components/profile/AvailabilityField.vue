@@ -4,6 +4,12 @@
 // rather than as a standalone modal, since both places that use it
 // (Profil page, onboarding verification) already provide their own
 // container and save flow.
+//
+// "immediate" and "unavailable" need no further input, so picking either
+// saves right away. "date" and "notice" need a value first -- picking the
+// radio only changes which row is highlighted; the actual save (commit)
+// only fires once a date or a notice length is chosen, so nothing gets
+// persisted with an empty date/notice.
 const props = defineProps({
   status: { type: String, default: 'immediate' },
   date: { type: String, default: null },
@@ -20,14 +26,23 @@ const OPTIONS = [
   { value: 'unavailable', labelKey: 'availability.opt_unavailable', tone: 'danger' },
 ]
 
+// Visual selection, separate from the last *saved* status -- lets picking
+// "date" or "notice" highlight that row immediately without saving
+// anything until a value is actually provided.
+const localStatus = ref(props.status)
+watch(
+  () => props.status,
+  (v) => (localStatus.value = v)
+)
+
 const infoKey = computed(() => {
-  switch (props.status) {
+  switch (localStatus.value) {
     case 'immediate':
       return 'availability.info_immediate'
     case 'date':
-      return 'availability.info_date'
+      return props.date ? 'availability.info_date' : 'availability.info_date_pending'
     case 'notice':
-      return 'availability.info_notice'
+      return props.noticeMonths ? 'availability.info_notice' : 'availability.info_notice_pending'
     default:
       return 'availability.info_unavailable'
   }
@@ -38,21 +53,23 @@ const formattedDate = computed(() =>
 )
 
 function select(value) {
+  localStatus.value = value
+  if (value !== 'immediate' && value !== 'unavailable') return
   emit('update:status', value)
-  emit('commit', {
-    status: value,
-    date: value === 'date' ? props.date : null,
-    noticeMonths: value === 'notice' ? props.noticeMonths || NOTICE_OPTIONS[0] : null,
-  })
+  emit('commit', { status: value, date: null, noticeMonths: null })
 }
 
 function onDateChange(value) {
+  localStatus.value = 'date'
+  emit('update:status', 'date')
   emit('update:date', value)
   emit('commit', { status: 'date', date: value, noticeMonths: null })
 }
 
 function onNoticeChange(value) {
   const months = Number(value)
+  localStatus.value = 'notice'
+  emit('update:status', 'notice')
   emit('update:noticeMonths', months)
   emit('commit', { status: 'notice', date: null, noticeMonths: months })
 }
@@ -65,12 +82,12 @@ function onNoticeChange(value) {
         <button
           type="button"
           role="radio"
-          :aria-checked="status === opt.value"
+          :aria-checked="localStatus === opt.value"
           class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"
-          :class="status === opt.value ? 'border-brand' : 'border-gray-300'"
+          :class="localStatus === opt.value ? 'border-brand' : 'border-gray-300'"
           @click="select(opt.value)"
         >
-          <span v-if="status === opt.value" class="h-2.5 w-2.5 rounded-full bg-brand" />
+          <span v-if="localStatus === opt.value" class="h-2.5 w-2.5 rounded-full bg-brand" />
         </button>
 
         <span
@@ -90,7 +107,7 @@ function onNoticeChange(value) {
           type="date"
           class="rounded-md border-[1.5px] border-gray-200 px-2.5 py-1.5 text-[13px] text-gray-900 outline-none focus:border-brand"
           :value="date || ''"
-          @focus="select('date')"
+          @focus="localStatus = 'date'"
           @change="onDateChange($event.target.value)"
         />
 
@@ -98,9 +115,10 @@ function onNoticeChange(value) {
           v-if="opt.value === 'notice'"
           class="rounded-md border-[1.5px] border-gray-200 px-2.5 py-1.5 text-[13px] text-gray-900 outline-none focus:border-brand"
           :value="noticeMonths || ''"
-          @focus="select('notice')"
+          @focus="localStatus = 'notice'"
           @change="onNoticeChange($event.target.value)"
         >
+          <option value="" disabled>{{ $t('availability.months_placeholder') }}</option>
           <option v-for="m in NOTICE_OPTIONS" :key="m" :value="m">
             {{ $t('availability.months', { count: m }) }}
           </option>
