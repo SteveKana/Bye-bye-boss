@@ -17,7 +17,13 @@ const { t } = useI18n()
 const query = ref(props.modelValue)
 const suggestions = ref([])
 const open = ref(false)
+const justSaved = ref(false)
 let debounceTimer = null
+
+function flashSaved() {
+  justSaved.value = true
+  setTimeout(() => (justSaved.value = false), 900)
+}
 
 watch(
   () => props.modelValue,
@@ -132,6 +138,7 @@ function select(s) {
   emit('commit', s.value)
   open.value = false
   suggestions.value = []
+  flashSaved()
 }
 
 function onBlur() {
@@ -146,6 +153,7 @@ function onBlur() {
     } else if (query.value.trim() === '' && props.modelValue) {
       emit('update:modelValue', '')
       emit('commit', '')
+      flashSaved()
     }
   }, 150)
 }
@@ -157,11 +165,18 @@ function onBlur() {
       type="text"
       :value="query"
       :placeholder="placeholder"
-      class="w-full rounded-md border-[1.5px] border-gray-200 px-3 py-2 text-[13.5px] text-gray-900 outline-none focus:border-brand focus:shadow-focus-ring"
+      class="w-full rounded-md border-[1.5px] border-gray-200 py-2 pl-3 pr-8 text-[13.5px] text-gray-900 outline-none focus:border-brand focus:shadow-focus-ring"
       @input="onInput"
       @focus="open = true"
       @blur="onBlur"
     />
+    <span
+      v-if="justSaved"
+      class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-success"
+      aria-hidden="true"
+    >
+      ✓
+    </span>
     <ul
       v-if="open && suggestions.length"
       class="absolute z-10 mt-1 max-h-64 w-full overflow-y-auto rounded-md border border-gray-200 bg-white shadow-card"
