@@ -62,19 +62,39 @@ async function search(term) {
     return
   }
   try {
+    const cityKey = matchArrondissementCity(term)
+
+    if (cityKey) {
+      // Once it's clear the person means Paris/Lyon/Marseille, drop the
+      // fuzzy substring noise (e.g. "Parisot", "Cormeilles-en-Parisis")
+      // entirely and show only the city itself, followed by its
+      // arrondissements in numeric order -- anything else here is noise,
+      // not a real option worth scrolling past.
+      const number = term.match(/(\d+)/)?.[1]
+      const [communesRes, all] = await Promise.all([
+        fetch(
+          `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(cityKey)}&fields=nom,codesPostaux&limit=1`
+        ),
+        fetchArrondissements(cityKey),
+      ])
+      const parent = communesRes.ok ? await communesRes.json() : []
+      const arrondissementNumber = (nom) => parseInt(nom.match(/(\d+)/)?.[1] || '999', 10)
+      const arrondissements = (number ? all.filter((c) => c.nom.includes(number)) : all)
+        .slice()
+        .sort((a, b) => arrondissementNumber(a.nom) - arrondissementNumber(b.nom))
+
+      suggestions.value = [...parent, ...arrondissements].map((c) => ({
+        label: c.nom,
+        postal: c.codesPostaux?.[0] || '',
+      }))
+      return
+    }
+
     const communesRes = await fetch(
       `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(term)}&fields=nom,codesPostaux&boost=population&limit=8`
     )
     if (!communesRes.ok) throw new Error('geo api error')
-    let results = await communesRes.json()
-
-    const cityKey = matchArrondissementCity(term)
-    if (cityKey) {
-      const number = term.match(/(\d+)/)?.[1]
-      const all = await fetchArrondissements(cityKey)
-      const filtered = number ? all.filter((c) => c.nom.toLowerCase().includes(number)) : all
-      results = [...results, ...filtered]
-    }
+    const results = await communesRes.json()
 
     const seen = new Set()
     suggestions.value = results
