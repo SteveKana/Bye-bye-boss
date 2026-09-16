@@ -521,5 +521,8 @@
     "info_date_pending": "Choisissez une date pour continuer.",
     "info_notice_pending": "Choisissez la durée de votre préavis pour continuer.",
     "months_placeholder": "Choisir…"
+  },
+  "location": {
+    "all_districts": "tous arrondissements"
   }
 }

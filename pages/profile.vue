@@ -58,7 +58,10 @@ onMounted(async () => {
 async function saveField(field, value) {
   try {
     await onboarding.updateProfile({ [field]: value })
-    toast.success(t('profileCv.saved'))
+    // No success toast here on purpose: ProfileEditableField already gives
+    // its own inline pencil→checkmark confirmation right at the field
+    // itself. Stacking a toast on top of that was reported as confusing --
+    // two confirmations firing for one action.
   } catch (err) {
     toast.error(err?.message || t('profileCv.save_error'))
   }
@@ -71,9 +74,15 @@ async function saveAvailability({ status, date, noticeMonths }) {
       availability_date: date,
       notice_period_months: noticeMonths,
     })
-    toast.success(t('profileCv.saved'))
+    // No toast here either, same reasoning as saveField -- the inline
+    // "✓ Enregistré" badge next to the field is the confirmation.
     availabilityJustSaved.value = true
     setTimeout(() => (availabilityJustSaved.value = false), 2000)
+    // Collapse back to the compact pencil view, like every other editable
+    // field does after a save -- safe now that commit only fires once the
+    // choice is actually complete (immediate/unavailable picked directly,
+    // or a date/notice length chosen), never on a bare radio click.
+    editingAvailability.value = false
   } catch (err) {
     toast.error(err?.message || t('profileCv.save_error'))
   }
@@ -248,7 +257,7 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
 
       <NuxtLink
         to="/onboarding/verification"
-        class="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand-light px-3.5 py-2 text-sm font-bold text-brand-text hover:bg-brand hover:text-white"
+        class="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
       >
         {{ $t('profileCv.edit_fields') }} →
       </NuxtLink>

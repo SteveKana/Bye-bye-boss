@@ -521,5 +521,8 @@
     "info_date_pending": "Pick a date to continue.",
     "info_notice_pending": "Pick your notice period to continue.",
     "months_placeholder": "Choose…"
+  },
+  "location": {
+    "all_districts": "all districts"
   }
 }
