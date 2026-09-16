@@ -11,6 +11,7 @@ const reuploading = ref(false)
 const reuploadFilename = ref('')
 const fileInput = ref(null)
 const editingAvailability = ref(false)
+const availabilityJustSaved = ref(false)
 
 const profile = computed(() => onboarding.profile)
 
@@ -71,6 +72,8 @@ async function saveAvailability({ status, date, noticeMonths }) {
       notice_period_months: noticeMonths,
     })
     toast.success(t('profileCv.saved'))
+    availabilityJustSaved.value = true
+    setTimeout(() => (availabilityJustSaved.value = false), 2000)
   } catch (err) {
     toast.error(err?.message || t('profileCv.save_error'))
   }
@@ -153,7 +156,17 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
       </div>
 
       <div class="mt-4">
-        <div class="mb-1 text-[11px] text-gray-400">{{ $t('profileCv.availability') }}</div>
+        <div class="mb-1 flex items-center gap-2 text-[11px] text-gray-400">
+          {{ $t('profileCv.availability') }}
+          <Transition name="fade">
+            <span
+              v-if="availabilityJustSaved"
+              class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[11px] font-bold text-success-text"
+            >
+              ✓ {{ $t('profileCv.saved') }}
+            </span>
+          </Transition>
+        </div>
         <ProfileAvailabilityField
           v-if="editingAvailability"
           :status="profile.availability_status"
@@ -199,9 +212,18 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
         </div>
       </div>
 
-      <p v-if="reuploading" class="mb-4 text-sm text-gray-500">
-        {{ $t('profileCv.analyzing', { filename: reuploadFilename }) }}
-      </p>
+      <div
+        v-if="reuploading"
+        class="mb-4 flex items-center gap-3 rounded-lg border-2 border-brand/30 bg-brand-light px-4 py-3"
+      >
+        <span
+          class="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-brand border-t-transparent"
+          aria-hidden="true"
+        />
+        <p class="text-sm font-semibold text-brand-text">
+          {{ $t('profileCv.analyzing', { filename: reuploadFilename }) }}
+        </p>
+      </div>
 
       <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div>
@@ -226,10 +248,21 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
 
       <NuxtLink
         to="/onboarding/verification"
-        class="mt-3.5 inline-block text-[12.5px] font-semibold text-gray-500 hover:text-brand hover:underline"
+        class="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand-light px-3.5 py-2 text-sm font-bold text-brand-text hover:bg-brand hover:text-white"
       >
         {{ $t('profileCv.edit_fields') }} →
       </NuxtLink>
     </UiCard>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

@@ -8,10 +8,30 @@ const props = defineProps({
 defineEmits(['dismiss', 'undo'])
 
 const variants = {
-  success: { icon: '✓', accent: 'text-success-text', border: 'border-l-success' },
-  danger: { icon: '✕', accent: 'text-danger', border: 'border-l-danger' },
-  warning: { icon: '!', accent: 'text-warning', border: 'border-l-warning' },
-  info: { icon: 'ℹ', accent: 'text-brand', border: 'border-l-brand' },
+  success: {
+    icon: '✓',
+    badge: 'bg-success text-white',
+    bg: 'bg-success-light border-success/30',
+    text: 'text-success-text',
+  },
+  danger: {
+    icon: '✕',
+    badge: 'bg-danger text-white',
+    bg: 'bg-danger-light border-danger/30',
+    text: 'text-danger',
+  },
+  warning: {
+    icon: '!',
+    badge: 'bg-warning text-white',
+    bg: 'bg-warning-light border-warning/30',
+    text: 'text-warning',
+  },
+  info: {
+    icon: 'ℹ',
+    badge: 'bg-brand text-white',
+    bg: 'bg-brand-light border-brand/30',
+    text: 'text-brand-text',
+  },
 }
 
 const style = computed(() => variants[props.toast.variant] || variants.info)
@@ -19,20 +39,25 @@ const style = computed(() => variants[props.toast.variant] || variants.info)
 
 <template>
   <div
-    class="flex w-full max-w-sm items-start gap-3 rounded-md border border-gray-100 border-l-4 bg-white px-4 py-3 shadow-card"
-    :class="style.border"
+    class="flex w-full max-w-sm items-start gap-3 rounded-lg border-2 px-4 py-3.5 shadow-lg"
+    :class="style.bg"
     role="alert"
   >
-    <span class="mt-0.5 text-base font-bold" :class="style.accent" aria-hidden="true">
+    <span
+      class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+      :class="style.badge"
+      aria-hidden="true"
+    >
       {{ style.icon }}
     </span>
 
-    <p class="flex-1 text-sm text-gray-800">{{ toast.message }}</p>
+    <p class="flex-1 pt-0.5 text-sm font-semibold" :class="style.text">{{ toast.message }}</p>
 
     <button
       v-if="toast.undo"
       type="button"
-      class="shrink-0 text-sm font-semibold text-brand hover:text-brand-dark"
+      class="shrink-0 text-sm font-bold underline"
+      :class="style.text"
       @click="$emit('undo')"
     >
       {{ toast.undoLabel }}
@@ -40,7 +65,8 @@ const style = computed(() => variants[props.toast.variant] || variants.info)
 
     <button
       type="button"
-      class="shrink-0 text-gray-400 hover:text-gray-600"
+      class="shrink-0 opacity-50 hover:opacity-100"
+      :class="style.text"
       aria-label="Fermer"
       @click="$emit('dismiss')"
     >
