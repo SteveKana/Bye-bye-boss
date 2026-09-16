@@ -12,6 +12,7 @@ const props = defineProps({
   placeholder: { type: String, default: '' },
 })
 const emit = defineEmits(['update:modelValue', 'commit'])
+const { t } = useI18n()
 
 const query = ref(props.modelValue)
 const suggestions = ref([])
@@ -77,16 +78,24 @@ async function search(term) {
         ),
         fetchArrondissements(cityKey),
       ])
-      const parent = communesRes.ok ? await communesRes.json() : []
+      const parentData = communesRes.ok ? await communesRes.json() : []
+      // Showing the first of Paris's 20 postal codes (75001) next to the
+      // generic "Paris" entry made it look like a duplicate of "Paris 1er
+      // Arrondissement 75001" -- they read as the same thing at a glance.
+      // Labelling this one explicitly as covering every arrondissement
+      // removes that ambiguity instead of just hiding the postal code.
+      const parent = parentData.map((c) => ({
+        label: `${c.nom} (${t('location.all_districts')})`,
+        value: c.nom,
+        postal: '',
+      }))
       const arrondissementNumber = (nom) => parseInt(nom.match(/(\d+)/)?.[1] || '999', 10)
       const arrondissements = (number ? all.filter((c) => c.nom.includes(number)) : all)
         .slice()
         .sort((a, b) => arrondissementNumber(a.nom) - arrondissementNumber(b.nom))
+        .map((c) => ({ label: c.nom, value: c.nom, postal: c.codesPostaux?.[0] || '' }))
 
-      suggestions.value = [...parent, ...arrondissements].map((c) => ({
-        label: c.nom,
-        postal: c.codesPostaux?.[0] || '',
-      }))
+      suggestions.value = [...parent, ...arrondissements]
       return
     }
 
@@ -100,7 +109,7 @@ async function search(term) {
     suggestions.value = results
       .filter((c) => (seen.has(c.nom) ? false : seen.add(c.nom)))
       .slice(0, 20)
-      .map((c) => ({ label: c.nom, postal: c.codesPostaux?.[0] || '' }))
+      .map((c) => ({ label: c.nom, value: c.nom, postal: c.codesPostaux?.[0] || '' }))
   } catch {
     // Network hiccup or the public API being down -- suggestions stay
     // empty, and the blur-revert rule below still protects against saving
@@ -118,9 +127,9 @@ function onInput(event) {
 }
 
 function select(s) {
-  query.value = s.label
-  emit('update:modelValue', s.label)
-  emit('commit', s.label)
+  query.value = s.value
+  emit('update:modelValue', s.value)
+  emit('commit', s.value)
   open.value = false
   suggestions.value = []
 }
