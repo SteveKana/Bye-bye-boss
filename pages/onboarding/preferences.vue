@@ -28,9 +28,17 @@ const remotePreferences = ref([])
 const mobility = ref('France entière')
 const salaryTarget = ref(null)
 
+// Captured once, at load time, before this visit can change it: tells us
+// whether the wizard is being run for the first time (draft profile, should
+// finish into /dashboard) or re-entered later to edit preferences on an
+// already-complete profile (should return to /profile, not restart onto the
+// dashboard).
+const wasAlreadyComplete = ref(false)
+
 onMounted(async () => {
   try {
     const profile = onboarding.profile || (await onboarding.fetchProfile())
+    wasAlreadyComplete.value = profile.status === 'complete'
     contractTypes.value = profile.contract_types?.length ? [...profile.contract_types] : []
     remotePreferences.value = profile.remote_preferences?.length
       ? [...profile.remote_preferences]
@@ -56,7 +64,7 @@ async function onContinue() {
       mobility: mobility.value,
       salary_target: salaryTarget.value || null,
     })
-    await navigateTo('/dashboard')
+    await navigateTo(wasAlreadyComplete.value ? '/profile' : '/dashboard')
   } catch (err) {
     toast.error(err.message || t('onboarding.preferences.error_generic'))
   } finally {
