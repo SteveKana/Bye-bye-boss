@@ -480,7 +480,10 @@
     "save_error": "The update failed. Please try again.",
     "upload_error": "Importing the CV failed. Please try again.",
     "download_full": "Download your CV",
-    "download_error": "Downloading the CV failed. Please try again."
+    "download_error": "Downloading the CV failed. Please try again.",
+    "download_named": "Download my CV: {filename}",
+    "key_skills": "Key skills",
+    "key_skills_hint": "Automatically detected from your CV — they represent only part of your profile."
   },
   "settings": {
     "subtitle": "Subscription, notifications, and account information.",

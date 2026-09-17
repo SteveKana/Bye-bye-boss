@@ -220,23 +220,39 @@ async function downloadCv() {
 
     <!-- CV summary -->
     <UiCard>
-      <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 class="text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
-        <div class="flex gap-2.5">
-          <UiButton variant="secondary" size="sm" :loading="downloading" @click="downloadCv">
-            ⬇ {{ $t('profileCv.download_full') }}
-          </UiButton>
-          <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
-            ⬆ {{ $t('profileCv.reupload') }}
-          </UiButton>
-          <input
-            ref="fileInput"
-            type="file"
-            accept=".pdf,.docx"
-            class="hidden"
-            @change="onReupload"
-          />
-        </div>
+      <h2 class="mb-3 text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
+
+      <!-- Row 1: download, alone, filename in the label -->
+      <UiButton
+        v-if="profile.cv_filename"
+        variant="secondary"
+        size="sm"
+        class="mb-3 w-full justify-center sm:w-auto"
+        :loading="downloading"
+        @click="downloadCv"
+      >
+        ⬇ {{ $t('profileCv.download_named', { filename: profile.cv_filename }) }}
+      </UiButton>
+
+      <!-- Row 2: reimport + edit-fields link, "Ou" sitting between them -->
+      <div class="mb-4 flex flex-wrap items-center gap-3">
+        <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
+          ⬆ {{ $t('profileCv.reupload') }}
+        </UiButton>
+        <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
+        <NuxtLink
+          to="/onboarding/verification"
+          class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
+        >
+          {{ $t('profileCv.edit_fields') }} →
+        </NuxtLink>
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".pdf,.docx"
+          class="hidden"
+          @change="onReupload"
+        />
       </div>
 
       <div
@@ -263,22 +279,21 @@ async function downloadCv() {
         </div>
       </div>
 
-      <div v-if="profile.skills?.length" class="flex flex-wrap gap-2">
-        <span
-          v-for="s in profile.skills"
-          :key="s"
-          class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
-        >
-          {{ s }}
-        </span>
+      <div v-if="profile.skills?.length">
+        <h3 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+          {{ $t('profileCv.key_skills') }}
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="s in profile.skills"
+            :key="s"
+            class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+          >
+            {{ s }}
+          </span>
+        </div>
+        <p class="mt-2 text-xs text-gray-400">{{ $t('profileCv.key_skills_hint') }}</p>
       </div>
-
-      <NuxtLink
-        to="/onboarding/verification"
-        class="mt-4 inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
-      >
-        {{ $t('profileCv.edit_fields') }} →
-      </NuxtLink>
     </UiCard>
   </div>
 </template>
