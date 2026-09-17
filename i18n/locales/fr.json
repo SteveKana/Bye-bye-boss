@@ -163,6 +163,7 @@
       "opportunities": "Opportunités",
       "applications": "Candidatures",
       "profile": "Profil",
+      "preferences": "Préférences",
       "settings": "Paramètres"
     },
     "soon": "bientôt",
@@ -184,12 +185,14 @@
     "reject": "Rejeter cette offre",
     "see_all": "Voir toutes les opportunités",
     "offer_hidden": "Offre masquée",
-    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres.",
-    "edit_preferences_title": "Vos préférences de recherche",
-    "cancel": "Annuler",
+    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres."
+  },
+  "preferencesPage": {
+    "title": "Préférences",
+    "subtitle": "Ces critères affinent vos correspondances d'offres. Modifiables à tout moment.",
     "save": "Enregistrer",
     "saved": "Préférences mises à jour.",
-    "error_required": "Merci de sélectionner au moins une option pour chaque critère.",
+    "error_required": "Merci de sélectionner au moins une option pour chaque critère obligatoire.",
     "error_generic": "La mise à jour des préférences a échoué. Merci de réessayer."
   },
   "profile": {
