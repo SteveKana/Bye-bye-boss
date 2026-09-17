@@ -163,6 +163,7 @@
       "opportunities": "Opportunities",
       "applications": "Applications",
       "profile": "Profile",
+      "preferences": "Preferences",
       "settings": "Settings"
     },
     "soon": "soon",
@@ -184,12 +185,14 @@
     "reject": "Reject this offer",
     "see_all": "See all opportunities",
     "offer_hidden": "Offer hidden",
-    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
-    "edit_preferences_title": "Your search preferences",
-    "cancel": "Cancel",
+    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you."
+  },
+  "preferencesPage": {
+    "title": "Preferences",
+    "subtitle": "These criteria refine your offer matches. Editable at any time.",
     "save": "Save",
     "saved": "Preferences updated.",
-    "error_required": "Please select at least one option for each criterion.",
+    "error_required": "Please select at least one option for each required criterion.",
     "error_generic": "Updating preferences failed. Please try again."
   },
   "profile": {
