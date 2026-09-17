@@ -283,7 +283,7 @@ async function downloadCv() {
         </UiButton>
         <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
         <NuxtLink
-          to="/onboarding/verification"
+          to="/profile/edit"
           class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
         >
           {{ $t('profileCv.edit_fields') }} →

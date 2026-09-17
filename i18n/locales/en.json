@@ -7,7 +7,9 @@
     "back_to_login": "Back to sign in",
     "undo": "Undo",
     "first_name": "First name",
-    "last_name": "Last name"
+    "last_name": "Last name",
+    "previous": "Previous",
+    "save": "Save"
   },
   "nav": {
     "no_account": "No account yet?",
@@ -182,7 +184,13 @@
     "reject": "Reject this offer",
     "see_all": "See all opportunities",
     "offer_hidden": "Offer hidden",
-    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you."
+    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
+    "edit_preferences_title": "Your search preferences",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saved": "Preferences updated.",
+    "error_required": "Please select at least one option for each criterion.",
+    "error_generic": "Updating preferences failed. Please try again."
   },
   "profile": {
     "subtitle": "Your personal information, used for matching.",
@@ -472,7 +480,7 @@
     "analyzing": "Analyzing {filename}… you'll be redirected to verification.",
     "last_update": "Last update",
     "total_experience": "Total experience",
-    "edit_fields": "Edit the CV directly online",
+    "edit_fields": "Edit my CV online",
     "updated_today": "Today",
     "updated_yesterday": "Yesterday",
     "updated_days": "{days} days ago",
@@ -484,7 +492,10 @@
     "download_named": "Download my CV: {filename}",
     "key_skills": "Key skills",
     "key_skills_hint": "Automatically detected from your CV — they represent only part of your profile.",
-    "edit": "Edit"
+    "edit": "Edit",
+    "edit_title": "Edit my CV",
+    "edit_subtitle": "Update the information extracted from your CV.",
+    "edit_saved": "Your CV has been updated."
   },
   "settings": {
     "subtitle": "Subscription, notifications, and account information.",
