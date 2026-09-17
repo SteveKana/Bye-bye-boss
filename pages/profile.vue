@@ -234,27 +234,6 @@ async function downloadCv() {
         ⬇ {{ $t('profileCv.download_named', { filename: profile.cv_filename }) }}
       </UiButton>
 
-      <!-- Row 2: reimport + edit-fields link, "Ou" sitting between them -->
-      <div class="mb-4 flex flex-wrap items-center gap-3">
-        <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
-          ⬆ {{ $t('profileCv.reupload') }}
-        </UiButton>
-        <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
-        <NuxtLink
-          to="/onboarding/verification"
-          class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
-        >
-          {{ $t('profileCv.edit_fields') }} →
-        </NuxtLink>
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".pdf,.docx"
-          class="hidden"
-          @change="onReupload"
-        />
-      </div>
-
       <div
         v-if="reuploading"
         class="mb-4 flex items-center gap-3 rounded-lg border-2 border-brand/30 bg-brand-light px-4 py-3"
@@ -279,7 +258,7 @@ async function downloadCv() {
         </div>
       </div>
 
-      <div v-if="profile.skills?.length">
+      <div v-if="profile.skills?.length" class="mb-4">
         <h3 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
           {{ $t('profileCv.key_skills') }}
         </h3>
@@ -293,6 +272,29 @@ async function downloadCv() {
           </span>
         </div>
         <p class="mt-2 text-xs text-gray-400">{{ $t('profileCv.key_skills_hint') }}</p>
+      </div>
+
+      <!-- Bottom row: reimport + edit-fields link, "Ou" sitting between them.
+           Placed last so it never competes with the CV data above it for
+           attention -- these are actions on the CV, not part of its content. -->
+      <div class="flex flex-wrap items-center gap-3">
+        <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
+          ⬆ {{ $t('profileCv.reupload') }}
+        </UiButton>
+        <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
+        <NuxtLink
+          to="/onboarding/verification"
+          class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
+        >
+          {{ $t('profileCv.edit_fields') }} →
+        </NuxtLink>
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".pdf,.docx"
+          class="hidden"
+          @change="onReupload"
+        />
       </div>
     </UiCard>
   </div>
