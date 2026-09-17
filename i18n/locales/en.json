@@ -479,7 +479,8 @@
     "saved": "Saved",
     "save_error": "The update failed. Please try again.",
     "upload_error": "Importing the CV failed. Please try again.",
-    "download_full": "Download your CV"
+    "download_full": "Download your CV",
+    "download_error": "Downloading the CV failed. Please try again."
   },
   "settings": {
     "subtitle": "Subscription, notifications, and account information.",
