@@ -110,7 +110,25 @@ async function onReupload(event) {
 // The original CV file isn't stored server-side (only the text extracted
 // from it), so there is nothing to download yet -- honest placeholder
 // rather than a broken download.
-const downloadSoon = () => toast.info(t('app.soon_full'))
+const downloading = ref(false)
+async function downloadCv() {
+  downloading.value = true
+  try {
+    const blob = await useApi()('cv/download', { responseType: 'blob' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = profile.value?.cv_filename || 'cv.pdf'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.download_error'))
+  } finally {
+    downloading.value = false
+  }
+}
 </script>
 
 <template>
@@ -205,7 +223,7 @@ const downloadSoon = () => toast.info(t('app.soon_full'))
       <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
         <h2 class="text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
         <div class="flex gap-2.5">
-          <UiButton variant="secondary" size="sm" @click="downloadSoon">
+          <UiButton variant="secondary" size="sm" :loading="downloading" @click="downloadCv">
             ⬇ {{ $t('profileCv.download_full') }}
           </UiButton>
           <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">

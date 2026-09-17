@@ -479,7 +479,8 @@
     "saved": "Enregistré",
     "save_error": "La mise à jour a échoué. Merci de réessayer.",
     "upload_error": "L'import du CV a échoué. Merci de réessayer.",
-    "download_full": "Télécharger votre CV"
+    "download_full": "Télécharger votre CV",
+    "download_error": "Le téléchargement du CV a échoué. Merci de réessayer."
   },
   "settings": {
     "subtitle": "Abonnement, notifications et informations de compte.",
