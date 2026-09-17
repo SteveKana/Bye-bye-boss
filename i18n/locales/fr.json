@@ -472,7 +472,7 @@
     "analyzing": "Analyse de {filename} en cours… vous allez être redirigé vers la vérification.",
     "last_update": "Dernière mise à jour",
     "total_experience": "Expérience totale",
-    "edit_fields": "Ou modifier directement les champs existants",
+    "edit_fields": "Modifier directement le CV en ligne",
     "updated_today": "Aujourd'hui",
     "updated_yesterday": "Hier",
     "updated_days": "Il y a {days} jours",
@@ -483,7 +483,8 @@
     "download_error": "Le téléchargement du CV a échoué. Merci de réessayer.",
     "download_named": "Télécharger mon CV : {filename}",
     "key_skills": "Compétences clés",
-    "key_skills_hint": "Détectées automatiquement dans votre CV — elles ne représentent qu'une partie de votre profil."
+    "key_skills_hint": "Détectées automatiquement dans votre CV — elles ne représentent qu'une partie de votre profil.",
+    "edit": "Modifier"
   },
   "settings": {
     "subtitle": "Abonnement, notifications et informations de compte.",

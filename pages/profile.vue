@@ -210,7 +210,7 @@ async function downloadCv() {
           <button
             type="button"
             class="flex h-5 w-5 items-center justify-center rounded text-gray-300 hover:bg-brand-light hover:text-brand"
-            :aria-label="$t('profileCv.edit_fields')"
+            :aria-label="$t('profileCv.edit')"
           >
             ✎
           </button>

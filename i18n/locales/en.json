@@ -472,7 +472,7 @@
     "analyzing": "Analyzing {filename}… you'll be redirected to verification.",
     "last_update": "Last update",
     "total_experience": "Total experience",
-    "edit_fields": "Or edit the existing fields directly",
+    "edit_fields": "Edit the CV directly online",
     "updated_today": "Today",
     "updated_yesterday": "Yesterday",
     "updated_days": "{days} days ago",
@@ -483,7 +483,8 @@
     "download_error": "Downloading the CV failed. Please try again.",
     "download_named": "Download my CV: {filename}",
     "key_skills": "Key skills",
-    "key_skills_hint": "Automatically detected from your CV — they represent only part of your profile."
+    "key_skills_hint": "Automatically detected from your CV — they represent only part of your profile.",
+    "edit": "Edit"
   },
   "settings": {
     "subtitle": "Subscription, notifications, and account information.",
