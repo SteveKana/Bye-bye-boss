@@ -7,7 +7,9 @@
     "back_to_login": "Retour à la connexion",
     "undo": "Annuler",
     "first_name": "Prénom",
-    "last_name": "Nom"
+    "last_name": "Nom",
+    "previous": "Précédent",
+    "save": "Sauvegarder"
   },
   "nav": {
     "no_account": "Pas encore de compte ?",
@@ -182,7 +184,13 @@
     "reject": "Rejeter cette offre",
     "see_all": "Voir toutes les opportunités",
     "offer_hidden": "Offre masquée",
-    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres."
+    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres.",
+    "edit_preferences_title": "Vos préférences de recherche",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saved": "Préférences mises à jour.",
+    "error_required": "Merci de sélectionner au moins une option pour chaque critère.",
+    "error_generic": "La mise à jour des préférences a échoué. Merci de réessayer."
   },
   "profile": {
     "subtitle": "Vos informations personnelles, utilisées pour le matching.",
@@ -472,7 +480,7 @@
     "analyzing": "Analyse de {filename} en cours… vous allez être redirigé vers la vérification.",
     "last_update": "Dernière mise à jour",
     "total_experience": "Expérience totale",
-    "edit_fields": "Modifier directement le CV en ligne",
+    "edit_fields": "Modifier mon CV en ligne",
     "updated_today": "Aujourd'hui",
     "updated_yesterday": "Hier",
     "updated_days": "Il y a {days} jours",
@@ -484,7 +492,10 @@
     "download_named": "Télécharger mon CV : {filename}",
     "key_skills": "Compétences clés",
     "key_skills_hint": "Détectées automatiquement dans votre CV — elles ne représentent qu'une partie de votre profil.",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "edit_title": "Modifier mon CV",
+    "edit_subtitle": "Mettez à jour les informations extraites de votre CV.",
+    "edit_saved": "Votre CV a bien été mis à jour."
   },
   "settings": {
     "subtitle": "Abonnement, notifications et informations de compte.",

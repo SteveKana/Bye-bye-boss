@@ -7,6 +7,19 @@ const toast = useToast()
 const { firstName } = useUserDisplay()
 const onboarding = useOnboardingStore()
 
+const CONTRACT_OPTIONS = ['CDI', 'Freelance', 'CDD', 'Intérim'].map((v) => ({
+  value: v,
+  label: t(`onboarding.contract_types.${v}`),
+}))
+const REMOTE_OPTIONS = ['Sur site', 'Hybride', 'Full remote'].map((v) => ({
+  value: v,
+  label: t(`onboarding.remote_options.${v}`),
+}))
+const MOBILITY_OPTIONS = ['France entière', 'Région uniquement', 'Ville uniquement'].map((v) => ({
+  value: v,
+  label: t(`onboarding.mobility_options.${v}`),
+}))
+
 // Static demo data (the matching engine is not built yet — Phase 1 shows the
 // shell with placeholder offers). Full class names so Tailwind keeps them.
 const scoreColors = {
@@ -21,23 +34,81 @@ const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential', regr
 // onboarding. Empty until the profile has loaded.
 const criteria = ref([])
 
+function refreshCriteria(profile) {
+  const salary = profile.salary_target
+    ? `${profile.salary_target.toLocaleString('fr-FR')} € brut / an`
+    : null
+  criteria.value = [
+    ...(profile.contract_types || []),
+    ...(profile.remote_preferences || []),
+    profile.mobility,
+    salary,
+  ].filter(Boolean)
+}
+
 onMounted(async () => {
   try {
     const profile = onboarding.profile || (await onboarding.fetchProfile())
-    const salary = profile.salary_target
-      ? `${profile.salary_target.toLocaleString('fr-FR')} € brut / an`
-      : null
-    criteria.value = [
-      ...(profile.contract_types || []),
-      ...(profile.remote_preferences || []),
-      profile.mobility,
-      salary,
-    ].filter(Boolean)
+    refreshCriteria(profile)
   } catch {
     // No profile yet (onboarding not completed) — leave the criteria bar empty
     // rather than showing anything misleading.
   }
 })
+
+// Inline preferences editor -- replaces the old "coming soon" placeholder.
+// Editing happens right here in the dashboard rather than by leaving to a
+// separate /preferences page: same fields as the onboarding wizard's step 3,
+// reused via the same OnboardingChoiceGroup + salary input, wired to
+// onboarding.updatePreferences().
+const editingPreferences = ref(false)
+const savingPreferences = ref(false)
+const editContractTypes = ref([])
+const editRemotePreferences = ref([])
+const editMobility = ref('France entière')
+const editSalaryTarget = ref(null)
+
+function openPreferencesEditor() {
+  const profile = onboarding.profile
+  editContractTypes.value = profile?.contract_types?.length ? [...profile.contract_types] : []
+  editRemotePreferences.value = profile?.remote_preferences?.length
+    ? [...profile.remote_preferences]
+    : []
+  editMobility.value = profile?.mobility || 'France entière'
+  editSalaryTarget.value = profile?.salary_target ?? null
+  editingPreferences.value = true
+}
+
+function cancelPreferencesEditor() {
+  editingPreferences.value = false
+}
+
+async function savePreferences() {
+  if (
+    !editContractTypes.value.length ||
+    !editRemotePreferences.value.length ||
+    !editMobility.value
+  ) {
+    toast.error(t('dashboard.error_required'))
+    return
+  }
+  savingPreferences.value = true
+  try {
+    const profile = await onboarding.updatePreferences({
+      contract_types: editContractTypes.value,
+      remote_preferences: editRemotePreferences.value,
+      mobility: editMobility.value,
+      salary_target: editSalaryTarget.value || null,
+    })
+    refreshCriteria(profile)
+    toast.success(t('dashboard.saved'))
+    editingPreferences.value = false
+  } catch (err) {
+    toast.error(err?.message || t('dashboard.error_generic'))
+  } finally {
+    savingPreferences.value = false
+  }
+}
 
 // The matching engine isn't wired in yet, so there are no real offers to
 // show — an honest empty state beats fabricated placeholder listings.
@@ -79,7 +150,10 @@ const openOffer = () => toast.info(t('app.soon_full'))
     </div>
 
     <!-- Search criteria, from the saved preferences -->
-    <div v-if="criteria.length" class="mb-6 flex flex-wrap items-center gap-2 text-sm">
+    <div
+      v-if="criteria.length && !editingPreferences"
+      class="mb-6 flex flex-wrap items-center gap-2 text-sm"
+    >
       <span class="font-semibold text-gray-500">{{ $t('dashboard.your_search') }}</span>
       <span
         v-for="c in criteria"
@@ -88,10 +162,88 @@ const openOffer = () => toast.info(t('app.soon_full'))
       >
         {{ c }}
       </span>
-      <button class="font-semibold text-brand hover:underline" @click="soon">
+      <button class="font-semibold text-brand hover:underline" @click="openPreferencesEditor">
         {{ $t('dashboard.edit') }} →
       </button>
     </div>
+
+    <!-- Inline "Préférences" editor -- same fields as onboarding's step 3,
+         edited in place instead of navigating away to /preferences. -->
+    <UiCard v-if="editingPreferences" class="mb-6" :title="$t('dashboard.edit_preferences_title')">
+      <div class="mb-5">
+        <h3 class="mb-2 text-sm font-semibold text-gray-900">
+          {{ $t('onboarding.preferences.contract_type_title') }}
+        </h3>
+        <OnboardingChoiceGroup
+          v-model="editContractTypes"
+          :options="CONTRACT_OPTIONS"
+          multiple
+          :columns="4"
+        />
+        <p class="mt-2 text-xs text-gray-400">{{ $t('onboarding.preferences.multi_choice') }}</p>
+      </div>
+
+      <div class="mb-5">
+        <h3 class="mb-2 text-sm font-semibold text-gray-900">
+          {{ $t('onboarding.preferences.remote_title') }}
+        </h3>
+        <OnboardingChoiceGroup
+          v-model="editRemotePreferences"
+          :options="REMOTE_OPTIONS"
+          multiple
+          :columns="3"
+        />
+        <p class="mt-2 text-xs text-gray-400">{{ $t('onboarding.preferences.multi_choice') }}</p>
+      </div>
+
+      <div class="mb-5">
+        <h3 class="mb-2 text-sm font-semibold text-gray-900">
+          {{ $t('onboarding.preferences.mobility_title') }}
+        </h3>
+        <OnboardingChoiceGroup v-model="editMobility" :options="MOBILITY_OPTIONS" :columns="3" />
+        <p class="mt-2 text-xs text-gray-400">{{ $t('onboarding.preferences.single_choice') }}</p>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="mb-2 text-sm font-semibold text-gray-900">
+          {{ $t('onboarding.preferences.salary_title') }}
+        </h3>
+        <div class="relative max-w-xs">
+          <input
+            v-model.number="editSalaryTarget"
+            type="number"
+            min="0"
+            step="1000"
+            :placeholder="$t('onboarding.preferences.salary_placeholder')"
+            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pr-28 text-sm text-gray-700 outline-none placeholder:text-gray-400 focus:border-brand focus:shadow-focus-ring"
+          />
+          <span
+            class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400"
+          >
+            {{ $t('onboarding.preferences.salary_suffix') }}
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <UiButton
+          variant="secondary"
+          type="button"
+          :disabled="savingPreferences"
+          @click="cancelPreferencesEditor"
+        >
+          {{ $t('dashboard.cancel') }}
+        </UiButton>
+        <UiButton
+          variant="primary"
+          type="button"
+          :loading="savingPreferences"
+          @click="savePreferences"
+        >
+          {{ $t('dashboard.save') }}
+        </UiButton>
+      </div>
+    </UiCard>
 
     <!-- Top opportunities -->
     <UiCard>
