@@ -225,18 +225,17 @@ async function downloadCv() {
           </button>
         </span>
       </div>
-
-      <div v-if="profile.total_experience" class="mt-3 text-[13px] text-gray-500">
-        {{ $t('profileCv.experience_line', { value: profile.total_experience }) }}
-      </div>
     </UiCard>
 
     <!-- Professional synthesis, generated from the CV -- read-only, absent
          until the candidate (re)imports a CV processed with this feature. -->
     <UiCard v-if="hasProfessionalSynthesis" class="mb-4">
-      <h2 class="mb-3 text-base font-bold text-navy">
+      <h2 class="text-base font-bold text-navy">
         {{ $t('profileCv.professional_section_title') }}
       </h2>
+      <p class="mb-3 mt-1 text-xs text-gray-400">
+        {{ $t('profileCv.professional_section_subtitle') }}
+      </p>
 
       <h3 v-if="profile.headline" class="text-[15px] font-bold text-navy">
         {{ profile.headline }}
