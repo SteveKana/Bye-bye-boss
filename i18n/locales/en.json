@@ -388,6 +388,7 @@
       "hint": "PDF or Word, 5 MB max",
       "remove": "Remove file",
       "analyzing": "Analyzing your CV…",
+      "analyzing_hint": "Our AI is reading your CV and preparing your profile — this usually takes under a minute.",
       "cancel": "Cancel",
       "continue": "Continue",
       "error_required": "Please import a CV before continuing.",
