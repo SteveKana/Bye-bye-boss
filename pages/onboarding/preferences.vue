@@ -12,17 +12,9 @@ const saving = ref(false)
 const formRef = ref(null)
 const location = ref('')
 
-// Captured once, at load time, before this visit can change it: tells us
-// whether the wizard is being run for the first time (draft profile, should
-// finish into /dashboard) or re-entered later to edit preferences on an
-// already-complete profile (should return to /profile, not restart onto the
-// dashboard).
-const wasAlreadyComplete = ref(false)
-
 onMounted(async () => {
   try {
     const profile = onboarding.profile || (await onboarding.fetchProfile())
-    wasAlreadyComplete.value = profile.status === 'complete'
     location.value = profile.location || ''
     formRef.value.applyProfile(profile)
     ready.value = true
@@ -39,7 +31,10 @@ async function onContinue() {
   saving.value = true
   try {
     await onboarding.updatePreferences({ ...formRef.value.form })
-    await navigateTo(wasAlreadyComplete.value ? '/profile' : '/dashboard')
+    // Preferences is the last onboarding step -- whether this is a first-time
+    // completion or a later re-edit, /profile is where the person can see
+    // what was just imported/set, so it's the landing page either way.
+    await navigateTo('/profile')
   } catch (err) {
     toast.error(err.message || t('onboarding.preferences.error_generic'))
   } finally {
