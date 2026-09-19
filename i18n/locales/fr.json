@@ -507,8 +507,8 @@
     "edit_title": "Modifier mon CV",
     "edit_subtitle": "Mettez à jour les informations extraites de votre CV.",
     "edit_saved": "Votre CV a bien été mis à jour.",
-    "experience_line": "{value} d'expérience",
     "professional_section_title": "Votre profil professionnel",
+    "professional_section_subtitle": "Généré par notre IA à partir de votre CV.",
     "identified_roles_title": "Métiers identifiés",
     "domains_title": "Domaines",
     "skills_detected_title": "Compétences détectées"
