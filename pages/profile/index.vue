@@ -108,11 +108,17 @@ async function onReupload(event) {
   reuploadFilename.value = file.name
   reuploading.value = true
   try {
+    // The upload endpoint already persists the freshly extracted profile
+    // (it's what /onboarding/verification would just re-save unchanged if
+    // nothing were edited), so a reimport from this page can land straight
+    // back here instead of detouring through the onboarding verification +
+    // preferences steps again -- everything stays editable inline below.
     await onboarding.uploadCv(file)
-    await navigateTo('/onboarding/verification')
+    toast.success(t('profileCv.reupload_success'))
   } catch (err) {
-    reuploading.value = false
     toast.error(err?.message || t('profileCv.upload_error'))
+  } finally {
+    reuploading.value = false
   }
 }
 
@@ -237,9 +243,10 @@ async function downloadCv() {
         {{ $t('profileCv.professional_section_subtitle') }}
       </p>
 
-      <h3 v-if="profile.headline" class="text-[15px] font-bold text-navy">
-        {{ profile.headline }}
-      </h3>
+      <!-- The headline itself is already shown (and editable) right under
+           the name at the top of the page -- repeating it here as a plain
+           heading was a pure duplicate, so only the summary paragraph
+           (which doesn't appear anywhere else) stays in this section. -->
       <p v-if="profile.professional_summary" class="mt-1 text-[13.5px] text-gray-600">
         {{ profile.professional_summary }}
       </p>
