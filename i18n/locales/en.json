@@ -505,7 +505,12 @@
     "edit": "Edit",
     "edit_title": "Edit my CV",
     "edit_subtitle": "Update the information extracted from your CV.",
-    "edit_saved": "Your CV has been updated."
+    "edit_saved": "Your CV has been updated.",
+    "experience_line": "{value} of experience",
+    "professional_section_title": "Your professional profile",
+    "identified_roles_title": "Identified roles",
+    "domains_title": "Domains",
+    "skills_detected_title": "Detected skills"
   },
   "settings": {
     "subtitle": "Subscription, notifications, and account information.",
