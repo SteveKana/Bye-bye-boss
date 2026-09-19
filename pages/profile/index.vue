@@ -29,6 +29,15 @@ const updatedAgo = computed(() => {
   return t('profileCv.updated_days', { days })
 })
 
+const hasProfessionalSynthesis = computed(() => {
+  if (!profile.value) return false
+  return !!(
+    profile.value.professional_summary ||
+    profile.value.identified_roles?.length ||
+    profile.value.domains?.length
+  )
+})
+
 const availabilityLabel = computed(() => {
   if (!profile.value) return ''
   const status = profile.value.availability_status || 'immediate'
@@ -216,6 +225,92 @@ async function downloadCv() {
           </button>
         </span>
       </div>
+
+      <div v-if="profile.total_experience" class="mt-3 text-[13px] text-gray-500">
+        {{ $t('profileCv.experience_line', { value: profile.total_experience }) }}
+      </div>
+    </UiCard>
+
+    <!-- Professional synthesis, generated from the CV -- read-only, absent
+         until the candidate (re)imports a CV processed with this feature. -->
+    <UiCard v-if="hasProfessionalSynthesis" class="mb-4">
+      <h2 class="mb-3 text-base font-bold text-navy">
+        {{ $t('profileCv.professional_section_title') }}
+      </h2>
+
+      <h3 v-if="profile.headline" class="text-[15px] font-bold text-navy">
+        {{ profile.headline }}
+      </h3>
+      <p v-if="profile.professional_summary" class="mt-1 text-[13.5px] text-gray-600">
+        {{ profile.professional_summary }}
+      </p>
+
+      <div v-if="profile.identified_roles?.length" class="mt-4">
+        <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+          {{ $t('profileCv.identified_roles_title') }}
+        </h4>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="role in profile.identified_roles"
+            :key="role"
+            class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+          >
+            {{ role }}
+          </span>
+        </div>
+      </div>
+
+      <div v-if="profile.domains?.length" class="mt-4">
+        <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+          {{ $t('profileCv.domains_title') }}
+        </h4>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="domain in profile.domains"
+            :key="domain"
+            class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
+          >
+            {{ domain }}
+          </span>
+        </div>
+      </div>
+    </UiCard>
+
+    <!-- Skills, grouped by category when the CV synthesis provided one;
+         falls back to the flat list for profiles not yet reprocessed. -->
+    <UiCard v-if="profile.skill_categories?.length || profile.skills?.length" class="mb-4">
+      <h2 class="mb-3 text-base font-bold text-navy">
+        {{ $t('profileCv.skills_detected_title') }}
+      </h2>
+
+      <div v-if="profile.skill_categories?.length">
+        <div v-for="cat in profile.skill_categories" :key="cat.category" class="mb-4 last:mb-0">
+          <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+            {{ cat.category }}
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            <span
+              v-for="skill in cat.skills"
+              :key="skill"
+              class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+            >
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="s in profile.skills"
+            :key="s"
+            class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+          >
+            {{ s }}
+          </span>
+        </div>
+        <p class="mt-2 text-xs text-gray-400">{{ $t('profileCv.key_skills_hint') }}</p>
+      </div>
     </UiCard>
 
     <!-- CV summary -->
@@ -256,22 +351,6 @@ async function downloadCv() {
           <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.total_experience') }}</div>
           <div class="text-lg font-extrabold text-navy">{{ profile.total_experience || '—' }}</div>
         </div>
-      </div>
-
-      <div v-if="profile.skills?.length" class="mb-4">
-        <h3 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
-          {{ $t('profileCv.key_skills') }}
-        </h3>
-        <div class="flex flex-wrap gap-2">
-          <span
-            v-for="s in profile.skills"
-            :key="s"
-            class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
-          >
-            {{ s }}
-          </span>
-        </div>
-        <p class="mt-2 text-xs text-gray-400">{{ $t('profileCv.key_skills_hint') }}</p>
       </div>
 
       <!-- Bottom row: reimport + edit-fields link, "Ou" sitting between them.
