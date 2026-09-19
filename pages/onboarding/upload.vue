@@ -124,9 +124,19 @@ async function onContinue() {
         </div>
       </div>
 
-      <p v-if="loading" class="mt-4 text-sm text-gray-500">
-        {{ $t('onboarding.upload.analyzing') }}
-      </p>
+      <div
+        v-if="loading"
+        class="mt-4 flex items-center gap-3.5 rounded-xl border-2 border-brand/30 bg-brand-light px-4 py-3.5"
+      >
+        <span
+          class="h-6 w-6 shrink-0 animate-spin rounded-full border-[3px] border-brand border-t-transparent"
+          aria-hidden="true"
+        />
+        <div>
+          <p class="text-sm font-bold text-brand-text">{{ $t('onboarding.upload.analyzing') }}</p>
+          <p class="text-xs text-brand-text/70">{{ $t('onboarding.upload.analyzing_hint') }}</p>
+        </div>
+      </div>
     </div>
 
     <template #actions>
