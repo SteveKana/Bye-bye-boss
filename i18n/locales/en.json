@@ -387,8 +387,6 @@
       "browse": "Browse my files",
       "hint": "PDF or Word, 5 MB max",
       "remove": "Remove file",
-      "analyzing": "Analyzing your CV…",
-      "analyzing_hint": "Our AI is reading your CV and preparing your profile — this usually takes under a minute.",
       "cancel": "Cancel",
       "continue": "Continue",
       "error_required": "Please import a CV before continuing.",
@@ -479,6 +477,13 @@
       "Ville uniquement": "City only"
     }
   },
+  "cvAnalyzing": {
+    "title": "Analyzing {filename}…",
+    "duration_notice": "This can take up to 5 minutes.",
+    "step_read": "Reading your CV",
+    "step_extract": "Extracting your skills and experience",
+    "step_generate": "Generating your profile"
+  },
   "profileCv": {
     "title": "Profile",
     "subtitle": "Your personal information and CV, as used for matching.",
@@ -488,7 +493,6 @@
     "your_cv": "Your CV",
     "download": "Download",
     "reupload": "Import a new CV",
-    "analyzing": "Analyzing {filename}… you'll be redirected to verification.",
     "last_update": "Last update",
     "total_experience": "Total experience",
     "edit_fields": "Edit my CV online",

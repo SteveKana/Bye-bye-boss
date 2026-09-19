@@ -328,18 +328,7 @@ async function downloadCv() {
         ⬇ {{ $t('profileCv.download_named', { filename: profile.cv_filename }) }}
       </UiButton>
 
-      <div
-        v-if="reuploading"
-        class="mb-4 flex items-center gap-3 rounded-lg border-2 border-brand/30 bg-brand-light px-4 py-3"
-      >
-        <span
-          class="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-brand border-t-transparent"
-          aria-hidden="true"
-        />
-        <p class="text-sm font-semibold text-brand-text">
-          {{ $t('profileCv.analyzing', { filename: reuploadFilename }) }}
-        </p>
-      </div>
+      <CvAnalyzingProgress v-if="reuploading" class="mb-4" :filename="reuploadFilename" />
 
       <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div>

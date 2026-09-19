@@ -387,8 +387,6 @@
       "browse": "Parcourir mes fichiers",
       "hint": "PDF ou Word, 5 Mo maximum",
       "remove": "Retirer le fichier",
-      "analyzing": "Analyse de votre CV en cours…",
-      "analyzing_hint": "Notre IA lit votre CV et prépare votre profil — cela prend généralement moins d'une minute.",
       "cancel": "Annuler",
       "continue": "Continuer",
       "error_required": "Merci d'importer un CV avant de continuer.",
@@ -479,6 +477,13 @@
       "Ville uniquement": "Ville uniquement"
     }
   },
+  "cvAnalyzing": {
+    "title": "Analyse de {filename} en cours…",
+    "duration_notice": "Ce traitement peut prendre jusqu'à 5 minutes.",
+    "step_read": "Lecture de votre CV",
+    "step_extract": "Extraction de vos compétences et expériences",
+    "step_generate": "Génération de votre profil"
+  },
   "profileCv": {
     "title": "Profil",
     "subtitle": "Vos informations personnelles et votre CV, tels qu'utilisés pour le matching.",
@@ -488,7 +493,6 @@
     "your_cv": "Votre CV",
     "download": "Télécharger",
     "reupload": "Importer un nouveau CV",
-    "analyzing": "Analyse de {filename} en cours… vous allez être redirigé vers la vérification.",
     "last_update": "Dernière mise à jour",
     "total_experience": "Expérience totale",
     "edit_fields": "Modifier mon CV en ligne",
