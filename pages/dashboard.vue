@@ -38,6 +38,46 @@ function initials(name) {
 // just "strong fit" -- an editorial threshold, easy to tune later.
 const STRONG_FIT_THRESHOLD = 75
 
+// The offer's contract_type is free text and source-dependent -- France
+// Travail gives French labels ("CDI", "CDD", "Mission intérimaire"...),
+// Adzuna gives English ones joined from two separate fields ("permanent,
+// full_time" / "contract, part_time") -- see the backend offers module's
+// provider normalizers. This maps both onto a short, consistent French tag;
+// an unrecognized label is shown as-is rather than hidden, and no label at
+// all shows no tag.
+function contractTag(rawLabel) {
+  if (!rawLabel) return ''
+  const text = rawLabel.toLowerCase()
+  if (text.includes('cdi') || text.includes('permanent')) return 'CDI'
+  if (text.includes('cdd')) return 'CDD'
+  if (text.includes('intérim') || text.includes('interim')) return 'Intérim'
+  if (
+    text.includes('alternance') ||
+    text.includes('apprentissage') ||
+    text.includes('professionnalisation')
+  ) {
+    return 'Alternance'
+  }
+  if (text.includes('stage') || text.includes('internship')) return 'Stage'
+  if (text.includes('freelance') || text.includes('indépendant') || text.includes('portage')) {
+    return 'Freelance'
+  }
+  // Adzuna's "contract" (vs. "permanent") has no exact French equivalent --
+  // freelance/portage is the closest fit for the kind of missions this
+  // platform's search keywords target.
+  if (text.includes('contract')) return 'Freelance'
+  return rawLabel
+}
+
+// Same relative-date idiom as pages/profile/index.vue's `updatedAgo`.
+function publishedAgo(dateStr) {
+  if (!dateStr) return ''
+  const days = Math.floor((Date.now() - new Date(dateStr)) / 86400000)
+  if (days <= 0) return t('dashboard.published_today')
+  if (days === 1) return t('dashboard.published_yesterday')
+  return t('dashboard.published_days', { days })
+}
+
 // Real search criteria, pulled from the profile saved at the end of
 // onboarding. Empty until the profile has loaded. Read-only here -- editing
 // happens on the dedicated /preferences page (its own sidebar section), not
@@ -82,6 +122,8 @@ const offers = computed(() =>
       loc: match.offer.location || '',
       strong: match.career_score >= STRONG_FIT_THRESHOLD,
       blockingMessage: match.blocking_message || '',
+      contractTag: contractTag(match.offer.contract_type),
+      publishedAgo: publishedAgo(match.offer.published_at),
       url: match.offer.url,
       scores: {
         career: match.career_score,
@@ -193,15 +235,26 @@ function openOffer(offer) {
             <div class="truncate text-sm font-bold text-navy">{{ offer.title }}</div>
             <div class="truncate text-[12.5px] text-gray-500">
               {{ offer.company }} · {{ offer.loc }}
+              <template v-if="offer.publishedAgo"> · {{ offer.publishedAgo }}</template>
             </div>
-            <span
-              class="mt-1 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-              :class="
-                offer.strong ? 'bg-success-light text-success-text' : 'bg-amber-100 text-amber-700'
-              "
-            >
-              {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
-            </span>
+            <div class="mt-1 flex flex-wrap items-center gap-1.5">
+              <span
+                class="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
+                :class="
+                  offer.strong
+                    ? 'bg-success-light text-success-text'
+                    : 'bg-amber-100 text-amber-700'
+                "
+              >
+                {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
+              </span>
+              <span
+                v-if="offer.contractTag"
+                class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
+              >
+                {{ offer.contractTag }}
+              </span>
+            </div>
             <p v-if="offer.blockingMessage" class="mt-1 text-[11.5px] text-amber-700">
               {{ offer.blockingMessage }}
             </p>
