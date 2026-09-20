@@ -59,7 +59,14 @@ function contractTag(rawLabel) {
     return 'Alternance'
   }
   if (text.includes('stage') || text.includes('internship')) return 'Stage'
-  if (text.includes('freelance') || text.includes('indépendant') || text.includes('portage')) {
+  if (
+    text.includes('freelance') ||
+    text.includes('indépendant') ||
+    text.includes('portage') ||
+    // France Travail's "Profession libérale" is a self-employed/liberal-
+    // profession status -- closest existing tag is Freelance.
+    text.includes('libérale')
+  ) {
     return 'Freelance'
   }
   // Adzuna's "contract" (vs. "permanent") has no exact French equivalent --
