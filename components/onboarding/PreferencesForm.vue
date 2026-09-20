@@ -35,12 +35,12 @@ const REMOTE_OPTIONS = ['Sur site', 'Hybride', 'Full remote'].map((v) => ({
 
 const MOBILITY_OPTIONS = computed(() => [
   { value: 'France entière', label: t('onboarding.mobility_options.France entière') },
-  {
-    value: 'Région uniquement',
-    label: props.location
-      ? t('onboarding.preferences.mobility_region_named', { city: props.location })
-      : t('onboarding.mobility_options.Région uniquement'),
-  },
+  // No city-based guessing here (unlike "Ville uniquement" below) -- which
+  // French région this covers is picked explicitly from MOBILITY_REGIONS
+  // once this option is selected (see the conditional UiSelect in the
+  // template), never inferred from the free-text `location` extracted off
+  // the CV, which has no guaranteed format to parse a région out of.
+  { value: 'Région uniquement', label: t('onboarding.mobility_options.Région uniquement') },
   {
     value: 'Ville uniquement',
     label: props.location
@@ -49,10 +49,34 @@ const MOBILITY_OPTIONS = computed(() => [
   },
 ])
 
+// The 18 French régions (13 metropolitan + 5 overseas) -- must match the
+// backend's MobilityRegion literal (app/modules/cv/schemas.py) exactly.
+const MOBILITY_REGIONS = [
+  'Auvergne-Rhône-Alpes',
+  'Bourgogne-Franche-Comté',
+  'Bretagne',
+  'Centre-Val de Loire',
+  'Corse',
+  'Grand Est',
+  'Hauts-de-France',
+  'Île-de-France',
+  'Normandie',
+  'Nouvelle-Aquitaine',
+  'Occitanie',
+  'Pays de la Loire',
+  "Provence-Alpes-Côte d'Azur",
+  'Guadeloupe',
+  'Martinique',
+  'Guyane',
+  'La Réunion',
+  'Mayotte',
+].map((v) => ({ value: v, label: t(`onboarding.mobility_regions.${v}`) }))
+
 const form = reactive({
   contract_types: [],
   remote_preferences: [],
   mobility: 'France entière',
+  mobility_region: null,
   salary_target: null,
   daily_rate: null,
 })
@@ -61,12 +85,23 @@ const form = reactive({
 // otherwise instead of sitting there unused next to the annual salary.
 const showDailyRate = computed(() => form.contract_types.includes('Freelance'))
 
+// Cleared whenever "Région uniquement" isn't the active choice, so a stale
+// région from an earlier selection never lingers and gets silently
+// resubmitted once the field is hidden again.
+watch(
+  () => form.mobility,
+  (value) => {
+    if (value !== 'Région uniquement') form.mobility_region = null
+  }
+)
+
 function applyProfile(profile) {
   form.contract_types = profile.contract_types?.length ? [...profile.contract_types] : []
   form.remote_preferences = profile.remote_preferences?.length
     ? [...profile.remote_preferences]
     : []
   form.mobility = profile.mobility || 'France entière'
+  form.mobility_region = profile.mobility_region || null
   form.salary_target = profile.salary_target ?? null
   form.daily_rate = profile.daily_rate ?? null
 }
@@ -125,6 +160,13 @@ defineExpose({ form, applyProfile, isValid })
       </p>
       <div class="mt-4">
         <OnboardingChoiceGroup v-model="form.mobility" :options="MOBILITY_OPTIONS" :columns="3" />
+      </div>
+      <div v-if="form.mobility === 'Région uniquement'" class="mt-4 max-w-xs">
+        <UiSelect
+          v-model="form.mobility_region"
+          :options="MOBILITY_REGIONS"
+          :placeholder="$t('onboarding.preferences.mobility_region_placeholder')"
+        />
       </div>
       <p class="mt-3 text-xs text-gray-400">{{ $t('onboarding.preferences.single_choice') }}</p>
       <p v-if="!location" class="mt-1 text-xs text-gray-400">

@@ -107,10 +107,17 @@ onMounted(async () => {
     const salary = profile.salary_target
       ? `${profile.salary_target.toLocaleString('fr-FR')} € brut / an`
       : null
+    // "Région uniquement" alone is the same raw internal value the user
+    // never actually chose to see -- show the région they picked instead
+    // (see PreferencesForm.vue's mobility_region field).
+    const mobility =
+      profile.mobility === 'Région uniquement'
+        ? profile.mobility_region || profile.mobility
+        : profile.mobility
     criteria.value = [
       ...(profile.contract_types || []),
       ...(profile.remote_preferences || []),
-      profile.mobility,
+      mobility,
       salary,
     ].filter(Boolean)
   } catch {
