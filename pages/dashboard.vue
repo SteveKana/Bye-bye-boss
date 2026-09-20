@@ -117,26 +117,70 @@ onMounted(async () => {
 
 const loadingOpportunities = ref(true)
 
+// A ats_potential at or above this is shown as "good ATS fit" in the filter.
+// Deliberately the same cutoff as STRONG_FIT_THRESHOLD, but a distinct
+// constant: it's a coincidence that they share a value today, not a promise
+// they always will, and the two scores measure different things -- see the
+// filter's own comment below.
+const STRONG_ATS_THRESHOLD = 75
+
+// Fixed, canonical order for the contract-type quick filters (mirrors
+// contractTag()'s possible outputs) -- only the ones actually present in the
+// current results are shown, but always in this order, not first-seen order.
+const CONTRACT_TAG_ORDER = ['CDI', 'CDD', 'Intérim', 'Freelance', 'Alternance', 'Stage']
+
+// Filter/sort state, all client-side over the already-loaded top matches --
+// there are at most ~20 of them (see the backend's list_top_for_profile),
+// so there's no need for a dedicated filtering endpoint.
+const contractFilter = ref(new Set())
+const atsFilter = ref('all') // 'all' | 'good' | 'low'
+const sortBy = ref('relevance') // 'relevance' | 'date_desc' | 'date_asc'
+
+function toggleContractTag(tag) {
+  const next = new Set(contractFilter.value)
+  if (next.has(tag)) next.delete(tag)
+  else next.add(tag)
+  contractFilter.value = next
+}
+
+function resetFilters() {
+  contractFilter.value = new Set()
+  atsFilter.value = 'all'
+}
+
+const hasActiveFilters = computed(() => contractFilter.value.size > 0 || atsFilter.value !== 'all')
+
+const sortOptions = computed(() => [
+  { value: 'relevance', label: t('dashboard.sort_relevance') },
+  { value: 'date_desc', label: t('dashboard.sort_date_desc') },
+  { value: 'date_asc', label: t('dashboard.sort_date_asc') },
+])
+
 // Real matches from the background scoring job, reshaped for the template.
 // Locally rejected offers are filtered out below (see `reject`) without
 // touching the backend -- there's no "reject" endpoint yet, this is purely a
 // client-side hide, same as before this was wired to real data.
 const rejectedIds = ref(new Set())
-const offers = computed(() =>
+const matchedOffers = computed(() =>
   matching.topOpportunities
     .filter((match) => !rejectedIds.value.has(match.id))
-    .map((match, index) => ({
+    .map((match) => ({
       id: match.id,
-      rank: index + 1,
       logo: initials(match.company_name || match.offer.company_name),
       bg: avatarColor(match.company_name || match.offer.company_name || match.offer.title),
       title: match.offer.title,
       company: match.company_name || match.offer.company_name || '',
       loc: match.offer.location || '',
       strong: match.career_score >= STRONG_FIT_THRESHOLD,
+      // Best achievable ATS compatibility for this offer once the CV is
+      // reworded -- a high career_score with a low ats_potential still means
+      // reduced chances of getting past the recruiter's ATS software, so the
+      // "correspondance" filter goes by this, not by career_score.
+      goodAtsFit: match.ats_potential >= STRONG_ATS_THRESHOLD,
       blockingMessage: match.blocking_message || '',
       contractTag: contractTag(match.offer.contract_type),
       publishedAgo: publishedLabel(match.offer.published_at),
+      publishedAt: match.offer.published_at ? new Date(match.offer.published_at) : null,
       url: match.offer.url,
       scores: {
         career: match.career_score,
@@ -145,6 +189,36 @@ const offers = computed(() =>
       },
     }))
 )
+
+const contractTagOptions = computed(() =>
+  CONTRACT_TAG_ORDER.filter((tag) => matchedOffers.value.some((offer) => offer.contractTag === tag))
+)
+
+const filteredOffers = computed(() =>
+  matchedOffers.value.filter((offer) => {
+    if (contractFilter.value.size && !contractFilter.value.has(offer.contractTag)) return false
+    if (atsFilter.value === 'good' && !offer.goodAtsFit) return false
+    if (atsFilter.value === 'low' && offer.goodAtsFit) return false
+    return true
+  })
+)
+
+// Missing dates always sort last, whichever direction is chosen -- an offer
+// with no known publication date is neither "recent" nor "old".
+const offers = computed(() => {
+  const list = [...filteredOffers.value]
+  if (sortBy.value === 'date_desc' || sortBy.value === 'date_asc') {
+    const sign = sortBy.value === 'date_desc' ? -1 : 1
+    list.sort((a, b) => {
+      if (!a.publishedAt) return 1
+      if (!b.publishedAt) return -1
+      return sign * (a.publishedAt - b.publishedAt)
+    })
+  }
+  // 'relevance' keeps matchedOffers' incoming order (backend-sorted by
+  // career_score, see list_top_for_profile) -- nothing to do.
+  return list.map((offer, index) => ({ ...offer, rank: index + 1 }))
+})
 
 onMounted(async () => {
   try {
@@ -222,6 +296,63 @@ function openOffer(offer) {
         </div>
         <p class="mt-1 text-[13px] text-gray-500">{{ $t('dashboard.top_sub') }}</p>
       </template>
+
+      <!-- Filters/sort -- shown only once there's something to filter. -->
+      <div
+        v-if="matchedOffers.length"
+        class="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-gray-100 pb-3"
+      >
+        <div v-if="contractTagOptions.length" class="flex flex-wrap items-center gap-1.5">
+          <button
+            v-for="tag in contractTagOptions"
+            :key="tag"
+            type="button"
+            class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
+            :class="
+              contractFilter.has(tag)
+                ? 'border-brand bg-brand-light text-brand-text'
+                : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            "
+            @click="toggleContractTag(tag)"
+          >
+            {{ tag }}
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button
+            v-for="opt in [
+              { value: 'all', label: $t('dashboard.filter_ats_all') },
+              { value: 'good', label: $t('dashboard.filter_ats_good') },
+              { value: 'low', label: $t('dashboard.filter_ats_low') },
+            ]"
+            :key="opt.value"
+            type="button"
+            class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
+            :class="
+              atsFilter === opt.value
+                ? 'border-brand bg-brand-light text-brand-text'
+                : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            "
+            @click="atsFilter = opt.value"
+          >
+            {{ opt.label }}
+          </button>
+        </div>
+
+        <button
+          v-if="hasActiveFilters"
+          type="button"
+          class="text-[12px] font-semibold text-gray-400 hover:text-gray-600 hover:underline"
+          @click="resetFilters"
+        >
+          {{ $t('dashboard.filter_reset') }}
+        </button>
+
+        <div class="ml-auto w-full max-w-[200px]">
+          <UiSelect v-model="sortBy" :options="sortOptions" />
+        </div>
+      </div>
 
       <ul class="divide-y divide-gray-100">
         <li
@@ -318,6 +449,15 @@ function openOffer(offer) {
       <p v-if="loadingOpportunities" class="py-6 text-center text-sm text-gray-400">
         {{ $t('dashboard.loading') }}
       </p>
+      <div
+        v-else-if="!offers.length && matchedOffers.length"
+        class="py-6 text-center text-sm text-gray-400"
+      >
+        <p>{{ $t('dashboard.empty_filtered') }}</p>
+        <button class="mt-1 font-semibold text-brand hover:underline" @click="resetFilters">
+          {{ $t('dashboard.filter_reset') }}
+        </button>
+      </div>
       <p v-else-if="!offers.length" class="py-6 text-center text-sm text-gray-400">
         {{ $t('dashboard.empty') }}
       </p>
