@@ -181,6 +181,7 @@
     "top_title": "Top opportunities for you",
     "top_sub": "Offers ranked by compatibility with your profile.",
     "loading": "Finding your best opportunities…",
+    "loading_sub": "We're analyzing hundreds of offers to find only the ones that truly match your profile. This can take a few minutes.",
     "published_today": "Posted today",
     "published_yesterday": "Posted yesterday",
     "published_days": "Posted {days} days ago",
