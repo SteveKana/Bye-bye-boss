@@ -187,10 +187,18 @@
     "published_on": "Posted on {date}",
     "fit_strong": "Very strong fit",
     "fit_good": "Strong fit",
+    "filter_ats_all": "All",
+    "filter_ats_good": "Good ATS fit",
+    "filter_ats_low": "Needs work",
+    "filter_reset": "Reset filters",
+    "sort_relevance": "Sort by relevance",
+    "sort_date_desc": "Newest",
+    "sort_date_asc": "Oldest",
     "reject": "Reject this offer",
     "see_all": "See all opportunities",
     "offer_hidden": "Offer hidden",
-    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you."
+    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
+    "empty_filtered": "No offers match these filters."
   },
   "preferencesPage": {
     "title": "Preferences",

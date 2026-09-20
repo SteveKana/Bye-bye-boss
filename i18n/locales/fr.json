@@ -187,10 +187,18 @@
     "published_on": "Publiée le {date}",
     "fit_strong": "Très forte compatibilité",
     "fit_good": "Forte compatibilité",
+    "filter_ats_all": "Toutes",
+    "filter_ats_good": "Bonne compatibilité ATS",
+    "filter_ats_low": "À améliorer",
+    "filter_reset": "Réinitialiser les filtres",
+    "sort_relevance": "Trier par pertinence",
+    "sort_date_desc": "Plus récentes",
+    "sort_date_asc": "Plus anciennes",
     "reject": "Rejeter cette offre",
     "see_all": "Voir toutes les opportunités",
     "offer_hidden": "Offre masquée",
-    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres."
+    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres.",
+    "empty_filtered": "Aucune offre ne correspond à ces filtres."
   },
   "preferencesPage": {
     "title": "Préférences",
