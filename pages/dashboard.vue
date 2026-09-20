@@ -34,8 +34,12 @@ function initials(name) {
   return (words[0][0] + (words[1]?.[0] || '')).toUpperCase()
 }
 
-// A career_score at or above this is shown as "very strong fit" rather than
-// just "strong fit" -- an editorial threshold, easy to tune later.
+// An ats_potential at or above this is shown as "very strong fit" rather
+// than just "strong fit" -- an editorial threshold, easy to tune later.
+// Was career_score-based originally, switched to ats_potential: a high
+// career_score alone doesn't mean much on its own if the CV, as it stands,
+// has little chance of getting past the recruiter's ATS software for this
+// offer -- see the "pertinence" sort below, which uses the same reasoning.
 const STRONG_FIT_THRESHOLD = 75
 
 // The offer's contract_type is free text and source-dependent -- France
@@ -117,38 +121,21 @@ onMounted(async () => {
 
 const loadingOpportunities = ref(true)
 
-// A ats_potential at or above this is shown as "good ATS fit" in the filter.
-// Deliberately the same cutoff as STRONG_FIT_THRESHOLD, but a distinct
-// constant: it's a coincidence that they share a value today, not a promise
-// they always will, and the two scores measure different things -- see the
-// filter's own comment below.
-const STRONG_ATS_THRESHOLD = 75
-
-// Fixed, canonical order for the contract-type quick filters (mirrors
-// contractTag()'s possible outputs) -- only the ones actually present in the
-// current results are shown, but always in this order, not first-seen order.
-const CONTRACT_TAG_ORDER = ['CDI', 'CDD', 'Intérim', 'Freelance', 'Alternance', 'Stage']
-
 // Filter/sort state, all client-side over the already-loaded top matches --
 // there are at most ~20 of them (see the backend's list_top_for_profile),
 // so there's no need for a dedicated filtering endpoint.
-const contractFilter = ref(new Set())
-const atsFilter = ref('all') // 'all' | 'good' | 'low'
+//
+// Only CDI/Freelance get their own quick-filter button -- CDD/Intérim/
+// Alternance/Stage still show as a tag on individual cards (contractTag()
+// is unchanged), they're just not offered as a top-level filter.
+const contractFilter = ref('all') // 'all' | 'CDI' | 'Freelance'
 const sortBy = ref('relevance') // 'relevance' | 'date_desc' | 'date_asc'
 
-function toggleContractTag(tag) {
-  const next = new Set(contractFilter.value)
-  if (next.has(tag)) next.delete(tag)
-  else next.add(tag)
-  contractFilter.value = next
-}
-
 function resetFilters() {
-  contractFilter.value = new Set()
-  atsFilter.value = 'all'
+  contractFilter.value = 'all'
 }
 
-const hasActiveFilters = computed(() => contractFilter.value.size > 0 || atsFilter.value !== 'all')
+const hasActiveFilters = computed(() => contractFilter.value !== 'all')
 
 const sortOptions = computed(() => [
   { value: 'relevance', label: t('dashboard.sort_relevance') },
@@ -171,12 +158,7 @@ const matchedOffers = computed(() =>
       title: match.offer.title,
       company: match.company_name || match.offer.company_name || '',
       loc: match.offer.location || '',
-      strong: match.career_score >= STRONG_FIT_THRESHOLD,
-      // Best achievable ATS compatibility for this offer once the CV is
-      // reworded -- a high career_score with a low ats_potential still means
-      // reduced chances of getting past the recruiter's ATS software, so the
-      // "correspondance" filter goes by this, not by career_score.
-      goodAtsFit: match.ats_potential >= STRONG_ATS_THRESHOLD,
+      strong: match.ats_potential >= STRONG_FIT_THRESHOLD,
       blockingMessage: match.blocking_message || '',
       contractTag: contractTag(match.offer.contract_type),
       publishedAgo: publishedLabel(match.offer.published_at),
@@ -190,17 +172,10 @@ const matchedOffers = computed(() =>
     }))
 )
 
-const contractTagOptions = computed(() =>
-  CONTRACT_TAG_ORDER.filter((tag) => matchedOffers.value.some((offer) => offer.contractTag === tag))
-)
-
 const filteredOffers = computed(() =>
-  matchedOffers.value.filter((offer) => {
-    if (contractFilter.value.size && !contractFilter.value.has(offer.contractTag)) return false
-    if (atsFilter.value === 'good' && !offer.goodAtsFit) return false
-    if (atsFilter.value === 'low' && offer.goodAtsFit) return false
-    return true
-  })
+  matchedOffers.value.filter(
+    (offer) => contractFilter.value === 'all' || offer.contractTag === contractFilter.value
+  )
 )
 
 // Missing dates always sort last, whichever direction is chosen -- an offer
@@ -214,9 +189,13 @@ const offers = computed(() => {
       if (!b.publishedAt) return -1
       return sign * (a.publishedAt - b.publishedAt)
     })
+  } else {
+    // "Pertinence" -- ats_potential descending, not career_score: the point
+    // is to surface the offers giving the best real odds of getting past
+    // the recruiter's ATS once the CV is adapted, not just a good abstract
+    // career fit (see STRONG_FIT_THRESHOLD's comment above).
+    list.sort((a, b) => b.scores.potential - a.scores.potential)
   }
-  // 'relevance' keeps matchedOffers' incoming order (backend-sorted by
-  // career_score, see list_top_for_profile) -- nothing to do.
   return list.map((offer, index) => ({ ...offer, rank: index + 1 }))
 })
 
@@ -302,39 +281,22 @@ function openOffer(offer) {
         v-if="matchedOffers.length"
         class="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-gray-100 pb-3"
       >
-        <div v-if="contractTagOptions.length" class="flex flex-wrap items-center gap-1.5">
-          <button
-            v-for="tag in contractTagOptions"
-            :key="tag"
-            type="button"
-            class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
-            :class="
-              contractFilter.has(tag)
-                ? 'border-brand bg-brand-light text-brand-text'
-                : 'border-gray-200 text-gray-500 hover:border-gray-300'
-            "
-            @click="toggleContractTag(tag)"
-          >
-            {{ tag }}
-          </button>
-        </div>
-
         <div class="flex flex-wrap items-center gap-1.5">
           <button
             v-for="opt in [
-              { value: 'all', label: $t('dashboard.filter_ats_all') },
-              { value: 'good', label: $t('dashboard.filter_ats_good') },
-              { value: 'low', label: $t('dashboard.filter_ats_low') },
+              { value: 'all', label: $t('dashboard.filter_contract_all') },
+              { value: 'CDI', label: 'CDI' },
+              { value: 'Freelance', label: 'Freelance' },
             ]"
             :key="opt.value"
             type="button"
             class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
             :class="
-              atsFilter === opt.value
+              contractFilter === opt.value
                 ? 'border-brand bg-brand-light text-brand-text'
                 : 'border-gray-200 text-gray-500 hover:border-gray-300'
             "
-            @click="atsFilter = opt.value"
+            @click="contractFilter = opt.value"
           >
             {{ opt.label }}
           </button>
