@@ -69,13 +69,19 @@ function contractTag(rawLabel) {
   return rawLabel
 }
 
-// Same relative-date idiom as pages/profile/index.vue's `updatedAgo`.
-function publishedAgo(dateStr) {
+// Relative for the first week (same idiom as pages/profile/index.vue's
+// `updatedAgo`), then an absolute date beyond that -- "publiée il y a 111
+// jours" reads as stale/dead even for an offer France Travail itself just
+// refreshed (see the offers module's dateActualisation fix), so relative
+// phrasing is capped at a week.
+function publishedLabel(dateStr) {
   if (!dateStr) return ''
-  const days = Math.floor((Date.now() - new Date(dateStr)) / 86400000)
+  const date = new Date(dateStr)
+  const days = Math.floor((Date.now() - date) / 86400000)
   if (days <= 0) return t('dashboard.published_today')
   if (days === 1) return t('dashboard.published_yesterday')
-  return t('dashboard.published_days', { days })
+  if (days <= 7) return t('dashboard.published_days', { days })
+  return t('dashboard.published_on', { date: date.toLocaleDateString('fr-FR') })
 }
 
 // Real search criteria, pulled from the profile saved at the end of
@@ -123,7 +129,7 @@ const offers = computed(() =>
       strong: match.career_score >= STRONG_FIT_THRESHOLD,
       blockingMessage: match.blocking_message || '',
       contractTag: contractTag(match.offer.contract_type),
-      publishedAgo: publishedAgo(match.offer.published_at),
+      publishedAgo: publishedLabel(match.offer.published_at),
       url: match.offer.url,
       scores: {
         career: match.career_score,

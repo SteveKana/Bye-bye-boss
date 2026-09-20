@@ -184,6 +184,7 @@
     "published_today": "Publiée aujourd'hui",
     "published_yesterday": "Publiée hier",
     "published_days": "Publiée il y a {days} jours",
+    "published_on": "Publiée le {date}",
     "fit_strong": "Très forte compatibilité",
     "fit_good": "Forte compatibilité",
     "reject": "Rejeter cette offre",

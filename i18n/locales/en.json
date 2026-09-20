@@ -184,6 +184,7 @@
     "published_today": "Posted today",
     "published_yesterday": "Posted yesterday",
     "published_days": "Posted {days} days ago",
+    "published_on": "Posted on {date}",
     "fit_strong": "Very strong fit",
     "fit_good": "Strong fit",
     "reject": "Reject this offer",
