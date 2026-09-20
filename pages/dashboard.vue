@@ -6,16 +6,37 @@ useHead({ title: computed(() => `${t('app.nav.dashboard')} · Bye Bye Boss`) })
 const toast = useToast()
 const { firstName } = useUserDisplay()
 const onboarding = useOnboardingStore()
+const matching = useMatchingStore()
 
-// Static demo data (the matching engine is not built yet — Phase 1 shows the
-// shell with placeholder offers). Full class names so Tailwind keeps them.
+// Full class names so Tailwind keeps them. No "regret" entry -- the Regret
+// Index is deliberately unavailable for now (see the backend `matching`
+// module's docstring): we never fabricate a score, so there's nothing to
+// show a color/label for.
 const scoreColors = {
   ats: 'text-green-600',
   career: 'text-blue-600',
   potential: 'text-brand',
-  regret: 'text-amber-600',
 }
-const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential', regret: 'Regret' }
+const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential' }
+
+// Small fixed palette for the company-initials avatar -- picked
+// deterministically from the company name so the same company always gets
+// the same color (not randomized on every render).
+const avatarPalette = ['#5B3FE8', '#0F0B2E', '#10B981', '#F59E0B', '#2D9CDB', '#DC2626']
+function avatarColor(name) {
+  let hash = 0
+  for (const char of name) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
+  return avatarPalette[hash % avatarPalette.length]
+}
+function initials(name) {
+  const words = (name || '').trim().split(/\s+/).filter(Boolean)
+  if (!words.length) return '?'
+  return (words[0][0] + (words[1]?.[0] || '')).toUpperCase()
+}
+
+// A career_score at or above this is shown as "very strong fit" rather than
+// just "strong fit" -- an editorial threshold, easy to tune later.
+const STRONG_FIT_THRESHOLD = 75
 
 // Real search criteria, pulled from the profile saved at the end of
 // onboarding. Empty until the profile has loaded. Read-only here -- editing
@@ -41,29 +62,65 @@ onMounted(async () => {
   }
 })
 
-// The matching engine isn't wired in yet, so there are no real offers to
-// show — an honest empty state beats fabricated placeholder listings.
-const offers = ref([])
+const loadingOpportunities = ref(true)
+
+// Real matches from the background scoring job, reshaped for the template.
+// Locally rejected offers are filtered out below (see `reject`) without
+// touching the backend -- there's no "reject" endpoint yet, this is purely a
+// client-side hide, same as before this was wired to real data.
+const rejectedIds = ref(new Set())
+const offers = computed(() =>
+  matching.topOpportunities
+    .filter((match) => !rejectedIds.value.has(match.id))
+    .map((match, index) => ({
+      id: match.id,
+      rank: index + 1,
+      logo: initials(match.company_name || match.offer.company_name),
+      bg: avatarColor(match.company_name || match.offer.company_name || match.offer.title),
+      title: match.offer.title,
+      company: match.company_name || match.offer.company_name || '',
+      loc: match.offer.location || '',
+      strong: match.career_score >= STRONG_FIT_THRESHOLD,
+      blockingMessage: match.blocking_message || '',
+      url: match.offer.url,
+      scores: {
+        career: match.career_score,
+        ats: match.ats_score,
+        potential: match.ats_potential,
+      },
+    }))
+)
+
+onMounted(async () => {
+  try {
+    await matching.fetchTop()
+  } catch {
+    // No profile yet, profile not "complete", or nothing scored yet -- all
+    // read as "no opportunities yet", same honest empty state as before,
+    // not an alarming error toast.
+  } finally {
+    loadingOpportunities.value = false
+  }
+})
 
 // Reject with a short undo window — mirrors the spec (a real reject is permanent).
 function reject(offer) {
-  const index = offers.value.findIndex((o) => o.id === offer.id)
-  if (index === -1) return
-  offers.value.splice(index, 1)
+  rejectedIds.value.add(offer.id)
   toast.show({
     message: t('dashboard.offer_hidden'),
     variant: 'info',
     duration: 5000,
-    undo: () => offers.value.splice(index, 0, offer),
+    undo: () => rejectedIds.value.delete(offer.id),
     undoLabel: t('common.undo'),
   })
 }
 
 const soon = () => toast.info(t('app.soon_full'))
 
-// Each offer row links to the opportunity detail — a later phase, so for now
-// clicking (or activating with the keyboard) shows a generic "coming soon".
-const openOffer = () => toast.info(t('app.soon_full'))
+// Opens the real job listing (France Travail / Adzuna) in a new tab.
+function openOffer(offer) {
+  window.open(offer.url, '_blank', 'noopener')
+}
 </script>
 
 <template>
@@ -145,6 +202,9 @@ const openOffer = () => toast.info(t('app.soon_full'))
             >
               {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
             </span>
+            <p v-if="offer.blockingMessage" class="mt-1 text-[11.5px] text-amber-700">
+              {{ offer.blockingMessage }}
+            </p>
           </div>
 
           <div class="hidden shrink-0 gap-5 sm:flex">
@@ -189,7 +249,10 @@ const openOffer = () => toast.info(t('app.soon_full'))
         </li>
       </ul>
 
-      <p v-if="!offers.length" class="py-6 text-center text-sm text-gray-400">
+      <p v-if="loadingOpportunities" class="py-6 text-center text-sm text-gray-400">
+        {{ $t('dashboard.loading') }}
+      </p>
+      <p v-else-if="!offers.length" class="py-6 text-center text-sm text-gray-400">
         {{ $t('dashboard.empty') }}
       </p>
 
