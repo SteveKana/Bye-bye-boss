@@ -408,9 +408,58 @@ function openOffer(offer) {
         </li>
       </ul>
 
-      <p v-if="loadingOpportunities" class="py-6 text-center text-sm text-gray-400">
-        {{ $t('dashboard.loading') }}
-      </p>
+      <div v-if="loadingOpportunities">
+        <!-- role="status"/aria-live: the only part of this loading state a
+             screen reader needs to hear -- the skeleton rows below are pure
+             visual filler (aria-hidden), not real content. -->
+        <div
+          role="status"
+          aria-live="polite"
+          class="flex flex-col items-center gap-2 py-6 text-center"
+        >
+          <svg
+            class="h-5 w-5 animate-spin text-brand"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
+          </svg>
+          <p class="text-sm font-semibold text-navy">{{ $t('dashboard.loading') }}</p>
+          <p class="max-w-sm text-[12.5px] text-gray-400">{{ $t('dashboard.loading_sub') }}</p>
+        </div>
+
+        <!-- Skeleton rows: same shape as a real offer row (avatar, two text
+             lines, tag pill, score column) so the layout doesn't jump once
+             real offers arrive, and so it's obvious something is actively
+             loading rather than the section just being empty/broken. -->
+        <ul class="mt-2 divide-y divide-gray-100" aria-hidden="true">
+          <li v-for="n in 3" :key="n" class="-mx-2 flex items-center gap-4 rounded-lg px-2 py-3.5">
+            <span class="w-4 shrink-0"></span>
+            <span class="h-10 w-10 shrink-0 animate-pulse rounded-[10px] bg-gray-100"></span>
+            <div class="min-w-0 flex-1 space-y-2 py-0.5">
+              <div class="h-3.5 w-2/5 animate-pulse rounded bg-gray-100"></div>
+              <div class="h-3 w-3/5 animate-pulse rounded bg-gray-100"></div>
+              <div class="h-4 w-24 animate-pulse rounded-full bg-gray-100"></div>
+            </div>
+            <div class="hidden shrink-0 gap-5 sm:flex">
+              <div v-for="i in 3" :key="i" class="h-8 w-8 animate-pulse rounded bg-gray-100"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
       <div
         v-else-if="!offers.length && matchedOffers.length"
         class="py-6 text-center text-sm text-gray-400"

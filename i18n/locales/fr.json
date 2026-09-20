@@ -181,6 +181,7 @@
     "top_title": "Top opportunités pour vous",
     "top_sub": "Offres classées par compatibilité avec votre profil.",
     "loading": "Recherche de vos meilleures opportunités…",
+    "loading_sub": "Nous analysons des centaines d'offres pour ne retenir que celles qui correspondent vraiment à votre profil. Cela peut prendre quelques minutes.",
     "published_today": "Publiée aujourd'hui",
     "published_yesterday": "Publiée hier",
     "published_days": "Publiée il y a {days} jours",
