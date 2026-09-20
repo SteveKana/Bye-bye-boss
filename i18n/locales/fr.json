@@ -454,9 +454,9 @@
       "mobility_title": "Mobilité géographique",
       "mobility_subtitle": "La zone géographique où vous souhaitez travailler",
       "single_choice": "Un seul choix — « France entière » couvre déjà toutes les zones",
-      "mobility_region_named": "Autour de {city}",
       "mobility_city_named": "{city} uniquement",
-      "mobility_hint_no_location": "Renseignez votre ville dans votre profil pour préciser ces options.",
+      "mobility_hint_no_location": "Renseignez votre ville dans votre profil pour activer l'option « Ville uniquement ».",
+      "mobility_region_placeholder": "Choisissez votre région",
       "salary_title": "Salaire cible (facultatif)",
       "salary_subtitle": "Votre salaire brut annuel souhaité",
       "salary_placeholder": "Ex : 55000",
@@ -485,8 +485,28 @@
     },
     "mobility_options": {
       "France entière": "France entière",
-      "Région uniquement": "Région uniquement",
+      "Région uniquement": "Une région en particulier",
       "Ville uniquement": "Ville uniquement"
+    },
+    "mobility_regions": {
+      "Auvergne-Rhône-Alpes": "Auvergne-Rhône-Alpes",
+      "Bourgogne-Franche-Comté": "Bourgogne-Franche-Comté",
+      "Bretagne": "Bretagne",
+      "Centre-Val de Loire": "Centre-Val de Loire",
+      "Corse": "Corse",
+      "Grand Est": "Grand Est",
+      "Hauts-de-France": "Hauts-de-France",
+      "Île-de-France": "Île-de-France",
+      "Normandie": "Normandie",
+      "Nouvelle-Aquitaine": "Nouvelle-Aquitaine",
+      "Occitanie": "Occitanie",
+      "Pays de la Loire": "Pays de la Loire",
+      "Provence-Alpes-Côte d'Azur": "Provence-Alpes-Côte d'Azur",
+      "Guadeloupe": "Guadeloupe",
+      "Martinique": "Martinique",
+      "Guyane": "Guyane",
+      "La Réunion": "La Réunion",
+      "Mayotte": "Mayotte"
     }
   },
   "cvAnalyzing": {

@@ -454,9 +454,9 @@
       "mobility_title": "Geographic mobility",
       "mobility_subtitle": "The geographic area you'd like to work in",
       "single_choice": "One choice only — \"Anywhere in France\" already covers all areas",
-      "mobility_region_named": "Around {city}",
       "mobility_city_named": "{city} only",
-      "mobility_hint_no_location": "Set your city in your profile to make these options more precise.",
+      "mobility_hint_no_location": "Set your city in your profile to enable the \"City only\" option.",
+      "mobility_region_placeholder": "Choose your region",
       "salary_title": "Target salary (optional)",
       "salary_subtitle": "Your desired gross annual salary",
       "salary_placeholder": "E.g. 55000",
@@ -485,8 +485,28 @@
     },
     "mobility_options": {
       "France entière": "Anywhere in France",
-      "Région uniquement": "Region only",
+      "Région uniquement": "A specific region",
       "Ville uniquement": "City only"
+    },
+    "mobility_regions": {
+      "Auvergne-Rhône-Alpes": "Auvergne-Rhône-Alpes",
+      "Bourgogne-Franche-Comté": "Bourgogne-Franche-Comté",
+      "Bretagne": "Bretagne",
+      "Centre-Val de Loire": "Centre-Val de Loire",
+      "Corse": "Corse",
+      "Grand Est": "Grand Est",
+      "Hauts-de-France": "Hauts-de-France",
+      "Île-de-France": "Île-de-France",
+      "Normandie": "Normandie",
+      "Nouvelle-Aquitaine": "Nouvelle-Aquitaine",
+      "Occitanie": "Occitanie",
+      "Pays de la Loire": "Pays de la Loire",
+      "Provence-Alpes-Côte d'Azur": "Provence-Alpes-Côte d'Azur",
+      "Guadeloupe": "Guadeloupe",
+      "Martinique": "Martinique",
+      "Guyane": "Guyane",
+      "La Réunion": "La Réunion",
+      "Mayotte": "Mayotte"
     }
   },
   "cvAnalyzing": {
