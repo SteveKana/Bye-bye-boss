@@ -241,9 +241,16 @@ const soon = () => toast.info(t('app.soon_full'))
               </div>
             </div>
 
-            <p v-if="publishedLabel(offer.published_at)" class="shrink-0 text-xs text-gray-400">
-              {{ publishedLabel(offer.published_at) }}
-            </p>
+            <div
+              v-if="publishedLabel(offer.published_at)"
+              class="flex shrink-0 items-center gap-1 text-xs text-gray-400"
+            >
+              <span>{{ publishedLabel(offer.published_at) }}</span>
+              <UiWarningHint
+                v-if="offer.source === 'adzuna'"
+                :message="$t('common.stale_source_warning')"
+              />
+            </div>
           </div>
 
           <div class="mt-4">
@@ -512,7 +519,13 @@ const soon = () => toast.info(t('app.soon_full'))
               v-if="publishedLabel(offer.published_at)"
               class="flex items-center gap-2 py-2.5 text-[13px]"
             >
-              <span class="flex-1 text-gray-500">{{ $t('opportunity.detail_published') }}</span>
+              <span class="flex flex-1 items-center gap-1 text-gray-500">
+                {{ $t('opportunity.detail_published') }}
+                <UiWarningHint
+                  v-if="offer.source === 'adzuna'"
+                  :message="$t('common.stale_source_warning')"
+                />
+              </span>
               <span class="font-bold text-navy">{{ publishedLabel(offer.published_at) }}</span>
             </div>
           </div>
