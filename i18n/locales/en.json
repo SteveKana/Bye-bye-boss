@@ -9,7 +9,8 @@
     "first_name": "First name",
     "last_name": "Last name",
     "previous": "Previous",
-    "save": "Save"
+    "save": "Save",
+    "stale_source_warning": "This information may no longer be up to date."
   },
   "nav": {
     "no_account": "No account yet?",

@@ -9,7 +9,8 @@
     "first_name": "Prénom",
     "last_name": "Nom",
     "previous": "Précédent",
-    "save": "Sauvegarder"
+    "save": "Sauvegarder",
+    "stale_source_warning": "Cette information pourrait ne plus être à jour."
   },
   "nav": {
     "no_account": "Pas encore de compte ?",

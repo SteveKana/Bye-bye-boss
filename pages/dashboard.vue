@@ -290,9 +290,22 @@ function openOffer(offer) {
 
           <div class="min-w-0 flex-1">
             <div class="truncate text-sm font-bold text-navy">{{ offer.title }}</div>
-            <div class="truncate text-[12.5px] text-gray-500">
-              {{ offer.company }} · {{ offer.loc }}
-              <template v-if="offer.publishedAgo"> · {{ offer.publishedAgo }}</template>
+            <div class="flex min-w-0 items-center gap-0.5">
+              <span class="truncate text-[12.5px] text-gray-500">
+                {{ offer.company }} · {{ offer.loc }}
+                <template v-if="offer.publishedAgo"> · {{ offer.publishedAgo }}</template>
+              </span>
+              <!-- Adzuna's published date is the date its crawler last (re-)
+                   indexed the listing, not necessarily the true original
+                   posting date on the source job board -- see the backend
+                   provider's published_at comment. France Travail's own
+                   dateActualisation doesn't have this issue, so the hint is
+                   Adzuna-only. -->
+              <UiWarningHint
+                v-if="offer.publishedAgo && offer.source === 'adzuna'"
+                :message="$t('common.stale_source_warning')"
+                class="shrink-0"
+              />
             </div>
             <div class="mt-1 flex flex-wrap items-center gap-1.5">
               <span
