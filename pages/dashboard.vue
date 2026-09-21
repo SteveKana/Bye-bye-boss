@@ -26,81 +26,12 @@ const scoreColors = {
 }
 const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential' }
 
-// Small fixed palette for the company-initials avatar -- picked
-// deterministically from the company name so the same company always gets
-// the same color (not randomized on every render).
-const avatarPalette = ['#5B3FE8', '#0F0B2E', '#10B981', '#F59E0B', '#2D9CDB', '#DC2626']
-function avatarColor(name) {
-  let hash = 0
-  for (const char of name) hash = (hash * 31 + char.charCodeAt(0)) >>> 0
-  return avatarPalette[hash % avatarPalette.length]
-}
-function initials(name) {
-  const words = (name || '').trim().split(/\s+/).filter(Boolean)
-  if (!words.length) return '?'
-  return (words[0][0] + (words[1]?.[0] || '')).toUpperCase()
-}
-
-// An ats_potential at or above this is shown as "very strong fit" rather
-// than just "strong fit" -- an editorial threshold, easy to tune later.
-// Was career_score-based originally, switched to ats_potential: a high
-// career_score alone doesn't mean much on its own if the CV, as it stands,
-// has little chance of getting past the recruiter's ATS software for this
-// offer -- see the "pertinence" sort below, which uses the same reasoning.
-const STRONG_FIT_THRESHOLD = 75
-
-// The offer's contract_type is free text and source-dependent -- France
-// Travail gives French labels ("CDI", "CDD", "Mission intérimaire"...),
-// Adzuna gives English ones joined from two separate fields ("permanent,
-// full_time" / "contract, part_time") -- see the backend offers module's
-// provider normalizers. This maps both onto a short, consistent French tag;
-// an unrecognized label is shown as-is rather than hidden, and no label at
-// all shows no tag.
-function contractTag(rawLabel) {
-  if (!rawLabel) return ''
-  const text = rawLabel.toLowerCase()
-  if (text.includes('cdi') || text.includes('permanent')) return 'CDI'
-  if (text.includes('cdd')) return 'CDD'
-  if (text.includes('intérim') || text.includes('interim')) return 'Intérim'
-  if (
-    text.includes('alternance') ||
-    text.includes('apprentissage') ||
-    text.includes('professionnalisation')
-  ) {
-    return 'Alternance'
-  }
-  if (text.includes('stage') || text.includes('internship')) return 'Stage'
-  if (
-    text.includes('freelance') ||
-    text.includes('indépendant') ||
-    text.includes('portage') ||
-    // France Travail's "Profession libérale" is a self-employed/liberal-
-    // profession status -- closest existing tag is Freelance.
-    text.includes('libérale')
-  ) {
-    return 'Freelance'
-  }
-  // Adzuna's "contract" (vs. "permanent") has no exact French equivalent --
-  // freelance/portage is the closest fit for the kind of missions this
-  // platform's search keywords target.
-  if (text.includes('contract')) return 'Freelance'
-  return rawLabel
-}
-
-// Relative for the first week (same idiom as pages/profile/index.vue's
-// `updatedAgo`), then an absolute date beyond that -- "publiée il y a 111
-// jours" reads as stale/dead even for an offer France Travail itself just
-// refreshed (see the offers module's dateActualisation fix), so relative
-// phrasing is capped at a week.
-function publishedLabel(dateStr) {
-  if (!dateStr) return ''
-  const date = new Date(dateStr)
-  const days = Math.floor((Date.now() - date) / 86400000)
-  if (days <= 0) return t('dashboard.published_today')
-  if (days === 1) return t('dashboard.published_yesterday')
-  if (days <= 7) return t('dashboard.published_days', { days })
-  return t('dashboard.published_on', { date: date.toLocaleDateString('fr-FR') })
-}
+// avatarColor/initials/contractTag/publishedLabel now live in
+// composables/useOfferDisplay.js, shared with the "Opportunité" detail page
+// (pages/opportunity/[id].vue) so the same company/offer always renders the
+// same avatar color, initials, contract tag and published-date wording on
+// both views.
+const { avatarColor, initials, contractTag, publishedLabel } = useOfferDisplay()
 
 // Real search criteria, pulled from the profile saved at the end of
 // onboarding. Empty until the profile has loaded. Read-only here -- editing
@@ -242,9 +173,12 @@ function reject(offer) {
 
 const soon = () => toast.info(t('app.soon_full'))
 
-// Opens the real job listing (France Travail / Adzuna) in a new tab.
+// Opens the "Opportunité" detail page in-app -- matches the mockups, which
+// never redirect straight to the external job listing from the dashboard
+// list itself. The real external URL (offer.url) is only opened from the
+// "Voir l'offre" button on that detail page (pages/opportunity/[id].vue).
 function openOffer(offer) {
-  window.open(offer.url, '_blank', 'noopener')
+  navigateTo(`/opportunity/${offer.id}`)
 }
 </script>
 
