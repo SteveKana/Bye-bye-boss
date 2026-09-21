@@ -243,7 +243,7 @@ const soon = () => toast.info(t('app.soon_full'))
 
             <div
               v-if="publishedLabel(offer.published_at)"
-              class="flex shrink-0 items-center gap-1 text-xs text-gray-400"
+              class="flex shrink-0 items-center gap-0.5 text-xs text-gray-400"
             >
               <span>{{ publishedLabel(offer.published_at) }}</span>
               <UiWarningHint
@@ -519,14 +519,14 @@ const soon = () => toast.info(t('app.soon_full'))
               v-if="publishedLabel(offer.published_at)"
               class="flex items-center gap-2 py-2.5 text-[13px]"
             >
-              <span class="flex flex-1 items-center gap-1 text-gray-500">
-                {{ $t('opportunity.detail_published') }}
+              <span class="flex-1 text-gray-500">{{ $t('opportunity.detail_published') }}</span>
+              <span class="flex items-center gap-0.5 font-bold text-navy">
+                {{ publishedLabel(offer.published_at) }}
                 <UiWarningHint
                   v-if="offer.source === 'adzuna'"
                   :message="$t('common.stale_source_warning')"
                 />
               </span>
-              <span class="font-bold text-navy">{{ publishedLabel(offer.published_at) }}</span>
             </div>
           </div>
         </UiCard>
