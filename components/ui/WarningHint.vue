@@ -49,11 +49,11 @@ function toggle() {
     <div
       v-if="open"
       role="tooltip"
-      class="absolute bottom-full left-1/2 z-20 mb-1.5 w-44 -translate-x-1/2 rounded-md bg-gray-800 px-2.5 py-1.5 text-center text-[11px] font-medium leading-snug text-white shadow-lg"
+      class="absolute bottom-full right-0 z-20 mb-1.5 w-44 rounded-md bg-gray-800 px-2.5 py-1.5 text-center text-[11px] font-medium leading-snug text-white shadow-lg"
     >
       {{ message }}
       <span
-        class="absolute left-1/2 top-full h-0 w-0 -translate-x-1/2 border-4 border-transparent border-t-gray-800"
+        class="absolute right-1.5 top-full h-0 w-0 border-4 border-transparent border-t-gray-800"
         aria-hidden="true"
       />
     </div>
