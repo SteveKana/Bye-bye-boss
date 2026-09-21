@@ -22,8 +22,12 @@ const initials = computed(() => {
 })
 
 const updatedAgo = computed(() => {
-  if (!profile.value?.updated_at) return ''
-  const days = Math.floor((Date.now() - new Date(profile.value.updated_at)) / 86400000)
+  // cv_analyzed_at is when the CV was last actually (re-)parsed -- not
+  // profile.updated_at, which the backend bumps on ANY change to the
+  // profile row (e.g. saving preferences), and would otherwise make this
+  // label read "Aujourd'hui" without the CV itself having changed.
+  if (!profile.value?.cv_analyzed_at) return ''
+  const days = Math.floor((Date.now() - new Date(profile.value.cv_analyzed_at)) / 86400000)
   if (days <= 0) return t('profileCv.updated_today')
   if (days === 1) return t('profileCv.updated_yesterday')
   return t('profileCv.updated_days', { days })
