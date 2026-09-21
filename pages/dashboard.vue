@@ -7,6 +7,13 @@ const toast = useToast()
 const { firstName } = useUserDisplay()
 const onboarding = useOnboardingStore()
 const matching = useMatchingStore()
+const route = useRoute()
+
+// TEMPORARY debug hook -- no UI control, deliberately: visiting
+// /dashboard?source=adzuna (or ?source=france_travail) hides every offer
+// not from that provider, to spot-check that a given source's offers really
+// reach a candidate's dashboard. Remove once that's no longer needed.
+const debugSourceFilter = computed(() => route.query.source || null)
 
 // Full class names so Tailwind keeps them. No "regret" entry -- the Regret
 // Index is deliberately unavailable for now (see the backend `matching`
@@ -165,6 +172,7 @@ const matchedOffers = computed(() =>
       title: match.offer.title,
       company: match.company_name || match.offer.company_name || '',
       loc: match.offer.location || '',
+      source: match.offer.source,
       strong: match.ats_potential >= STRONG_FIT_THRESHOLD,
       blockingMessage: match.blocking_message || '',
       contractTag: contractTag(match.offer.contract_type),
@@ -181,7 +189,9 @@ const matchedOffers = computed(() =>
 
 const filteredOffers = computed(() =>
   matchedOffers.value.filter(
-    (offer) => contractFilter.value === 'all' || offer.contractTag === contractFilter.value
+    (offer) =>
+      (contractFilter.value === 'all' || offer.contractTag === contractFilter.value) &&
+      (!debugSourceFilter.value || offer.source === debugSourceFilter.value)
   )
 )
 
