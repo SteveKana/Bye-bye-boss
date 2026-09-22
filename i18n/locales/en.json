@@ -237,7 +237,10 @@
     "alerts_title": "Never miss an opportunity",
     "alerts_text": "Get alerted as soon as a new offer strongly matches your profile.",
     "adjust_title": "Your criteria no longer fit?",
-    "adjust_link": "Adjust my search criteria"
+    "adjust_link": "Adjust my search criteria",
+    "sort_potential_desc": "ATS potential",
+    "sort_career_desc": "Career score",
+    "salary_min_freelance_note": "Not available for freelance missions: offers don't carry a daily rate (TJM), only an annual salary for salaried roles."
   },
   "opportunity": {
     "back": "← Back to dashboard",
