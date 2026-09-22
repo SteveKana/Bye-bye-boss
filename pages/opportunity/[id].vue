@@ -21,8 +21,8 @@ definePageMeta({ layout: 'app', middleware: 'auth' })
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const api = useApi()
-const toast = useToast()
 const {
   avatarColor,
   initials,
@@ -149,8 +149,6 @@ async function openExternalOffer() {
   const updated = await markApplied(route.params.id)
   if (updated) match.value = updated
 }
-
-const soon = () => toast.info(t('app.soon_full'))
 </script>
 
 <template>
@@ -570,7 +568,11 @@ const soon = () => toast.info(t('app.soon_full'))
                 : $t('opportunity.ready_text_no_gaps')
             }}
           </p>
-          <UiButton variant="primary" block @click="soon">
+          <UiButton
+            variant="primary"
+            block
+            @click="router.push(`/opportunity/${route.params.id}/cv-optimise`)"
+          >
             {{ $t('opportunity.adapt_cv_button') }}
           </UiButton>
         </UiCard>
