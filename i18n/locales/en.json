@@ -662,11 +662,18 @@
     "changes_additions": "Additions",
     "changes_modifications": "Modifications",
     "advice_title": "Advice",
+    "template_label": "CV layout",
+    "template_sobre": "Sober",
+    "template_sobre_desc": "Clean, white background",
+    "template_visuelle": "Visual",
+    "template_visuelle_desc": "Bye Bye Boss colored banner",
     "confirm_button": "Create this CV variant",
-    "confirm_note": "This records your choice to use this version for this application.",
+    "confirm_note": "This records your choice to use this version for this application, and downloads the CV as a PDF.",
     "confirmed": "Variant created for this application",
-    "confirm_success": "CV variant created.",
-    "confirm_error": "Couldn't save this variant right now."
+    "download_again_button": "Download the PDF again",
+    "confirm_success": "CV variant created and downloaded.",
+    "confirm_error": "Couldn't save this variant right now.",
+    "pdf_download_error": "The PDF download failed. Please try again."
   },
   "profileCv": {
     "title": "Profile",
