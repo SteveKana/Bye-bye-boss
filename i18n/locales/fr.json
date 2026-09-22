@@ -662,11 +662,18 @@
     "changes_additions": "Ajouts",
     "changes_modifications": "Modifications",
     "advice_title": "Conseil",
+    "template_label": "Mise en page du CV",
+    "template_sobre": "Sobre",
+    "template_sobre_desc": "Épurée, fond blanc",
+    "template_visuelle": "Visuelle",
+    "template_visuelle_desc": "Bandeau coloré Bye Bye Boss",
     "confirm_button": "Créer cette variante de CV",
-    "confirm_note": "Cette action enregistre votre choix d'utiliser cette version pour cette candidature.",
+    "confirm_note": "Cette action enregistre votre choix d'utiliser cette version pour cette candidature, et télécharge le CV au format PDF.",
     "confirmed": "Variante créée pour cette candidature",
-    "confirm_success": "Variante de CV créée.",
-    "confirm_error": "Impossible d'enregistrer cette variante pour le moment."
+    "download_again_button": "Télécharger à nouveau le PDF",
+    "confirm_success": "Variante de CV créée et téléchargée.",
+    "confirm_error": "Impossible d'enregistrer cette variante pour le moment.",
+    "pdf_download_error": "Le téléchargement du PDF a échoué. Réessayez."
   },
   "profileCv": {
     "title": "Profil",

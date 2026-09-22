@@ -36,6 +36,14 @@ const generationFailed = ref(false)
 const optimization = ref(null)
 const confirming = ref(false)
 
+// "sobre" (plain) or "visuelle" (Bye Bye Boss colored banner) -- see
+// cv_pdf.py on the backend for what each one actually looks like. The
+// candidate picks before downloading rather than the app guessing/cloning
+// the style of whatever they originally uploaded (no reliable "style" to
+// extract from an arbitrary PDF/DOCX anyway).
+const CV_TEMPLATES = ['sobre', 'visuelle']
+const selectedTemplate = ref('sobre')
+
 async function loadMatchAndProfile() {
   try {
     const [m] = await Promise.all([
@@ -77,6 +85,53 @@ useHead({
   ),
 })
 
+// Mirrors the backend's cv_pdf.cv_pdf_filename() slugification (NFKD
+// normalize, strip accents, non-alphanumeric -> underscore) so the
+// downloaded file gets a sensible name without a round-trip just to read
+// the Content-Disposition header off a blob response.
+function cvPdfFilename() {
+  const name = [profile.value?.first_name, profile.value?.last_name]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+  const slug = name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+  return `CV_${slug || 'Candidat'}.pdf`
+}
+
+const downloadingPdf = ref(false)
+async function downloadCvPdf() {
+  downloadingPdf.value = true
+  try {
+    const blob = await api(`matching/${route.params.id}/cv-optimization/pdf`, {
+      query: { template: selectedTemplate.value },
+      responseType: 'blob',
+    })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = cvPdfFilename()
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+    return true
+  } catch (err) {
+    toast.error(err?.message || t('cvOptimize.pdf_download_error'))
+    return false
+  } finally {
+    downloadingPdf.value = false
+  }
+}
+
+// "Créer cette variante de CV" -- records the confirmation AND downloads
+// the PDF from the same click (see download_cv_optimization_pdf's
+// docstring on the backend). If the confirm call itself fails, the PDF
+// download is skipped -- no point downloading a file for a choice that
+// wasn't actually saved.
 async function confirmVariant() {
   confirming.value = true
   try {
@@ -86,9 +141,14 @@ async function confirmVariant() {
     toast.success(t('cvOptimize.confirm_success'))
   } catch (err) {
     toast.error(err?.message || t('cvOptimize.confirm_error'))
-  } finally {
     confirming.value = false
+    return
   }
+  confirming.value = false
+  // Confirmation is saved either way at this point -- a failed download
+  // here (network hiccup, etc.) gets its own toast from downloadCvPdf and
+  // the "download again" button on the confirmed state below covers it.
+  await downloadCvPdf()
 }
 
 // side_by_side | changes_only -- a real, working toggle (see docstring
@@ -512,14 +572,55 @@ const atsDelta = computed(() =>
             <p class="text-[12.5px] leading-relaxed text-gray-700">{{ optimization.advice }}</p>
           </UiCard>
 
+          <UiCard :title="$t('cvOptimize.template_label')">
+            <div class="flex flex-col gap-2 sm:flex-row">
+              <button
+                v-for="tpl in CV_TEMPLATES"
+                :key="tpl"
+                type="button"
+                class="flex-1 rounded-lg border p-2.5 text-left transition-colors"
+                :class="
+                  selectedTemplate === tpl
+                    ? 'border-brand bg-brand-light'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                "
+                @click="selectedTemplate = tpl"
+              >
+                <p
+                  class="text-[13px] font-bold"
+                  :class="selectedTemplate === tpl ? 'text-brand' : 'text-navy'"
+                >
+                  {{ $t(`cvOptimize.template_${tpl}`) }}
+                </p>
+                <p class="mt-0.5 text-[11.5px] text-gray-500">
+                  {{ $t(`cvOptimize.template_${tpl}_desc`) }}
+                </p>
+              </button>
+            </div>
+          </UiCard>
+
           <UiCard>
             <template v-if="optimization.confirmed_at">
               <p class="flex items-center gap-2 text-[13px] font-bold text-success-text">
                 <span aria-hidden="true">✓</span> {{ $t('cvOptimize.confirmed') }}
               </p>
+              <UiButton
+                class="mt-3"
+                variant="secondary"
+                block
+                :loading="downloadingPdf"
+                @click="downloadCvPdf"
+              >
+                {{ $t('cvOptimize.download_again_button') }}
+              </UiButton>
             </template>
             <template v-else>
-              <UiButton variant="primary" block :loading="confirming" @click="confirmVariant">
+              <UiButton
+                variant="primary"
+                block
+                :loading="confirming || downloadingPdf"
+                @click="confirmVariant"
+              >
                 {{ $t('cvOptimize.confirm_button') }}
               </UiButton>
               <p class="mt-2 text-[11px] leading-relaxed text-gray-400">
