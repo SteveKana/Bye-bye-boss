@@ -1,153 +1,36 @@
 <script setup>
+// Dashboard -- a 5-row preview of the best matches, no filters/sort. The
+// exhaustive list (all scored matches, with real filters) lives on the
+// separate "Opportunités" page (pages/opportunites.vue), linked via
+// "Voir toutes les opportunités" below -- see the mockups (dashboard.html
+// vs opportunites.html): they're deliberately two different views over the
+// same scored pool, not one page with a "show more" toggle.
 definePageMeta({ layout: 'app', middleware: 'auth' })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.dashboard')} · Bye Bye Boss`) })
 
 const toast = useToast()
 const { firstName } = useUserDisplay()
-const onboarding = useOnboardingStore()
 const matching = useMatchingStore()
-const route = useRoute()
-
-// TEMPORARY debug hook -- no UI control, deliberately: visiting
-// /dashboard?source=adzuna (or ?source=france_travail) hides every offer
-// not from that provider, to spot-check that a given source's offers really
-// reach a candidate's dashboard. Remove once that's no longer needed.
-const debugSourceFilter = computed(() => route.query.source || null)
-
-// Full class names so Tailwind keeps them. No "regret" entry -- the Regret
-// Index is deliberately unavailable for now (see the backend `matching`
-// module's docstring): we never fabricate a score, so there's nothing to
-// show a color/label for.
-const scoreColors = {
-  ats: 'text-green-600',
-  career: 'text-blue-600',
-  potential: 'text-brand',
-}
-const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential' }
-
-// avatarColor/initials/contractTag/publishedLabel now live in
-// composables/useOfferDisplay.js, shared with the "Opportunité" detail page
-// (pages/opportunity/[id].vue) so the same company/offer always renders the
-// same avatar color, initials, contract tag and published-date wording on
-// both views.
-const { avatarColor, initials, contractTag, publishedLabel } = useOfferDisplay()
-
-// Real search criteria, pulled from the profile saved at the end of
-// onboarding. Empty until the profile has loaded. Read-only here -- editing
-// happens on the dedicated /preferences page (its own sidebar section), not
-// inline in the dashboard.
-const criteria = ref([])
-
-onMounted(async () => {
-  try {
-    const profile = onboarding.profile || (await onboarding.fetchProfile())
-    const salary = profile.salary_target
-      ? `${profile.salary_target.toLocaleString('fr-FR')} € brut / an`
-      : null
-    // "Région uniquement" alone is the same raw internal value the user
-    // never actually chose to see -- show the région they picked instead
-    // (see PreferencesForm.vue's mobility_region field).
-    const mobility =
-      profile.mobility === 'Région uniquement'
-        ? profile.mobility_region || profile.mobility
-        : profile.mobility
-    criteria.value = [
-      ...(profile.contract_types || []),
-      ...(profile.remote_preferences || []),
-      mobility,
-      salary,
-    ].filter(Boolean)
-  } catch {
-    // No profile yet (onboarding not completed) — leave the criteria bar empty
-    // rather than showing anything misleading.
-  }
-})
+const { criteria, load: loadCriteria } = useSearchCriteria()
 
 const loadingOpportunities = ref(true)
 
-// Filter/sort state, all client-side over the already-loaded top matches --
-// there are at most ~20 of them (see the backend's list_top_for_profile),
-// so there's no need for a dedicated filtering endpoint.
-//
-// Only CDI/Freelance get their own quick-filter button -- CDD/Intérim/
-// Alternance/Stage still show as a tag on individual cards (contractTag()
-// is unchanged), they're just not offered as a top-level filter.
-const contractFilter = ref('all') // 'all' | 'CDI' | 'Freelance'
-const sortBy = ref('relevance') // 'relevance' | 'date_desc' | 'date_asc'
+const TOP_COUNT = 5
+const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOpportunities))
 
-function resetFilters() {
-  contractFilter.value = 'all'
-}
-
-const hasActiveFilters = computed(() => contractFilter.value !== 'all')
-
-const sortOptions = computed(() => [
-  { value: 'relevance', label: t('dashboard.sort_relevance') },
-  { value: 'date_desc', label: t('dashboard.sort_date_desc') },
-  { value: 'date_asc', label: t('dashboard.sort_date_asc') },
-])
-
-// Real matches from the background scoring job, reshaped for the template.
-// Locally rejected offers are filtered out below (see `reject`) without
-// touching the backend -- there's no "reject" endpoint yet, this is purely a
-// client-side hide, same as before this was wired to real data.
-const rejectedIds = ref(new Set())
-const matchedOffers = computed(() =>
-  matching.topOpportunities
-    .filter((match) => !rejectedIds.value.has(match.id))
-    .map((match) => ({
-      id: match.id,
-      logo: initials(match.company_name || match.offer.company_name),
-      bg: avatarColor(match.company_name || match.offer.company_name || match.offer.title),
-      title: match.offer.title,
-      company: match.company_name || match.offer.company_name || '',
-      loc: match.offer.location || '',
-      source: match.offer.source,
-      strong: match.ats_potential >= STRONG_FIT_THRESHOLD,
-      blockingMessage: match.blocking_message || '',
-      contractTag: contractTag(match.offer.contract_type),
-      publishedAgo: publishedLabel(match.offer.published_at),
-      publishedAt: match.offer.published_at ? new Date(match.offer.published_at) : null,
-      url: match.offer.url,
-      scores: {
-        career: match.career_score,
-        ats: match.ats_score,
-        potential: match.ats_potential,
-      },
-    }))
+// Best real odds of getting past the recruiter's ATS once the CV is
+// adapted (ats_potential), not just a good abstract career fit -- same
+// "Pertinence" ordering the full Opportunités page defaults to.
+const topOffers = computed(() =>
+  [...matchedOffers.value]
+    .sort((a, b) => b.scores.potential - a.scores.potential)
+    .slice(0, TOP_COUNT)
+    .map((offer, index) => ({ ...offer, rank: index + 1 }))
 )
-
-const filteredOffers = computed(() =>
-  matchedOffers.value.filter(
-    (offer) =>
-      (contractFilter.value === 'all' || offer.contractTag === contractFilter.value) &&
-      (!debugSourceFilter.value || offer.source === debugSourceFilter.value)
-  )
-)
-
-// Missing dates always sort last, whichever direction is chosen -- an offer
-// with no known publication date is neither "recent" nor "old".
-const offers = computed(() => {
-  const list = [...filteredOffers.value]
-  if (sortBy.value === 'date_desc' || sortBy.value === 'date_asc') {
-    const sign = sortBy.value === 'date_desc' ? -1 : 1
-    list.sort((a, b) => {
-      if (!a.publishedAt) return 1
-      if (!b.publishedAt) return -1
-      return sign * (a.publishedAt - b.publishedAt)
-    })
-  } else {
-    // "Pertinence" -- ats_potential descending, not career_score: the point
-    // is to surface the offers giving the best real odds of getting past
-    // the recruiter's ATS once the CV is adapted, not just a good abstract
-    // career fit (see STRONG_FIT_THRESHOLD's comment above).
-    list.sort((a, b) => b.scores.potential - a.scores.potential)
-  }
-  return list.map((offer, index) => ({ ...offer, rank: index + 1 }))
-})
 
 onMounted(async () => {
+  await loadCriteria()
   try {
     await matching.fetchTop()
   } catch {
@@ -158,18 +41,6 @@ onMounted(async () => {
     loadingOpportunities.value = false
   }
 })
-
-// Reject with a short undo window — mirrors the spec (a real reject is permanent).
-function reject(offer) {
-  rejectedIds.value.add(offer.id)
-  toast.show({
-    message: t('dashboard.offer_hidden'),
-    variant: 'info',
-    duration: 5000,
-    undo: () => rejectedIds.value.delete(offer.id),
-    undoLabel: t('common.undo'),
-  })
-}
 
 const soon = () => toast.info(t('app.soon_full'))
 
@@ -196,21 +67,7 @@ function openOffer(offer) {
       >
     </div>
 
-    <!-- Search criteria, read-only summary -- editing lives on the dedicated
-         /preferences page/section (see the sidebar), not inline here. -->
-    <div v-if="criteria.length" class="mb-6 flex flex-wrap items-center gap-2 text-sm">
-      <span class="font-semibold text-gray-500">{{ $t('dashboard.your_search') }}</span>
-      <span
-        v-for="c in criteria"
-        :key="c"
-        class="rounded-full bg-white px-3 py-1 text-[13px] font-medium text-gray-700 shadow-soft"
-      >
-        {{ c }}
-      </span>
-      <NuxtLink to="/preferences" class="font-semibold text-brand hover:underline">
-        {{ $t('dashboard.edit') }} →
-      </NuxtLink>
-    </div>
+    <AppCriteriaBar :criteria="criteria" />
 
     <!-- Top opportunities -->
     <UiCard>
@@ -227,49 +84,9 @@ function openOffer(offer) {
         <p class="mt-1 text-[13px] text-gray-500">{{ $t('dashboard.top_sub') }}</p>
       </template>
 
-      <!-- Filters/sort -- shown only once there's something to filter. -->
-      <div
-        v-if="matchedOffers.length"
-        class="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-gray-100 pb-3"
-      >
-        <div class="flex flex-wrap items-center gap-1.5">
-          <button
-            v-for="opt in [
-              { value: 'all', label: $t('dashboard.filter_contract_all') },
-              { value: 'CDI', label: 'CDI' },
-              { value: 'Freelance', label: 'Freelance' },
-            ]"
-            :key="opt.value"
-            type="button"
-            class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
-            :class="
-              contractFilter === opt.value
-                ? 'border-brand bg-brand-light text-brand-text'
-                : 'border-gray-200 text-gray-500 hover:border-gray-300'
-            "
-            @click="contractFilter = opt.value"
-          >
-            {{ opt.label }}
-          </button>
-        </div>
-
-        <button
-          v-if="hasActiveFilters"
-          type="button"
-          class="text-[12px] font-semibold text-gray-400 hover:text-gray-600 hover:underline"
-          @click="resetFilters"
-        >
-          {{ $t('dashboard.filter_reset') }}
-        </button>
-
-        <div class="ml-auto w-full max-w-[200px]">
-          <UiSelect v-model="sortBy" :options="sortOptions" />
-        </div>
-      </div>
-
       <ul class="divide-y divide-gray-100">
         <li
-          v-for="offer in offers"
+          v-for="offer in topOffers"
           :key="offer.id"
           class="group -mx-2 flex cursor-pointer items-center gap-4 rounded-lg px-2 py-3.5 transition hover:bg-gray-50"
           role="button"
@@ -331,9 +148,17 @@ function openOffer(offer) {
           </div>
 
           <div class="hidden shrink-0 gap-5 sm:flex">
-            <div v-for="(value, key) in offer.scores" :key="key" class="min-w-[40px] text-center">
-              <div class="text-[10.5px] font-semibold text-gray-400">{{ scoreLabels[key] }}</div>
-              <div class="text-sm font-extrabold" :class="scoreColors[key]">{{ value }}</div>
+            <div class="min-w-[40px] text-center">
+              <div class="text-[10.5px] font-semibold text-gray-400">ATS</div>
+              <div class="text-sm font-extrabold text-green-600">{{ offer.scores.ats }}</div>
+            </div>
+            <div class="min-w-[40px] text-center">
+              <div class="text-[10.5px] font-semibold text-gray-400">Career</div>
+              <div class="text-sm font-extrabold text-blue-600">{{ offer.scores.career }}</div>
+            </div>
+            <div class="min-w-[40px] text-center">
+              <div class="text-[10.5px] font-semibold text-gray-400">Potential</div>
+              <div class="text-sm font-extrabold text-brand">{{ offer.scores.potential }}</div>
             </div>
           </div>
 
@@ -410,7 +235,11 @@ function openOffer(offer) {
              real offers arrive, and so it's obvious something is actively
              loading rather than the section just being empty/broken. -->
         <ul class="mt-2 divide-y divide-gray-100" aria-hidden="true">
-          <li v-for="n in 3" :key="n" class="-mx-2 flex items-center gap-4 rounded-lg px-2 py-3.5">
+          <li
+            v-for="n in TOP_COUNT"
+            :key="n"
+            class="-mx-2 flex items-center gap-4 rounded-lg px-2 py-3.5"
+          >
             <span class="w-4 shrink-0"></span>
             <span class="h-10 w-10 shrink-0 animate-pulse rounded-[10px] bg-gray-100"></span>
             <div class="min-w-0 flex-1 space-y-2 py-0.5">
@@ -424,26 +253,17 @@ function openOffer(offer) {
           </li>
         </ul>
       </div>
-      <div
-        v-else-if="!offers.length && matchedOffers.length"
-        class="py-6 text-center text-sm text-gray-400"
-      >
-        <p>{{ $t('dashboard.empty_filtered') }}</p>
-        <button class="mt-1 font-semibold text-brand hover:underline" @click="resetFilters">
-          {{ $t('dashboard.filter_reset') }}
-        </button>
-      </div>
-      <p v-else-if="!offers.length" class="py-6 text-center text-sm text-gray-400">
+      <p v-else-if="!topOffers.length" class="py-6 text-center text-sm text-gray-400">
         {{ $t('dashboard.empty') }}
       </p>
 
       <template #footer>
-        <button
-          class="w-full text-center text-sm font-semibold text-brand hover:underline"
-          @click="soon"
+        <NuxtLink
+          to="/opportunites"
+          class="block w-full text-center text-sm font-semibold text-brand hover:underline"
         >
           {{ $t('dashboard.see_all') }} →
-        </button>
+        </NuxtLink>
       </template>
     </UiCard>
   </div>

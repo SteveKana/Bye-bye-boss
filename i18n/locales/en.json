@@ -200,6 +200,12 @@
     "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
     "empty_filtered": "No offers match these filters."
   },
+  "opportunites": {
+    "subtitle": "Every offer already analyzed and ranked for you.",
+    "count": "{count} offer(s) analyzed",
+    "sort_salary_desc": "Salary (highest first)",
+    "sort_ats_desc": "ATS score"
+  },
   "opportunity": {
     "back": "← Back to dashboard",
     "loading": "Loading the opportunity…",
