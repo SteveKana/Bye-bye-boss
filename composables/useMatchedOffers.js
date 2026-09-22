@@ -35,12 +35,19 @@ export function useMatchedOffers(rawMatches) {
         salaryValue: match.offer.salary_max || match.offer.salary_min || null,
         publishedAgo: publishedLabel(match.offer.published_at),
         publishedAt: match.offer.published_at ? new Date(match.offer.published_at) : null,
+        computedAt: match.computed_at ? new Date(match.computed_at) : null,
         url: match.offer.url,
         scores: {
           career: match.career_score,
           ats: match.ats_score,
           potential: match.ats_potential,
         },
+        // Full LLM analysis (job_skills/matches/ats_gaps/...) -- GET
+        // /matching/top returns the same shape as GET /matching/{id}, not a
+        // lighter list shape, so this is free to carry along. Only the
+        // Opportunités page's tag list and "pourquoi cette offre" reasons
+        // use it today; the dashboard's 5-row preview ignores it.
+        analysis: match.analysis || {},
       }))
   )
 
