@@ -39,6 +39,26 @@ export function useApplicationStatus() {
 
   const options = computed(() => STATUS_ORDER.map((value) => ({ value, label: label(value) })))
 
+  // dd/mm/yyyy, matching the fixed fr-FR date formatting already used
+  // elsewhere (dashboard.vue's salaryLabel, useOfferDisplay's
+  // publishedLabel's absolute-date branch) regardless of the interface
+  // language -- there's no per-language date style anywhere else in the app.
+  function dateLabel(dateStr) {
+    if (!dateStr) return ''
+    return new Date(dateStr).toLocaleDateString('fr-FR')
+  }
+
+  // What actually happened and when, e.g. "Vous avez cliqué sur « Voir
+  // l'offre » le 22/09/2026" for the auto-tracked "applied" status, or
+  // "Entretien obtenu le 22/09/2026" for a manual correction -- more
+  // concrete than the bare status label alone. Falls back to the label if
+  // there's no date yet (shouldn't happen in practice: the backend always
+  // sets application_status_updated_at in the same write as the status).
+  function message(status, dateStr) {
+    const date = dateLabel(dateStr)
+    return date ? t(`applicationStatus.messages.${status}`, { date }) : label(status)
+  }
+
   // Idempotent, one-way (not_applied -> applied only) on the backend -- see
   // matching_routes.mark_applied's docstring. Best-effort: swallows errors
   // so a background status update never blocks the external navigation it
@@ -63,5 +83,5 @@ export function useApplicationStatus() {
     })
   }
 
-  return { STATUS_ORDER, label, badgeClass, options, markApplied, updateStatus }
+  return { STATUS_ORDER, label, badgeClass, options, message, markApplied, updateStatus }
 }

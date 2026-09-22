@@ -246,14 +246,20 @@
     "interview": "Interview",
     "offer": "Offer received",
     "rejected": "Rejected",
-    "withdrawn": "Withdrawn"
+    "withdrawn": "Withdrawn",
+    "messages": {
+      "applied": "You clicked \"View the listing\" on {date}",
+      "interview": "Interview scheduled on {date}",
+      "offer": "Offer received on {date}",
+      "rejected": "Application rejected on {date}",
+      "withdrawn": "Application withdrawn on {date}"
+    }
   },
   "candidatures": {
     "title": "Applications",
     "subtitle": "The status automatically moves to \"Applied\" as soon as you click \"View the listing\" — correct it here if needed.",
     "loading": "Loading your applications…",
     "empty": "No applications yet. Click \"View the listing →\" on an opportunity for it to show up here.",
-    "updated_on": "Updated on {date}",
     "updated": "Status updated.",
     "removed": "Removed from your applications.",
     "update_error": "Couldn't update the status. Please try again."
