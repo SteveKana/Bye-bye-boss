@@ -29,6 +29,17 @@
 //   - The sidebar's "Premium" upsell card -- there's no subscription tier
 //     implemented; the backend spec for this section explicitly puts
 //     "Statut d'abonnement" out of MVP scope.
+//
+// Polish pass after the first mockup-fidelity delivery: the funnel/chevron/
+// checkmark icons are now the mockup's real inline SVGs (an emoji had been
+// used as a placeholder and rendered inconsistently across platforms); two
+// sort options were added ("Potentiel ATS", "Score carrière" -- Regret Index
+// sort still deliberately left out, same reasoning as above); and the
+// "Salaire minimum" filter is disabled with an explanatory note while
+// Freelance is selected, since offers only carry an annual salary_min/max
+// (whatever a salaried-role source reported), not a per-offer daily rate --
+// applying an annual threshold to a freelance mission wouldn't mean
+// anything.
 definePageMeta({ layout: 'app', middleware: 'auth' })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
@@ -69,9 +80,22 @@ const SALARY_OPTIONS = [30000, 40000, 50000, 60000, 70000]
 const contractFilters = ref([])
 const remoteFilter = ref('') // '' | 'onsite' | 'remote'
 const salaryMin = ref('')
-const sortBy = ref('relevance') // 'relevance' | 'date_desc' | 'date_asc' | 'salary_desc' | 'ats_desc'
+// 'relevance' | 'date_desc' | 'date_asc' | 'salary_desc' | 'ats_desc' | 'ats_potential_desc' | 'career_desc'
+const sortBy = ref('relevance')
 const page = ref(1)
 const PAGE_SIZE = 10
+
+// The salary_min/salary_max the backend stores is whatever a permanent-role
+// salary the source reported -- there's no per-offer daily-rate (TJM) field
+// (candidates state a target TJM in their preferences, but offers don't
+// carry one), so a fixed annual-salary threshold doesn't mean anything for
+// a freelance mission. Rather than silently apply an annual filter to a
+// figure that isn't one, the salary filter is disabled while Freelance is
+// selected.
+const freelanceSelected = computed(() => contractFilters.value.includes('Freelance'))
+watch(freelanceSelected, (isFreelance) => {
+  if (isFreelance) salaryMin.value = ''
+})
 
 function toggleContractFilter(value) {
   const index = contractFilters.value.indexOf(value)
@@ -136,6 +160,11 @@ const SORT_OPTIONS = computed(() => [
   { value: 'date_asc', label: t('dashboard.sort_date_asc') },
   { value: 'salary_desc', label: t('opportunites.sort_salary_desc') },
   { value: 'ats_desc', label: t('opportunites.sort_ats_desc') },
+  { value: 'ats_potential_desc', label: t('opportunites.sort_potential_desc') },
+  { value: 'career_desc', label: t('opportunites.sort_career_desc') },
+  // Regret Index sort (croissant/décroissant) isn't here yet -- same
+  // never-fabricate reasoning as the grayed Regret score below: there's no
+  // computed regret value to sort by until that scoring exists.
 ])
 const sortLabel = computed(
   () => SORT_OPTIONS.value.find((o) => o.value === sortBy.value)?.label || ''
@@ -175,6 +204,10 @@ const offers = computed(() => {
     })
   } else if (sortBy.value === 'ats_desc') {
     list.sort((a, b) => b.scores.ats - a.scores.ats)
+  } else if (sortBy.value === 'ats_potential_desc') {
+    list.sort((a, b) => b.scores.potential - a.scores.potential)
+  } else if (sortBy.value === 'career_desc') {
+    list.sort((a, b) => b.scores.career - a.scores.career)
   } else {
     // "Pertinence" -- ats_potential descending, same as the dashboard's
     // top-5 ordering: the best real odds of getting past the recruiter's
@@ -304,7 +337,19 @@ function selectSort(value) {
               class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft hover:bg-gray-50"
               @click="filtersOpen = !filtersOpen"
             >
-              🔽 {{ $t('opportunites.filters') }}
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-[15px] w-[15px]"
+                aria-hidden="true"
+              >
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+              </svg>
+              {{ $t('opportunites.filters') }}
               <span
                 v-if="hasActiveFilters"
                 class="flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"
@@ -372,7 +417,14 @@ function selectSort(value) {
                 <p class="mb-2 text-xs font-semibold text-gray-500">
                   {{ $t('opportunites.salary_min') }}
                 </p>
-                <UiSelect v-model="salaryMin" :options="salaryOptions" />
+                <UiSelect
+                  v-model="salaryMin"
+                  :options="salaryOptions"
+                  :disabled="freelanceSelected"
+                />
+                <p v-if="freelanceSelected" class="mt-1.5 text-[11px] text-gray-400">
+                  {{ $t('opportunites.salary_min_freelance_note') }}
+                </p>
               </div>
               <div class="flex items-center justify-between">
                 <button
@@ -400,7 +452,18 @@ function selectSort(value) {
               @click="sortOpen = !sortOpen"
             >
               {{ $t('opportunites.sort_by', { label: sortLabel }) }}
-              <span aria-hidden="true">⌄</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-3.5 w-3.5"
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
             </button>
             <div
               v-if="sortOpen"
@@ -415,7 +478,19 @@ function selectSort(value) {
                 @click="selectSort(opt.value)"
               >
                 <span>{{ opt.label }}</span>
-                <span v-if="opt.value === sortBy" aria-hidden="true">✓</span>
+                <svg
+                  v-if="opt.value === sortBy"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-[15px] w-[15px] text-brand"
+                  aria-hidden="true"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </button>
             </div>
           </div>
