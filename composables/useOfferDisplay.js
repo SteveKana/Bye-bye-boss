@@ -85,5 +85,18 @@ export function useOfferDisplay() {
     return t('dashboard.published_on', { date: date.toLocaleDateString('fr-FR') })
   }
 
-  return { avatarColor, initials, contractTag, publishedLabel }
+  // Takes a plain offer object (not a ref) so it works both wrapped in a
+  // computed (single-offer pages) and called per-row in a v-for (list
+  // pages) -- was previously duplicated as a local computed on the
+  // "Opportunité" detail page; now shared with the "Opportunités" list.
+  function salaryLabel(offer) {
+    if (!offer) return ''
+    if (offer.salary_label) return offer.salary_label
+    const { salary_min: min, salary_max: max } = offer
+    if (min && max) return `${min.toLocaleString('fr-FR')} € – ${max.toLocaleString('fr-FR')} €`
+    if (min || max) return `${(min || max).toLocaleString('fr-FR')} €`
+    return ''
+  }
+
+  return { avatarColor, initials, contractTag, publishedLabel, salaryLabel }
 }

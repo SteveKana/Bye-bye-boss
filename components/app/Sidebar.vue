@@ -7,7 +7,7 @@ const displayName = computed(() => fullName.value || auth.user?.email || '')
 
 const items = [
   { key: 'app.nav.dashboard', to: '/dashboard', icon: 'home' },
-  { key: 'app.nav.opportunities', icon: 'grid', disabled: true },
+  { key: 'app.nav.opportunities', to: '/opportunites', icon: 'grid' },
   { key: 'app.nav.applications', to: '/candidatures', icon: 'file' },
   { divider: true },
   { key: 'app.nav.profile', to: '/profile', icon: 'user' },

@@ -200,6 +200,12 @@
     "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres.",
     "empty_filtered": "Aucune offre ne correspond à ces filtres."
   },
+  "opportunites": {
+    "subtitle": "Toutes les offres déjà analysées et classées pour vous.",
+    "count": "{count} offre(s) analysée(s)",
+    "sort_salary_desc": "Salaire (décroissant)",
+    "sort_ats_desc": "Score ATS"
+  },
   "opportunity": {
     "back": "← Retour au tableau de bord",
     "loading": "Chargement de l'opportunité…",

@@ -23,7 +23,13 @@ const { t } = useI18n()
 const route = useRoute()
 const api = useApi()
 const toast = useToast()
-const { avatarColor, initials, contractTag, publishedLabel } = useOfferDisplay()
+const {
+  avatarColor,
+  initials,
+  contractTag,
+  publishedLabel,
+  salaryLabel: offerSalaryLabel,
+} = useOfferDisplay()
 const {
   badgeClass: applicationStatusBadgeClass,
   message: applicationStatusMessage,
@@ -58,14 +64,7 @@ const analysis = computed(() => match.value?.analysis || {})
 
 const strongFit = computed(() => !!match.value && match.value.ats_potential >= STRONG_FIT_THRESHOLD)
 
-const salaryLabel = computed(() => {
-  if (!offer.value) return ''
-  if (offer.value.salary_label) return offer.value.salary_label
-  const { salary_min: min, salary_max: max } = offer.value
-  if (min && max) return `${min.toLocaleString('fr-FR')} € – ${max.toLocaleString('fr-FR')} €`
-  if (min || max) return `${(min || max).toLocaleString('fr-FR')} €`
-  return ''
-})
+const salaryLabel = computed(() => offerSalaryLabel(offer.value))
 
 const scoreBlocks = computed(() => [
   {
