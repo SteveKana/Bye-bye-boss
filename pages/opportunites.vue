@@ -40,7 +40,15 @@
 // (whatever a salaried-role source reported), not a per-offer daily rate --
 // applying an annual threshold to a freelance mission wouldn't mean
 // anything.
-definePageMeta({ layout: 'app', middleware: 'auth' })
+//
+// Also from that feedback: the shared app layout centers most pages at a
+// max-w-5xl (1024px) reading width, which is fine for a single list but
+// squeezed this page's two-column grid badly -- the "Pourquoi cette offre
+// est faite pour vous" column had barely enough room and wrapped onto many
+// lines. This page now opts into the layout's wider max-w-7xl via
+// `wide: true` (see layouts/app.vue), and the reasoning column's min-width
+// was bumped to 200px to match the mockup exactly.
+definePageMeta({ layout: 'app', middleware: 'auth', wide: true })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
 
@@ -633,7 +641,7 @@ function selectSort(value) {
                 </div>
               </div>
 
-              <div v-if="reasonsFor(offer).length" class="min-w-[180px] flex-1">
+              <div v-if="reasonsFor(offer).length" class="min-w-[200px] flex-1">
                 <p class="mb-2 text-xs font-semibold text-gray-500">
                   {{ $t('opportunites.reasons_title') }}
                 </p>

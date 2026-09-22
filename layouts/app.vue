@@ -4,6 +4,13 @@
 const route = useRoute()
 const mobileOpen = ref(false)
 
+// Most pages read comfortably at the narrower centered width below, but a
+// page with its own two-column grid (an offer list + a right info panel,
+// e.g. Opportunités) needs more room or its inner columns get squeezed --
+// opt in per-page via definePageMeta({ wide: true }) rather than widening
+// every page's reading column.
+const wide = computed(() => !!route.meta.wide)
+
 // Close the drawer after navigating.
 watch(
   () => route.fullPath,
@@ -95,7 +102,7 @@ watch(
     </Transition>
 
     <main class="flex-1 overflow-x-hidden pt-14 lg:pt-0">
-      <div class="mx-auto max-w-5xl px-5 py-8 lg:px-10">
+      <div class="mx-auto px-5 py-8 lg:px-10" :class="wide ? 'max-w-7xl' : 'max-w-5xl'">
         <slot />
       </div>
     </main>
