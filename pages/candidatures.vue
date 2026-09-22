@@ -9,6 +9,13 @@
 // interview/offer/rejected/withdrawn, or resetting a wrong auto-mark back to
 // "not_applied" (which drops the row out of this list, same as the backend
 // route's docstring).
+//
+// The plain subtitle line under the title was replaced with the mockup's
+// disclaimer box (candidatures.html's own wording, adapted: this app's real
+// CTA is "Voir l'offre", not "Postuler", and the second sentence was
+// reworded -- our flow just opens the offer's external URL, there's no
+// in-app "formulaire" to abandon, so the caveat is phrased generally as not
+// having applied rather than a specific form-abandonment scenario).
 definePageMeta({ layout: 'app', middleware: 'auth' })
 
 const { t } = useI18n()
@@ -67,9 +74,31 @@ async function changeStatus(item, newStatus) {
 
 <template>
   <div>
-    <div class="mb-6">
+    <div class="mb-4">
       <h1 class="text-2xl font-extrabold text-navy">{{ $t('candidatures.title') }}</h1>
-      <p class="mt-1 text-sm text-gray-500">{{ $t('candidatures.subtitle') }}</p>
+    </div>
+
+    <div
+      class="mb-6 flex items-start gap-2.5 rounded-xl border border-gray-200 bg-gray-50 p-3.5 text-[12.5px] leading-relaxed text-gray-500"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="mt-0.5 h-4 w-4 shrink-0 text-gray-400"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="16" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12.01" y2="8" />
+      </svg>
+      <p>
+        <span class="font-semibold text-navy">{{ $t('candidatures.disclaimer_lead') }}</span>
+        {{ ' ' }}{{ $t('candidatures.disclaimer_note') }}
+      </p>
     </div>
 
     <UiCard>

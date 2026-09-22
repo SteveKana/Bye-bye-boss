@@ -299,7 +299,8 @@
   },
   "candidatures": {
     "title": "Applications",
-    "subtitle": "The status automatically moves to \"Applied\" as soon as you click \"View the listing\" — correct it here if needed.",
+    "disclaimer_lead": "This tracking reflects a click on \"View the listing\", not a confirmation that the recruiter received your application.",
+    "disclaimer_note": "If you ultimately didn't apply on the company's site, this list has no way to tell the difference yet.",
     "loading": "Loading your applications…",
     "empty": "No applications yet. Click \"View the listing →\" on an opportunity for it to show up here.",
     "updated": "Status updated.",
