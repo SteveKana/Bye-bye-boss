@@ -240,7 +240,9 @@
     "adjust_link": "Adjust my search criteria",
     "sort_potential_desc": "ATS potential",
     "sort_career_desc": "Career score",
-    "salary_min_freelance_note": "Not available for freelance missions: offers don't carry a daily rate (TJM), only an annual salary for salaried roles."
+    "tjm_min": "Minimum daily rate",
+    "tjm_min_label": "€{amount}/day",
+    "sort_tjm_desc": "Daily rate (highest first)"
   },
   "opportunity": {
     "back": "← Back to dashboard",

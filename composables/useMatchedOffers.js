@@ -8,7 +8,8 @@
 // reload, so each page keeps its own rejectedIds rather than sharing state
 // that wouldn't persist any better shared than not.
 export function useMatchedOffers(rawMatches) {
-  const { avatarColor, initials, contractTag, publishedLabel, salaryLabel } = useOfferDisplay()
+  const { avatarColor, initials, contractTag, publishedLabel, salaryLabel, dailyRateLabel } =
+    useOfferDisplay()
   const toast = useToast()
   const { t } = useI18n()
 
@@ -33,6 +34,14 @@ export function useMatchedOffers(rawMatches) {
         // Purely for sorting -- salary_max falls back to salary_min so a
         // "50k only" offer still sorts sensibly against a "40k-60k" one.
         salaryValue: match.offer.salary_max || match.offer.salary_min || null,
+        // Same pair, for the separate freelance daily-rate (TJM) field --
+        // see the backend's core/daily_rate.py. An annual salary_min/max
+        // threshold doesn't mean anything for a freelance mission (wrong
+        // unit, and usually just absent), so the Opportunités page's
+        // filter/sort switch to this field instead while Freelance is
+        // selected, rather than misapplying salaryValue to it.
+        dailyRateLabel: dailyRateLabel(match.offer),
+        dailyRateValue: match.offer.daily_rate_max || match.offer.daily_rate_min || null,
         publishedAgo: publishedLabel(match.offer.published_at),
         publishedAt: match.offer.published_at ? new Date(match.offer.published_at) : null,
         computedAt: match.computed_at ? new Date(match.computed_at) : null,

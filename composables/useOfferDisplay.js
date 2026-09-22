@@ -98,5 +98,26 @@ export function useOfferDisplay() {
     return ''
   }
 
-  return { avatarColor, initials, contractTag, publishedLabel, salaryLabel }
+  // Same shape as salaryLabel above, for the separate daily_rate_min/max
+  // pair (see the backend's core/daily_rate.py) -- best-effort text
+  // extraction, present only for the freelance offers that stated a TJM in
+  // a recognized pattern, never guessed when absent.
+  function dailyRateLabel(offer) {
+    if (!offer) return ''
+    const { daily_rate_min: min, daily_rate_max: max } = offer
+    if (min && max && min !== max) {
+      return `${min.toLocaleString('fr-FR')} – ${max.toLocaleString('fr-FR')} €/jour`
+    }
+    if (min || max) return `${(min || max).toLocaleString('fr-FR')} €/jour`
+    return ''
+  }
+
+  return {
+    avatarColor,
+    initials,
+    contractTag,
+    publishedLabel,
+    salaryLabel,
+    dailyRateLabel,
+  }
 }
