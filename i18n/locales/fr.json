@@ -240,6 +240,24 @@
     "ready_text_no_gaps": "Votre profil correspond bien à cette offre.",
     "adapt_cv_button": "📄 Adapter mon CV pour cette offre"
   },
+  "applicationStatus": {
+    "not_applied": "Non postulé",
+    "applied": "Postulé",
+    "interview": "Entretien",
+    "offer": "Offre reçue",
+    "rejected": "Refusé",
+    "withdrawn": "Retiré"
+  },
+  "candidatures": {
+    "title": "Candidatures",
+    "subtitle": "Le statut passe automatiquement à \"Postulé\" dès que vous cliquez sur \"Voir l'offre\" — corrigez-le ici si besoin.",
+    "loading": "Chargement de vos candidatures…",
+    "empty": "Aucune candidature pour l'instant. Cliquez sur \"Voir l'offre →\" sur une opportunité pour qu'elle apparaisse ici.",
+    "updated_on": "Mis à jour le {date}",
+    "updated": "Statut mis à jour.",
+    "removed": "Retiré de vos candidatures.",
+    "update_error": "La mise à jour du statut a échoué. Merci de réessayer."
+  },
   "preferencesPage": {
     "title": "Préférences",
     "subtitle": "Ces critères affinent vos correspondances d'offres. Modifiables à tout moment.",
