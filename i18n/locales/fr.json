@@ -246,14 +246,20 @@
     "interview": "Entretien",
     "offer": "Offre reçue",
     "rejected": "Refusé",
-    "withdrawn": "Retiré"
+    "withdrawn": "Retiré",
+    "messages": {
+      "applied": "Vous avez cliqué sur « Voir l'offre » le {date}",
+      "interview": "Entretien obtenu le {date}",
+      "offer": "Offre reçue le {date}",
+      "rejected": "Candidature refusée le {date}",
+      "withdrawn": "Candidature retirée le {date}"
+    }
   },
   "candidatures": {
     "title": "Candidatures",
     "subtitle": "Le statut passe automatiquement à \"Postulé\" dès que vous cliquez sur \"Voir l'offre\" — corrigez-le ici si besoin.",
     "loading": "Chargement de vos candidatures…",
     "empty": "Aucune candidature pour l'instant. Cliquez sur \"Voir l'offre →\" sur une opportunité pour qu'elle apparaisse ici.",
-    "updated_on": "Mis à jour le {date}",
     "updated": "Statut mis à jour.",
     "removed": "Retiré de vos candidatures.",
     "update_error": "La mise à jour du statut a échoué. Merci de réessayer."

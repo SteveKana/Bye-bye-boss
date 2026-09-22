@@ -25,8 +25,8 @@ const api = useApi()
 const toast = useToast()
 const { avatarColor, initials, contractTag, publishedLabel } = useOfferDisplay()
 const {
-  label: applicationStatusLabel,
   badgeClass: applicationStatusBadgeClass,
+  message: applicationStatusMessage,
   markApplied,
 } = useApplicationStatus()
 
@@ -271,13 +271,20 @@ const soon = () => toast.info(t('app.soon_full'))
             </UiButton>
             <!-- Passive confirmation only -- no action is ever required here,
                  see openExternalOffer(). Hidden for "not_applied" since
-                 there's nothing worth confirming yet. -->
+                 there's nothing worth confirming yet. The date makes it
+                 concrete (what actually happened and when) rather than just
+                 the bare status label. -->
             <span
               v-if="match.application_status !== 'not_applied'"
               class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
               :class="applicationStatusBadgeClass(match.application_status)"
             >
-              {{ applicationStatusLabel(match.application_status) }}
+              {{
+                applicationStatusMessage(
+                  match.application_status,
+                  match.application_status_updated_at
+                )
+              }}
             </span>
           </div>
         </UiCard>

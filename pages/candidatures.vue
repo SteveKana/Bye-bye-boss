@@ -20,6 +20,7 @@ const { avatarColor, initials } = useOfferDisplay()
 const {
   options: statusOptions,
   badgeClass: applicationStatusBadgeClass,
+  message: applicationStatusMessage,
   updateStatus,
 } = useApplicationStatus()
 
@@ -36,15 +37,6 @@ onMounted(async () => {
     loading.value = false
   }
 })
-
-function statusDateLabel(dateStr) {
-  if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
-}
 
 function openMatch(item) {
   navigateTo(`/opportunity/${item.id}`)
@@ -148,9 +140,10 @@ async function changeStatus(item, newStatus) {
             </div>
             <div v-if="item.application_status_updated_at" class="mt-1 text-[11px] text-gray-400">
               {{
-                $t('candidatures.updated_on', {
-                  date: statusDateLabel(item.application_status_updated_at),
-                })
+                applicationStatusMessage(
+                  item.application_status,
+                  item.application_status_updated_at
+                )
               }}
             </div>
           </div>
