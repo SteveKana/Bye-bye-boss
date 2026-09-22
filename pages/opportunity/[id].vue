@@ -24,6 +24,11 @@ const route = useRoute()
 const api = useApi()
 const toast = useToast()
 const { avatarColor, initials, contractTag, publishedLabel } = useOfferDisplay()
+const {
+  label: applicationStatusLabel,
+  badgeClass: applicationStatusBadgeClass,
+  markApplied,
+} = useApplicationStatus()
 
 const loading = ref(true)
 const notFound = ref(false)
@@ -135,8 +140,15 @@ const matchGroups = computed(() => {
 
 const gapsCount = computed(() => analysis.value.ats_gaps?.length || 0)
 
-function openExternalOffer() {
+// The click-through itself is the signal of intent to apply -- nothing is
+// asked of the candidate. See useApplicationStatus's markApplied() and the
+// backend route's docstring: idempotent and one-way, so clicking again
+// later never regresses a status the candidate (or a later correction on
+// the Candidatures page) already moved further along.
+async function openExternalOffer() {
   if (offer.value?.url) window.open(offer.value.url, '_blank', 'noopener')
+  const updated = await markApplied(route.params.id)
+  if (updated) match.value = updated
 }
 
 const soon = () => toast.info(t('app.soon_full'))
@@ -253,10 +265,20 @@ const soon = () => toast.info(t('app.soon_full'))
             </div>
           </div>
 
-          <div class="mt-4">
+          <div class="mt-4 flex flex-wrap items-center gap-3">
             <UiButton variant="primary" @click="openExternalOffer">
               {{ $t('opportunity.view_offer') }}
             </UiButton>
+            <!-- Passive confirmation only -- no action is ever required here,
+                 see openExternalOffer(). Hidden for "not_applied" since
+                 there's nothing worth confirming yet. -->
+            <span
+              v-if="match.application_status !== 'not_applied'"
+              class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+              :class="applicationStatusBadgeClass(match.application_status)"
+            >
+              {{ applicationStatusLabel(match.application_status) }}
+            </span>
           </div>
         </UiCard>
 

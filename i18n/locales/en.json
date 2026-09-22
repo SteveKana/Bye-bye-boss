@@ -240,6 +240,24 @@
     "ready_text_no_gaps": "Your profile matches this offer well.",
     "adapt_cv_button": "📄 Adapt my CV for this offer"
   },
+  "applicationStatus": {
+    "not_applied": "Not applied",
+    "applied": "Applied",
+    "interview": "Interview",
+    "offer": "Offer received",
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn"
+  },
+  "candidatures": {
+    "title": "Applications",
+    "subtitle": "The status automatically moves to \"Applied\" as soon as you click \"View the listing\" — correct it here if needed.",
+    "loading": "Loading your applications…",
+    "empty": "No applications yet. Click \"View the listing →\" on an opportunity for it to show up here.",
+    "updated_on": "Updated on {date}",
+    "updated": "Status updated.",
+    "removed": "Removed from your applications.",
+    "update_error": "Couldn't update the status. Please try again."
+  },
   "preferencesPage": {
     "title": "Preferences",
     "subtitle": "These criteria refine your offer matches. Editable at any time.",
