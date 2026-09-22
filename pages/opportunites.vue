@@ -34,12 +34,7 @@
 // checkmark icons are now the mockup's real inline SVGs (an emoji had been
 // used as a placeholder and rendered inconsistently across platforms); two
 // sort options were added ("Potentiel ATS", "Score carrière" -- Regret Index
-// sort still deliberately left out, same reasoning as above); and the
-// "Salaire minimum" filter is disabled with an explanatory note while
-// Freelance is selected, since offers only carry an annual salary_min/max
-// (whatever a salaried-role source reported), not a per-offer daily rate --
-// applying an annual threshold to a freelance mission wouldn't mean
-// anything.
+// sort still deliberately left out, same reasoning as above).
 //
 // Also from that feedback: the shared app layout centers most pages at a
 // max-w-5xl (1024px) reading width, which is fine for a single list but
@@ -48,6 +43,19 @@
 // lines. This page now opts into the layout's wider max-w-7xl via
 // `wide: true` (see layouts/app.vue), and the reasoning column's min-width
 // was bumped to 200px to match the mockup exactly.
+//
+// The "Salaire minimum" filter and "Salaire (décroissant)" sort used to
+// simply not apply to Freelance offers -- annual salary_min/max isn't the
+// right unit for a freelance mission's TJM, and the backend didn't carry a
+// TJM field at all, so the filter was disabled and the sort quietly did
+// nothing for them. Now that the backend extracts a best-effort TJM from
+// offer text (see core/daily_rate.py on the API side --
+// match.offer.daily_rate_min/max, never fabricated when the offer's text
+// doesn't state one), both switch to that field instead of salaryValue
+// whenever Freelance is selected: the filter's options and label become
+// TJM-denominated ("300 €/jour" etc. instead of "30 000 € brut/an"), and
+// "Salaire (décroissant)" sorts by daily_rate instead of annual salary,
+// relabeled "TJM (décroissant)" so it's clear which figure is being used.
 definePageMeta({ layout: 'app', middleware: 'auth', wide: true })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
@@ -84,6 +92,9 @@ const lastUpdatedLabel = computed(() => {
 
 const CONTRACT_OPTIONS = ['CDI', 'CDD', 'Freelance', 'Alternance']
 const SALARY_OPTIONS = [30000, 40000, 50000, 60000, 70000]
+// TJM scale for Freelance -- separate unit and range from the annual-salary
+// options above (see the freelanceSelected-driven switch below).
+const DAILY_RATE_OPTIONS = [300, 400, 500, 600, 700, 800]
 
 const contractFilters = ref([])
 const remoteFilter = ref('') // '' | 'onsite' | 'remote'
@@ -94,15 +105,18 @@ const page = ref(1)
 const PAGE_SIZE = 10
 
 // The salary_min/salary_max the backend stores is whatever a permanent-role
-// salary the source reported -- there's no per-offer daily-rate (TJM) field
-// (candidates state a target TJM in their preferences, but offers don't
-// carry one), so a fixed annual-salary threshold doesn't mean anything for
-// a freelance mission. Rather than silently apply an annual filter to a
-// figure that isn't one, the salary filter is disabled while Freelance is
-// selected.
+// salary the source reported -- an annual figure, the wrong unit for a
+// freelance mission's TJM. The filter/sort below switch to the separate
+// daily_rate_min/max field (extracted from offer text -- see
+// core/daily_rate.py on the API side) whenever Freelance is selected, rather
+// than misapplying an annual threshold to it.
 const freelanceSelected = computed(() => contractFilters.value.includes('Freelance'))
-watch(freelanceSelected, (isFreelance) => {
-  if (isFreelance) salaryMin.value = ''
+// The two scales (annual salary vs. daily TJM) don't share a numeric range,
+// so any selected threshold is cleared on toggle rather than silently
+// reinterpreted -- e.g. "50000" as a minimum makes no sense once the field
+// switches to a per-day rate.
+watch(freelanceSelected, () => {
+  salaryMin.value = ''
 })
 
 function toggleContractFilter(value) {
@@ -145,28 +159,46 @@ const activeFilterChips = computed(() => {
   if (salaryMin.value) {
     chips.push({
       key: 'salary',
-      label: t('opportunites.salary_min_label', {
-        amount: Number(salaryMin.value).toLocaleString('fr-FR'),
-      }),
+      label: t(
+        freelanceSelected.value ? 'opportunites.tjm_min_label' : 'opportunites.salary_min_label',
+        {
+          amount: Number(salaryMin.value).toLocaleString('fr-FR'),
+        }
+      ),
       clear: () => (salaryMin.value = ''),
     })
   }
   return chips
 })
 
-const salaryOptions = computed(() => [
-  { value: '', label: t('opportunites.salary_any') },
-  ...SALARY_OPTIONS.map((amount) => ({
-    value: amount,
-    label: t('opportunites.salary_min_label', { amount: amount.toLocaleString('fr-FR') }),
-  })),
-])
+const salaryOptions = computed(() =>
+  freelanceSelected.value
+    ? [
+        { value: '', label: t('opportunites.salary_any') },
+        ...DAILY_RATE_OPTIONS.map((amount) => ({
+          value: amount,
+          label: t('opportunites.tjm_min_label', { amount: amount.toLocaleString('fr-FR') }),
+        })),
+      ]
+    : [
+        { value: '', label: t('opportunites.salary_any') },
+        ...SALARY_OPTIONS.map((amount) => ({
+          value: amount,
+          label: t('opportunites.salary_min_label', { amount: amount.toLocaleString('fr-FR') }),
+        })),
+      ]
+)
 
 const SORT_OPTIONS = computed(() => [
   { value: 'relevance', label: t('dashboard.sort_relevance') },
   { value: 'date_desc', label: t('dashboard.sort_date_desc') },
   { value: 'date_asc', label: t('dashboard.sort_date_asc') },
-  { value: 'salary_desc', label: t('opportunites.sort_salary_desc') },
+  {
+    value: 'salary_desc',
+    label: t(
+      freelanceSelected.value ? 'opportunites.sort_tjm_desc' : 'opportunites.sort_salary_desc'
+    ),
+  },
   { value: 'ats_desc', label: t('opportunites.sort_ats_desc') },
   { value: 'ats_potential_desc', label: t('opportunites.sort_potential_desc') },
   { value: 'career_desc', label: t('opportunites.sort_career_desc') },
@@ -184,10 +216,13 @@ const filteredOffers = computed(() =>
       (!contractFilters.value.length || contractFilters.value.includes(offer.contractTag)) &&
       (!remoteFilter.value ||
         (remoteFilter.value === 'remote' ? offer.isFullRemote : !offer.isFullRemote)) &&
-      // No salary data at all can't be confirmed to meet a minimum, so it's
-      // excluded once a threshold is set -- same reasoning as a missing
+      // No salary/TJM data at all can't be confirmed to meet a minimum, so
+      // it's excluded once a threshold is set -- same reasoning as a missing
       // date/salary always sorting last below, just applied as a filter.
-      (!salaryMin.value || (offer.salaryValue || 0) >= Number(salaryMin.value)) &&
+      // Freelance switches to dailyRateValue -- see freelanceSelected above.
+      (!salaryMin.value ||
+        ((freelanceSelected.value ? offer.dailyRateValue : offer.salaryValue) || 0) >=
+          Number(salaryMin.value)) &&
       (!debugSourceFilter.value || offer.source === debugSourceFilter.value)
   )
 )
@@ -205,10 +240,14 @@ const offers = computed(() => {
       return sign * (a.publishedAt - b.publishedAt)
     })
   } else if (sortBy.value === 'salary_desc') {
+    // Freelance switches to dailyRateValue -- see freelanceSelected above;
+    // relabeled "TJM (décroissant)" in SORT_OPTIONS so it's clear which
+    // figure is being sorted.
+    const key = freelanceSelected.value ? 'dailyRateValue' : 'salaryValue'
     list.sort((a, b) => {
-      if (!a.salaryValue) return 1
-      if (!b.salaryValue) return -1
-      return b.salaryValue - a.salaryValue
+      if (!a[key]) return 1
+      if (!b[key]) return -1
+      return b[key] - a[key]
     })
   } else if (sortBy.value === 'ats_desc') {
     list.sort((a, b) => b.scores.ats - a.scores.ats)
@@ -423,16 +462,9 @@ function selectSort(value) {
               </div>
               <div class="mb-4">
                 <p class="mb-2 text-xs font-semibold text-gray-500">
-                  {{ $t('opportunites.salary_min') }}
+                  {{ $t(freelanceSelected ? 'opportunites.tjm_min' : 'opportunites.salary_min') }}
                 </p>
-                <UiSelect
-                  v-model="salaryMin"
-                  :options="salaryOptions"
-                  :disabled="freelanceSelected"
-                />
-                <p v-if="freelanceSelected" class="mt-1.5 text-[11px] text-gray-400">
-                  {{ $t('opportunites.salary_min_freelance_note') }}
-                </p>
+                <UiSelect v-model="salaryMin" :options="salaryOptions" />
               </div>
               <div class="flex items-center justify-between">
                 <button
@@ -622,7 +654,9 @@ function selectSort(value) {
                 <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400">
                   <span v-if="offer.loc">📍 {{ offer.loc }}</span>
                   <span v-if="offer.contractTag">📄 {{ offer.contractTag }}</span>
-                  <span v-if="offer.salaryLabel">{{ offer.salaryLabel }}</span>
+                  <span v-if="offer.dailyRateLabel || offer.salaryLabel">{{
+                    offer.dailyRateLabel || offer.salaryLabel
+                  }}</span>
                 </div>
                 <div v-if="tagsFor(offer).shown.length" class="mt-2 flex flex-wrap gap-1.5">
                   <span

@@ -240,7 +240,9 @@
     "adjust_link": "Ajuster mes critères de recherche",
     "sort_potential_desc": "Potentiel ATS",
     "sort_career_desc": "Score carrière",
-    "salary_min_freelance_note": "Non disponible pour les missions freelance : les offres ne renseignent pas de taux journalier (TJM), seulement un salaire annuel pour les postes salariés."
+    "tjm_min": "TJM minimum",
+    "tjm_min_label": "{amount} €/jour",
+    "sort_tjm_desc": "TJM (décroissant)"
   },
   "opportunity": {
     "back": "← Retour au tableau de bord",
