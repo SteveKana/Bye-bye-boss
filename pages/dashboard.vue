@@ -9,7 +9,6 @@ definePageMeta({ layout: 'app', middleware: 'auth' })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.dashboard')} · Bye Bye Boss`) })
 
-const toast = useToast()
 const { firstName } = useUserDisplay()
 const matching = useMatchingStore()
 const { criteria, load: loadCriteria } = useSearchCriteria()
@@ -42,8 +41,6 @@ onMounted(async () => {
   }
 })
 
-const soon = () => toast.info(t('app.soon_full'))
-
 // Opens the "Opportunité" detail page in-app -- matches the mockups, which
 // never redirect straight to the external job listing from the dashboard
 // list itself. The real external URL (offer.url) is only opened from the
@@ -62,7 +59,7 @@ function openOffer(offer) {
         </h1>
         <p class="mt-1 text-sm text-gray-500">{{ $t('dashboard.greeting_sub') }}</p>
       </div>
-      <UiButton variant="secondary" size="sm" @click="soon"
+      <UiButton variant="secondary" size="sm" @click="navigateTo('/settings')"
         >🔔 {{ $t('dashboard.alerts') }}</UiButton
       >
     </div>

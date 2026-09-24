@@ -12,6 +12,157 @@ const v = useValidators()
 
 const soon = () => toast.info(t('app.soon_full'))
 
+// --- Notifications (email/Discord/WhatsApp) --------------------------
+// See app/modules/notifications on the API. Email is a plain on/off toggle;
+// Discord and WhatsApp each need a value (webhook URL / phone number)
+// before they can be turned on, so those two get an "Activer" flow instead
+// of a bare switch.
+const notifications = useNotificationsStore()
+
+const prefsLoading = ref(true)
+const emailSaving = ref(false)
+const discordSaving = ref(false)
+const whatsappSaving = ref(false)
+const testSending = ref(false)
+
+const emailEnabled = ref(true)
+const discordEnabled = ref(false)
+const discordWebhookUrl = ref('')
+const discordError = ref('')
+const whatsappEnabled = ref(false)
+const whatsappPhoneNumber = ref('')
+const whatsappError = ref('')
+
+function applyPreferences(prefs) {
+  emailEnabled.value = prefs.email_enabled
+  discordEnabled.value = prefs.discord_enabled
+  discordWebhookUrl.value = prefs.discord_webhook_url || ''
+  whatsappEnabled.value = prefs.whatsapp_enabled
+  whatsappPhoneNumber.value = prefs.whatsapp_phone_number || ''
+}
+
+onMounted(async () => {
+  try {
+    applyPreferences(await notifications.fetchPreferences())
+  } catch (err) {
+    toast.error(err.message || t('settings.notifications_load_error'))
+  } finally {
+    prefsLoading.value = false
+  }
+})
+
+async function toggleEmail(next) {
+  emailSaving.value = true
+  try {
+    applyPreferences(await notifications.savePreferences({ email_enabled: next }))
+  } catch (err) {
+    toast.error(err.message || t('settings.notifications_save_error'))
+  } finally {
+    emailSaving.value = false
+  }
+}
+
+const DISCORD_WEBHOOK_PREFIX = 'https://discord.com/api/webhooks/'
+
+async function saveDiscord() {
+  discordError.value = ''
+  const webhook = discordWebhookUrl.value.trim()
+  if (!webhook) {
+    discordError.value = t('validation.discord_webhook_required')
+    return
+  }
+  if (!webhook.startsWith(DISCORD_WEBHOOK_PREFIX)) {
+    discordError.value = t('validation.discord_webhook_invalid')
+    return
+  }
+  discordSaving.value = true
+  try {
+    applyPreferences(
+      await notifications.savePreferences({
+        discord_enabled: true,
+        discord_webhook_url: webhook,
+      })
+    )
+    toast.success(t('settings.notifications_saved'))
+  } catch (err) {
+    toast.error(err.message || t('settings.notifications_save_error'))
+  } finally {
+    discordSaving.value = false
+  }
+}
+
+async function disableDiscord() {
+  discordSaving.value = true
+  try {
+    applyPreferences(await notifications.savePreferences({ discord_enabled: false }))
+  } catch (err) {
+    toast.error(err.message || t('settings.notifications_save_error'))
+  } finally {
+    discordSaving.value = false
+  }
+}
+
+// Loose international-format check (+ then 7-15 digits) -- the backend
+// doesn't validate the shape beyond "non-empty", this is just to catch an
+// obviously wrong value before it round-trips to the API.
+const WHATSAPP_PHONE_PATTERN = /^\+[1-9]\d{6,14}$/
+
+async function saveWhatsapp() {
+  whatsappError.value = ''
+  const phone = whatsappPhoneNumber.value.trim()
+  if (!phone) {
+    whatsappError.value = t('validation.whatsapp_phone_required')
+    return
+  }
+  if (!WHATSAPP_PHONE_PATTERN.test(phone)) {
+    whatsappError.value = t('validation.whatsapp_phone_invalid')
+    return
+  }
+  whatsappSaving.value = true
+  try {
+    applyPreferences(
+      await notifications.savePreferences({
+        whatsapp_enabled: true,
+        whatsapp_phone_number: phone,
+      })
+    )
+    toast.success(t('settings.notifications_saved'))
+  } catch (err) {
+    toast.error(err.message || t('settings.notifications_save_error'))
+  } finally {
+    whatsappSaving.value = false
+  }
+}
+
+async function disableWhatsapp() {
+  whatsappSaving.value = true
+  try {
+    applyPreferences(await notifications.savePreferences({ whatsapp_enabled: false }))
+  } catch (err) {
+    toast.error(err.message || t('settings.notifications_save_error'))
+  } finally {
+    whatsappSaving.value = false
+  }
+}
+
+async function sendTest() {
+  const channelLabels = {
+    email: t('settings.channel_email'),
+    discord: 'Discord',
+    whatsapp: 'WhatsApp',
+  }
+  testSending.value = true
+  try {
+    const result = await notifications.testSend()
+    const channels = result.channels_sent.map((c) => channelLabels[c] || c).join(', ')
+    toast.success(t('settings.test_send_success', { channels }))
+  } catch (err) {
+    toast.error(err.message || t('settings.test_send_error'))
+  } finally {
+    testSending.value = false
+  }
+}
+
 // --- Security (change password) — unchanged logic, moved here from the old
 // combined profile page to match the settings mockup's "Compte" card ---
 const pwdSchema = computed(() =>
@@ -67,53 +218,145 @@ const changePassword = handleSubmit(async (values) => {
       </div>
     </UiCard>
 
-    <!-- Notifications (not backed yet -- interacting shows "coming soon") -->
+    <!-- Notifications -->
     <UiCard class="mb-4" :title="$t('settings.notifications')">
       <p class="mb-4 text-[13px] text-gray-500">{{ $t('settings.notifications_sub') }}</p>
 
-      <div class="flex items-center justify-between gap-4 border-b border-gray-100 py-3.5">
-        <div>
-          <div class="text-sm font-semibold text-gray-900">{{ $t('settings.alerts_label') }}</div>
-          <div class="text-[12.5px] text-gray-500">{{ $t('settings.alerts_sub') }}</div>
-        </div>
-        <button
-          type="button"
-          class="relative h-6 w-11 shrink-0 rounded-full bg-gray-200"
-          role="switch"
-          aria-checked="false"
-          @click="soon"
-        >
-          <span class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-soft" />
-        </button>
+      <div v-if="prefsLoading" class="py-6 text-center text-sm text-gray-500">
+        {{ $t('settings.loading') }}
       </div>
 
-      <div class="flex items-center justify-between gap-4 border-b border-gray-100 py-3.5">
-        <div>
-          <div class="text-sm font-semibold text-gray-900">{{ $t('settings.channel_label') }}</div>
-          <div class="text-[12.5px] text-gray-500">{{ $t('settings.channel_sub') }}</div>
-        </div>
-        <UiSelect
-          class="w-44"
-          :model-value="$t('settings.channel_email')"
-          :options="[$t('settings.channel_email')]"
-          @update:model-value="soon"
-        />
-      </div>
-
-      <div class="flex items-center justify-between gap-4 pt-3.5">
-        <div>
-          <div class="text-sm font-semibold text-gray-900">
-            {{ $t('settings.frequency_label') }}
+      <template v-else>
+        <!-- Email -->
+        <div class="flex items-center justify-between gap-4 border-b border-gray-100 py-3.5">
+          <div>
+            <div class="text-sm font-semibold text-gray-900">
+              {{ $t('settings.channel_email') }}
+            </div>
+            <div class="text-[12.5px] text-gray-500">{{ $t('settings.email_sub') }}</div>
           </div>
-          <div class="text-[12.5px] text-gray-500">{{ $t('settings.frequency_sub') }}</div>
+          <UiToggle
+            :model-value="emailEnabled"
+            :disabled="emailSaving"
+            :label="$t('settings.channel_email')"
+            @update:model-value="toggleEmail"
+          />
         </div>
-        <UiSelect
-          class="w-44"
-          :model-value="$t('settings.frequency_daily')"
-          :options="[$t('settings.frequency_daily')]"
-          @update:model-value="soon"
-        />
-      </div>
+
+        <!-- Discord -->
+        <div class="border-b border-gray-100 py-3.5">
+          <div class="mb-2 flex items-center justify-between gap-4">
+            <div class="text-sm font-semibold text-gray-900">Discord</div>
+            <span
+              class="rounded-full px-2 py-0.5 text-[11px] font-bold"
+              :class="
+                discordEnabled ? 'bg-success-light text-success-text' : 'bg-gray-100 text-gray-500'
+              "
+            >
+              {{ discordEnabled ? $t('settings.channel_active') : $t('settings.channel_inactive') }}
+            </span>
+          </div>
+          <p class="mb-2 text-[12.5px] text-gray-500">{{ $t('settings.discord_sub') }}</p>
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+            <UiInput
+              v-model="discordWebhookUrl"
+              class="flex-1"
+              placeholder="https://discord.com/api/webhooks/…"
+              :error="discordError"
+              :disabled="discordSaving"
+            />
+            <div class="flex shrink-0 gap-2">
+              <UiButton variant="secondary" size="sm" :loading="discordSaving" @click="saveDiscord">
+                {{ discordEnabled ? $t('settings.update') : $t('settings.activate') }}
+              </UiButton>
+              <UiButton
+                v-if="discordEnabled"
+                variant="ghost"
+                size="sm"
+                :disabled="discordSaving"
+                @click="disableDiscord"
+              >
+                {{ $t('settings.deactivate') }}
+              </UiButton>
+            </div>
+          </div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="border-b border-gray-100 py-3.5">
+          <div class="mb-2 flex items-center justify-between gap-4">
+            <div class="text-sm font-semibold text-gray-900">WhatsApp</div>
+            <span
+              class="rounded-full px-2 py-0.5 text-[11px] font-bold"
+              :class="
+                whatsappEnabled ? 'bg-success-light text-success-text' : 'bg-gray-100 text-gray-500'
+              "
+            >
+              {{
+                whatsappEnabled ? $t('settings.channel_active') : $t('settings.channel_inactive')
+              }}
+            </span>
+          </div>
+          <p class="mb-2 text-[12.5px] text-gray-500">{{ $t('settings.whatsapp_sub') }}</p>
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+            <UiInput
+              v-model="whatsappPhoneNumber"
+              class="flex-1"
+              placeholder="+33612345678"
+              :error="whatsappError"
+              :disabled="whatsappSaving"
+            />
+            <div class="flex shrink-0 gap-2">
+              <UiButton
+                variant="secondary"
+                size="sm"
+                :loading="whatsappSaving"
+                @click="saveWhatsapp"
+              >
+                {{ whatsappEnabled ? $t('settings.update') : $t('settings.activate') }}
+              </UiButton>
+              <UiButton
+                v-if="whatsappEnabled"
+                variant="ghost"
+                size="sm"
+                :disabled="whatsappSaving"
+                @click="disableWhatsapp"
+              >
+                {{ $t('settings.deactivate') }}
+              </UiButton>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test send -->
+        <div class="flex items-center justify-between gap-4 border-b border-gray-100 py-3.5">
+          <div>
+            <div class="text-sm font-semibold text-gray-900">
+              {{ $t('settings.test_send_label') }}
+            </div>
+            <div class="text-[12.5px] text-gray-500">{{ $t('settings.test_send_sub') }}</div>
+          </div>
+          <UiButton variant="secondary" size="sm" :loading="testSending" @click="sendTest">
+            {{ $t('settings.test_send_button') }}
+          </UiButton>
+        </div>
+
+        <!-- Frequency (fixed to one daily send for now) -->
+        <div class="flex items-center justify-between gap-4 pt-3.5">
+          <div>
+            <div class="text-sm font-semibold text-gray-900">
+              {{ $t('settings.frequency_label') }}
+            </div>
+            <div class="text-[12.5px] text-gray-500">{{ $t('settings.frequency_fixed_hint') }}</div>
+          </div>
+          <UiSelect
+            class="w-44"
+            disabled
+            :model-value="$t('settings.frequency_daily')"
+            :options="[$t('settings.frequency_daily')]"
+          />
+        </div>
+      </template>
     </UiCard>
 
     <!-- Account -->

@@ -803,7 +803,13 @@ function selectSort(value) {
             <p class="text-xs font-bold text-navy">{{ $t('opportunites.alerts_title') }}</p>
           </div>
           <p class="text-xs leading-relaxed text-gray-500">{{ $t('opportunites.alerts_text') }}</p>
-          <UiButton size="sm" variant="secondary" block class="mt-3" @click="soon">
+          <UiButton
+            size="sm"
+            variant="secondary"
+            block
+            class="mt-3"
+            @click="navigateTo('/settings')"
+          >
             {{ $t('dashboard.alerts') }}
           </UiButton>
         </div>
