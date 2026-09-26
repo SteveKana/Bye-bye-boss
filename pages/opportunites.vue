@@ -639,21 +639,32 @@ function selectSort(value) {
               </span>
 
               <div class="min-w-0 flex-1">
-                <span
-                  class="mb-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
-                  :class="
-                    offer.strong
-                      ? 'bg-success-light text-success-text'
-                      : 'bg-amber-100 text-amber-700'
-                  "
-                >
-                  {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
-                </span>
+                <div class="mb-1 flex flex-wrap items-center gap-1.5">
+                  <span
+                    class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
+                    :class="
+                      offer.strong
+                        ? 'bg-success-light text-success-text'
+                        : 'bg-amber-100 text-amber-700'
+                    "
+                  >
+                    {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
+                  </span>
+                  <!-- Same colored-pill treatment as dashboard.vue's contract
+                  tag (not the muted "📄 label" text this page used to show
+                  here) so the info reads with the same weight in both
+                  places -- was easy to miss buried among location/salary. -->
+                  <span
+                    v-if="offer.contractTag"
+                    class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
+                  >
+                    {{ offer.contractTag }}
+                  </span>
+                </div>
                 <p class="text-base font-bold text-navy">{{ offer.title }}</p>
                 <p class="text-sm font-semibold text-gray-600">{{ offer.company }}</p>
                 <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400">
                   <span v-if="offer.loc">📍 {{ offer.loc }}</span>
-                  <span v-if="offer.contractTag">📄 {{ offer.contractTag }}</span>
                   <span v-if="offer.dailyRateLabel || offer.salaryLabel">{{
                     offer.dailyRateLabel || offer.salaryLabel
                   }}</span>
