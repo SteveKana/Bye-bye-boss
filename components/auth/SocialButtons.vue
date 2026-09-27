@@ -1,8 +1,84 @@
 <script setup>
-// Fictive social sign-in for now: the backend has no OAuth yet, so these just
-// notify that it is coming. Kept visually faithful to the mockups.
+// Google is wired for real (see below); LinkedIn stays fictive for now --
+// the backend has no LinkedIn OAuth, so that one still just notifies it's
+// coming. Both buttons stay visually faithful to the mockups.
 const { t } = useI18n()
 const toast = useToast()
+const auth = useAuthStore()
+const route = useRoute()
+const config = useRuntimeConfig()
+
+// Google Identity Services' own rendered button is what reliably opens the
+// account picker on click -- calling google.accounts.id.prompt() from a
+// fully custom element is documented as unreliable (after a user dismisses
+// the One Tap dialog once, Google enters an exponential cooldown, so a
+// button wired to prompt() can silently stop responding). To keep the
+// custom-styled button from the mockup working, Google's real button is
+// rendered into an invisible container, and our visible button just
+// forwards its click to it -- same visuals, Google's own click handling
+// underneath.
+const googleReady = ref(false)
+const googleContainer = ref(null)
+let googleScriptPromise = null
+
+function loadGoogleScript() {
+  if (window.google?.accounts?.id) return Promise.resolve()
+  if (googleScriptPromise) return googleScriptPromise
+  googleScriptPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    script.onload = resolve
+    script.onerror = reject
+    document.head.appendChild(script)
+  })
+  return googleScriptPromise
+}
+
+async function onGoogleCredential(response) {
+  try {
+    await auth.loginWithGoogle(response.credential)
+    const redirect = route.query.redirect
+    await navigateTo(typeof redirect === 'string' ? redirect : '/dashboard')
+  } catch (err) {
+    toast.error(err?.message || t('social.google_error'))
+  }
+}
+
+onMounted(async () => {
+  // No client id configured (e.g. a fresh environment before Steve sets
+  // NUXT_PUBLIC_GOOGLE_CLIENT_ID) -- fall back to the old "coming soon"
+  // behavior rather than rendering a button that can never work.
+  if (!config.public.googleClientId) return
+  try {
+    await loadGoogleScript()
+    window.google.accounts.id.initialize({
+      client_id: config.public.googleClientId,
+      callback: onGoogleCredential,
+    })
+    if (googleContainer.value) {
+      window.google.accounts.id.renderButton(googleContainer.value, {
+        type: 'standard',
+        size: 'large',
+        width: 320,
+      })
+    }
+    googleReady.value = true
+  } catch {
+    // Script blocked or failed to load (network issue, ad blocker...) --
+    // same graceful "coming soon" fallback as an unconfigured client id.
+    googleReady.value = false
+  }
+})
+
+function triggerGoogle() {
+  if (!googleReady.value) {
+    soon('Google')
+    return
+  }
+  googleContainer.value?.querySelector('div[role="button"]')?.click()
+}
 
 function soon(provider) {
   toast.info(t('social.soon', { provider }))
@@ -17,10 +93,19 @@ function soon(provider) {
       <span class="h-px flex-1 bg-gray-200" />
     </div>
 
+    <!-- Google's real button, rendered off-screen: it's the click target
+    that actually knows how to open the account picker reliably (see the
+    script setup comment above). -->
+    <div
+      ref="googleContainer"
+      class="pointer-events-none absolute -left-[9999px] h-0 w-0 overflow-hidden"
+      aria-hidden="true"
+    />
+
     <button
       type="button"
       class="mb-2.5 flex w-full items-center justify-center gap-2.5 rounded-md border-[1.5px] border-gray-200 bg-white py-3 text-sm font-semibold text-gray-900 transition hover:border-gray-300 hover:bg-gray-50"
-      @click="soon('Google')"
+      @click="triggerGoogle"
     >
       <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
         <path

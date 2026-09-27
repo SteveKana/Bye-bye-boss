@@ -81,7 +81,8 @@
   "social": {
     "google": "Continuer avec Google",
     "linkedin": "Continuer avec LinkedIn",
-    "soon": "Connexion via {provider} bientôt disponible"
+    "soon": "Connexion via {provider} bientôt disponible",
+    "google_error": "La connexion avec Google a échoué. Merci de réessayer."
   },
   "security": {
     "login": "Vos données sont chiffrées et sécurisées",
