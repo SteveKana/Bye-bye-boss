@@ -51,7 +51,7 @@ watch(
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
       </button>
-      <NuxtLink to="/dashboard" class="flex items-center gap-2 font-bold">
+      <NuxtLink to="/" class="flex items-center gap-2 font-bold">
         <span
           class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-[11px] font-black"
         >
