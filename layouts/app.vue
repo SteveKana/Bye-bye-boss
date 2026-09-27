@@ -52,11 +52,7 @@ watch(
         </svg>
       </button>
       <NuxtLink to="/" class="flex items-center gap-2 font-bold">
-        <span
-          class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-[11px] font-black"
-        >
-          BB
-        </span>
+        <UiLogoMark :size="28" />
         Bye Bye Boss
       </NuxtLink>
     </header>
