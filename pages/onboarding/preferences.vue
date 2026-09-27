@@ -31,10 +31,15 @@ async function onContinue() {
   saving.value = true
   try {
     await onboarding.updatePreferences({ ...formRef.value.form })
-    // Preferences is the last onboarding step -- whether this is a first-time
-    // completion or a later re-edit, /profile is where the person can see
-    // what was just imported/set, so it's the landing page either way.
-    await navigateTo('/profile')
+    // This route is only ever reached from the onboarding wizard (upload ->
+    // verification -> here) -- a later preferences edit goes through
+    // /preferences instead, never here. So this is always the very end of
+    // first-time onboarding, which now triggers an immediate matching run
+    // (see the backend's ProfileOnboardingCompleted event) -- send the
+    // candidate straight to /dashboard so they land on the product's own
+    // value proposition (their scored opportunities) at the moment they're
+    // most engaged, instead of /profile, which has nothing new to show.
+    await navigateTo('/dashboard')
   } catch (err) {
     toast.error(err.message || t('onboarding.preferences.error_generic'))
   } finally {

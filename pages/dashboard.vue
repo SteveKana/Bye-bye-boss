@@ -18,6 +18,36 @@ const loadingOpportunities = ref(true)
 const TOP_COUNT = 5
 const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOpportunities))
 
+// A brand-new profile's very first matching run fires in the background
+// right after onboarding completes (see the backend's
+// ProfileOnboardingCompleted event) and can take a minute or two -- without
+// this, an empty dashboard looked identical whether that run was still in
+// progress or had genuinely found nothing, and the only way to see freshly
+// finished matches was a manual reload. So: if the first fetch comes back
+// empty, keep showing the loading skeleton (not the "empty" message) and
+// poll for a couple of minutes before giving up and showing it for real.
+const POLL_INTERVAL_MS = 8000
+const MAX_POLL_ATTEMPTS = 15 // ~2 minutes at 8s
+let pollAttempts = 0
+
+const { pause: stopPolling, resume: startPolling } = useIntervalFn(
+  async () => {
+    pollAttempts += 1
+    try {
+      await matching.fetchTop()
+    } catch {
+      // Same as the initial fetch below -- keep retrying silently rather
+      // than surfacing an error toast for what reads as "no offers yet".
+    }
+    if (topOffers.value.length > 0 || pollAttempts >= MAX_POLL_ATTEMPTS) {
+      stopPolling()
+      loadingOpportunities.value = false
+    }
+  },
+  POLL_INTERVAL_MS,
+  { immediate: false }
+)
+
 // Best real odds of getting past the recruiter's ATS once the CV is
 // adapted (ats_potential), not just a good abstract career fit -- same
 // "Pertinence" ordering the full Opportunités page defaults to.
@@ -37,7 +67,15 @@ onMounted(async () => {
     // read as "no opportunities yet", same honest empty state as before,
     // not an alarming error toast.
   } finally {
-    loadingOpportunities.value = false
+    if (topOffers.value.length > 0) {
+      loadingOpportunities.value = false
+    } else {
+      // Still nothing: could be a first-time profile whose immediate
+      // matching run hasn't finished yet, so keep the skeleton up and poll
+      // for it instead of assuming this is the final, honest "empty" state
+      // right away -- see the comment above useIntervalFn.
+      startPolling()
+    }
   }
 })
 
