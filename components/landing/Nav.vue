@@ -57,11 +57,7 @@ async function onReupload(event) {
 <template>
   <nav class="flex items-center justify-between gap-6 px-6 py-4 lg:px-12">
     <NuxtLink to="/" class="flex items-center gap-2.5 font-bold text-navy" @click="goHome">
-      <span
-        class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-[13px] font-black text-white"
-      >
-        BB
-      </span>
+      <UiLogoMark :size="32" />
       Bye Bye Boss
     </NuxtLink>
 

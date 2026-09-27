@@ -2,11 +2,7 @@
   <footer class="border-t border-gray-200 bg-white px-6 py-8 lg:px-12">
     <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
       <div class="flex items-center gap-2.5 font-bold text-navy">
-        <span
-          class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-[13px] font-black text-white"
-        >
-          BB
-        </span>
+        <UiLogoMark :size="32" />
         Bye Bye Boss
       </div>
 

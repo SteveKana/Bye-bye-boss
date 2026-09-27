@@ -24,11 +24,7 @@ async function logout() {
 <template>
   <aside class="flex h-full w-64 shrink-0 flex-col bg-navy-light p-3 text-white">
     <NuxtLink to="/" class="mb-6 flex items-center gap-2.5 px-2 py-2">
-      <span
-        class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-[13px] font-black"
-      >
-        BB
-      </span>
+      <UiLogoMark :size="32" />
       <span class="font-bold">Bye Bye Boss</span>
     </NuxtLink>
 
