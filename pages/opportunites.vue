@@ -56,7 +56,7 @@
 // TJM-denominated ("300 €/jour" etc. instead of "30 000 € brut/an"), and
 // "Salaire (décroissant)" sorts by daily_rate instead of annual salary,
 // relabeled "TJM (décroissant)" so it's clear which figure is being used.
-definePageMeta({ layout: 'app', middleware: 'auth', wide: true })
+definePageMeta({ layout: 'app', middleware: ['auth', 'onboarding-complete'], wide: true })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
 

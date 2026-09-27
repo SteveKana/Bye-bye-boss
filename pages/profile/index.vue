@@ -1,5 +1,5 @@
 <script setup>
-definePageMeta({ layout: 'app', middleware: 'auth' })
+definePageMeta({ layout: 'app', middleware: ['auth', 'onboarding-complete'] })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.profile')} · Bye Bye Boss`) })
 

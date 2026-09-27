@@ -4,7 +4,7 @@
 // not a widget buried inside the dashboard. Same fields as the wizard's step
 // 3 (via the shared OnboardingPreferencesForm), editable at any time, saved
 // in place with a success toast (no redirect away).
-definePageMeta({ layout: 'app', middleware: 'auth' })
+definePageMeta({ layout: 'app', middleware: ['auth', 'onboarding-complete'] })
 
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('preferencesPage.title')} · Bye Bye Boss`) })
