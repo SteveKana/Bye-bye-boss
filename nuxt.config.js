@@ -48,6 +48,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '/api/v1/',
+      // The OAuth "Web application" client id from Google Cloud Console --
+      // public by nature (it identifies the app to Google, not a secret).
+      // Override per environment with NUXT_PUBLIC_GOOGLE_CLIENT_ID. Left
+      // empty, AuthSocialButtons just skips rendering the Google button
+      // rather than rendering a broken one.
+      googleClientId: '',
     },
   },
 

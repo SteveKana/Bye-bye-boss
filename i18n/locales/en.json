@@ -81,7 +81,8 @@
   "social": {
     "google": "Continue with Google",
     "linkedin": "Continue with LinkedIn",
-    "soon": "{provider} sign-in coming soon"
+    "soon": "{provider} sign-in coming soon",
+    "google_error": "Google sign-in failed. Please try again."
   },
   "security": {
     "login": "Your data is encrypted and secure",
