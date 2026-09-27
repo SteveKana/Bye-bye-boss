@@ -20,14 +20,25 @@ const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOp
 
 // A brand-new profile's very first matching run fires in the background
 // right after onboarding completes (see the backend's
-// ProfileOnboardingCompleted event) and can take a minute or two -- without
-// this, an empty dashboard looked identical whether that run was still in
-// progress or had genuinely found nothing, and the only way to see freshly
-// finished matches was a manual reload. So: if the first fetch comes back
-// empty, keep showing the loading skeleton (not the "empty" message) and
-// poll for a couple of minutes before giving up and showing it for real.
+// ProfileOnboardingCompleted event) -- without this, an empty dashboard
+// looked identical whether that run was still in progress or had
+// genuinely found nothing, and the only way to see freshly finished
+// matches was a manual reload. So: if the first fetch comes back empty,
+// keep showing the loading skeleton (not the "empty" message) and poll
+// before giving up and showing it for real.
+//
+// 4 minutes, not the "1-2 minutes" this used to say: the backend scores up
+// to MATCHING_MAX_OFFERS_PER_CANDIDATE offers, MATCHING_CONCURRENCY at a
+// time, each with its own MATCHING_OPENAI_TIMEOUT_SECONDS (180s) -- a real
+// run can legitimately take longer than "1-2 minutes" (confirmed live: a
+// run finished only a few seconds after the old 2-minute window gave up
+// and showed the "no opportunities" message). The loading copy
+// (dashboard.loading_sub) is upfront about this ceiling and tells the
+// candidate they'll get an email regardless, so there's little cost to
+// erring generous here over making them sit through a falsely negative
+// "no opportunities" message.
 const POLL_INTERVAL_MS = 8000
-const MAX_POLL_ATTEMPTS = 15 // ~2 minutes at 8s
+const MAX_POLL_ATTEMPTS = 30 // 4 minutes at 8s
 let pollAttempts = 0
 
 const { pause: stopPolling, resume: startPolling } = useIntervalFn(
