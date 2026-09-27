@@ -5,7 +5,7 @@
 // "Voir toutes les opportunités" below -- see the mockups (dashboard.html
 // vs opportunites.html): they're deliberately two different views over the
 // same scored pool, not one page with a "show more" toggle.
-definePageMeta({ layout: 'app', middleware: 'auth' })
+definePageMeta({ layout: 'app', middleware: ['auth', 'onboarding-complete'] })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.dashboard')} · Bye Bye Boss`) })
 
