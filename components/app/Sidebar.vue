@@ -32,7 +32,7 @@ async function logout() {
       <span class="font-bold">Bye Bye Boss</span>
     </NuxtLink>
 
-    <nav class="flex flex-1 flex-col gap-0.5">
+    <nav class="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
       <template v-for="(item, i) in items" :key="i">
         <div v-if="item.divider" class="my-3.5 h-px bg-white/10" />
         <NuxtLink
