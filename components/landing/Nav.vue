@@ -17,9 +17,41 @@ function goHome() {
 }
 
 // A logged-in visitor landing back on the marketing homepage (e.g. from a
-// bookmark or a shared link) has no reason to see "Se connecter" -- they
-// already are. Swap both CTAs for a single link into the app instead.
+// bookmark or a shared link) has no reason to see "Se connecter" or
+// "Importer mon CV" -- they already have an account. Swap both for an
+// avatar (identity/account access, same as the app sidebar) and a real
+// CV re-upload action, rather than routing either one through /register.
 const auth = useAuthStore()
+const { initials, fullName } = useUserDisplay()
+
+const onboarding = useOnboardingStore()
+const toast = useToast()
+const { t } = useI18n()
+
+const fileInput = ref(null)
+const reuploading = ref(false)
+
+function triggerReupload() {
+  fileInput.value?.click()
+}
+
+// Same endpoint and feedback as the profile page's own re-upload button
+// (see pages/profile/index.vue) -- no need to navigate to the app first
+// just to change your CV.
+async function onReupload(event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+  if (!file) return
+  reuploading.value = true
+  try {
+    await onboarding.uploadCv(file)
+    toast.success(t('profileCv.reupload_success'))
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.upload_error'))
+  } finally {
+    reuploading.value = false
+  }
+}
 </script>
 
 <template>
@@ -43,14 +75,31 @@ const auth = useAuthStore()
 
     <div class="flex items-center gap-3">
       <UiLangSwitcher />
-      <UiButton
-        v-if="auth.isAuthenticated"
-        variant="primary"
-        size="sm"
-        @click="navigateTo('/dashboard')"
-      >
-        {{ $t('app.nav.dashboard') }}
-      </UiButton>
+      <template v-if="auth.isAuthenticated">
+        <UiButton
+          variant="primary"
+          size="sm"
+          class="hidden sm:inline-flex"
+          :loading="reuploading"
+          @click="triggerReupload"
+        >
+          {{ $t('profileCv.reupload') }}
+        </UiButton>
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".pdf,.docx"
+          class="hidden"
+          @change="onReupload"
+        />
+        <NuxtLink
+          to="/dashboard"
+          :title="fullName || auth.user?.email"
+          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white"
+        >
+          {{ initials }}
+        </NuxtLink>
+      </template>
       <template v-else>
         <NuxtLink to="/login" class="text-sm font-semibold text-gray-600 hover:text-brand">
           {{ $t('landing.nav.login') }}
