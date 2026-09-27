@@ -21,7 +21,7 @@ watch(
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-gray-50">
+  <div class="flex h-screen overflow-hidden bg-gray-50">
     <!-- Desktop sidebar -->
     <div class="hidden lg:flex">
       <AppSidebar />
@@ -101,7 +101,7 @@ watch(
       </div>
     </Transition>
 
-    <main class="flex-1 overflow-x-hidden pt-14 lg:pt-0">
+    <main class="flex-1 overflow-x-hidden overflow-y-auto pt-14 lg:pt-0">
       <div class="mx-auto px-5 py-8 lg:px-10" :class="wide ? 'max-w-7xl' : 'max-w-5xl'">
         <slot />
       </div>
