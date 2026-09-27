@@ -5,6 +5,7 @@ useHead({ title: computed(() => `${t('app.nav.profile')} · Bye Bye Boss`) })
 
 const onboarding = useOnboardingStore()
 const toast = useToast()
+const { pictureUrl } = useUserDisplay()
 
 const loading = ref(true)
 const reuploading = ref(false)
@@ -160,11 +161,11 @@ async function downloadCv() {
     <!-- Identity -->
     <UiCard class="mb-4">
       <div class="mb-1 flex items-center gap-3.5">
-        <span
-          class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand text-lg font-extrabold text-white"
-        >
-          {{ initials }}
-        </span>
+        <UiAvatar
+          :picture-url="pictureUrl"
+          :initials="initials"
+          circle-class="h-14 w-14 text-lg font-extrabold text-white"
+        />
         <div>
           <ProfileEditableField
             :model-value="`${profile.first_name || ''} ${profile.last_name || ''}`.trim()"

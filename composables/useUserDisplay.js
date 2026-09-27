@@ -20,5 +20,11 @@ export function useUserDisplay() {
     return (auth.user?.email || '?').slice(0, 2).toUpperCase()
   })
 
-  return { firstName, fullName, initials }
+  // Only ever set from Google's ID token "picture" claim (see the
+  // backend's AuthService.login_with_google) -- null for an account that
+  // never signed in with Google, in which case UiAvatar falls back to the
+  // initials circle below.
+  const pictureUrl = computed(() => auth.user?.picture_url || null)
+
+  return { firstName, fullName, initials, pictureUrl }
 }

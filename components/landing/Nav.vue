@@ -22,7 +22,7 @@ function goHome() {
 // avatar (identity/account access, same as the app sidebar) and a real
 // CV re-upload action, rather than routing either one through /register.
 const auth = useAuthStore()
-const { initials, fullName } = useUserDisplay()
+const { initials, fullName, pictureUrl } = useUserDisplay()
 
 const onboarding = useOnboardingStore()
 const toast = useToast()
@@ -88,12 +88,12 @@ async function onReupload(event) {
           class="hidden"
           @change="onReupload"
         />
-        <NuxtLink
-          to="/dashboard"
-          :title="fullName || auth.user?.email"
-          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white"
-        >
-          {{ initials }}
+        <NuxtLink to="/dashboard" :title="fullName || auth.user?.email" class="shrink-0">
+          <UiAvatar
+            :picture-url="pictureUrl"
+            :initials="initials"
+            circle-class="h-8 w-8 text-xs font-bold text-white"
+          />
         </NuxtLink>
       </template>
       <template v-else>

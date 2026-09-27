@@ -2,7 +2,7 @@
 // Navy navigation column, shared by the desktop shell and the mobile drawer.
 const auth = useAuthStore()
 const route = useRoute()
-const { fullName, initials } = useUserDisplay()
+const { fullName, initials, pictureUrl } = useUserDisplay()
 const displayName = computed(() => fullName.value || auth.user?.email || '')
 
 const items = [
@@ -63,11 +63,11 @@ async function logout() {
         <UiLangSwitcher dark />
       </div>
       <div class="flex items-center gap-2.5 px-2 py-2">
-        <span
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold"
-        >
-          {{ initials }}
-        </span>
+        <UiAvatar
+          :picture-url="pictureUrl"
+          :initials="initials"
+          circle-class="h-9 w-9 text-xs font-bold"
+        />
         <div class="min-w-0">
           <div class="truncate text-[13px] font-semibold">{{ displayName }}</div>
           <div class="truncate text-[11px] text-white/40">{{ auth.user?.email }}</div>
