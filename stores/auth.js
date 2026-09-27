@@ -42,20 +42,27 @@ export const useAuthStore = defineStore('auth', () => {
 
   // idToken is the credential Google Identity Services hands back in the
   // browser (see AuthSocialButtons.vue) -- the backend verifies it, then
-  // either logs into or creates the matching account by email.
+  // either logs into or creates the matching account by email. Returns
+  // isNewUser so the caller can send a brand-new signup into onboarding
+  // (CV upload) instead of the dashboard.
   async function loginWithGoogle(idToken) {
-    const tokens = await useApi()(
+    const result = await useApi()(
       'auth/google',
       { method: 'POST', body: { id_token: idToken } },
       false
     )
-    setTokens(tokens)
+    setTokens(result)
     await fetchMe()
+    return { isNewUser: result.is_new_user }
   }
 
-  // Register does NOT log in: the account must confirm its email first.
-  function register(payload) {
-    return useApi()('auth/register', { method: 'POST', body: payload }, false)
+  // Registering signs the user straight in, same as login/loginWithGoogle --
+  // email verification is informational only, not a gate (Steve's call), so
+  // there's nothing to wait on before the account is fully usable.
+  async function register(payload) {
+    const tokens = await useApi()('auth/register', { method: 'POST', body: payload }, false)
+    setTokens(tokens)
+    await fetchMe()
   }
 
   function verifyEmail(token) {
