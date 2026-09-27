@@ -45,7 +45,14 @@ function loadGoogleScript() {
 
 async function onGoogleCredential(response) {
   try {
-    await auth.loginWithGoogle(response.credential)
+    const { isNewUser } = await auth.loginWithGoogle(response.credential)
+    // A brand-new account has no CV/profile yet -- send it into onboarding,
+    // same destination a fresh email/password signup gets. An existing
+    // account signing in goes to its intended page as before.
+    if (isNewUser) {
+      await navigateTo('/onboarding/upload')
+      return
+    }
     const redirect = route.query.redirect
     await navigateTo(typeof redirect === 'string' ? redirect : '/dashboard')
   } catch (err) {
