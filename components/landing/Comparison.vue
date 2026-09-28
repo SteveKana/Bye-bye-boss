@@ -20,17 +20,30 @@ const competitors = ['LinkedIn', 'Indeed', 'Welcome to the Jungle']
       </div>
       <h2 class="mb-10 text-3xl font-extrabold text-navy">{{ $t('landing.comparison.title') }}</h2>
 
+      <!-- Below `sm`, the 5-column table (feature + 3 named competitors +
+      Bye Bye Boss) didn't fit -- it kept its full min-width and scrolled
+      horizontally inside its own box, which silently clipped the "Bye Bye
+      Boss" column (the entire point of the comparison, and the only
+      all-checkmarks one) out of the initial view with no hint there was
+      more to scroll to. The 3 named competitors are collapsed into one
+      "Autres plateformes" column below `sm` (they already show the same
+      ✓/✕ per row -- `r.others` -- so nothing is lost, just condensed) so
+      "Fonctionnalité" and "Bye Bye Boss" both fit without scrolling; `sm`
+      and up keeps the original per-competitor table unchanged. -->
       <div class="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-card">
-        <table class="w-full min-w-[640px] border-collapse text-left text-sm">
+        <table class="w-full border-collapse text-left text-sm sm:min-w-[640px]">
           <thead>
             <tr class="border-b border-gray-200">
               <th class="px-4 py-3.5 font-semibold text-gray-600">
                 {{ $t('landing.comparison.feature') }}
               </th>
+              <th class="px-4 py-3.5 text-center font-semibold text-gray-500 sm:hidden">
+                {{ $t('landing.comparison.others') }}
+              </th>
               <th
                 v-for="c in competitors"
                 :key="c"
-                class="px-4 py-3.5 text-center font-semibold text-gray-500"
+                class="hidden px-4 py-3.5 text-center font-semibold text-gray-500 sm:table-cell"
               >
                 {{ c }}
               </th>
@@ -42,7 +55,15 @@ const competitors = ['LinkedIn', 'Indeed', 'Welcome to the Jungle']
           <tbody>
             <tr v-for="r in rows" :key="r.key" class="border-b border-gray-100 last:border-0">
               <td class="px-4 py-3 text-gray-700">{{ $t(`landing.comparison.rows.${r.key}`) }}</td>
-              <td v-for="c in competitors" :key="c" class="px-4 py-3 text-center">
+              <td class="px-4 py-3 text-center sm:hidden">
+                <span v-if="r.others" class="font-bold text-success-text">✓</span>
+                <span v-else class="font-bold text-gray-300">✕</span>
+              </td>
+              <td
+                v-for="c in competitors"
+                :key="c"
+                class="hidden px-4 py-3 text-center sm:table-cell"
+              >
                 <span v-if="r.others" class="font-bold text-success-text">✓</span>
                 <span v-else class="font-bold text-gray-300">✕</span>
               </td>
