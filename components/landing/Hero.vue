@@ -5,13 +5,42 @@
 // score is high. Replaces the earlier dashboard-preview hero, which
 // predates this design and still referenced the pre-launch waitlist.
 
-// A logged-in visitor has an account already -- "Importer mon CV" should
-// send them to their dashboard, not back through /register (same fix as
-// the header nav's own CTA, see components/landing/Nav.vue).
+// A logged-in visitor has an account already -- clicking "Importer mon CV"
+// should actually let them import a CV (re-upload it), not send them to
+// /register, or just to their dashboard where nothing happens either.
+// Same real re-upload action as the header nav's own CTA (see
+// components/landing/Nav.vue).
 const auth = useAuthStore()
+const onboarding = useOnboardingStore()
+const toast = useToast()
+const { t } = useI18n()
+
+const fileInput = ref(null)
+const reuploading = ref(false)
+
 function onCtaClick() {
-  navigateTo(auth.isAuthenticated ? '/dashboard' : '/register')
+  if (auth.isAuthenticated) {
+    fileInput.value?.click()
+  } else {
+    navigateTo('/register')
+  }
 }
+
+async function onReupload(event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+  if (!file) return
+  reuploading.value = true
+  try {
+    await onboarding.uploadCv(file)
+    toast.success(t('profileCv.reupload_success'))
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.upload_error'))
+  } finally {
+    reuploading.value = false
+  }
+}
+
 const gauges = [
   {
     key: 'ats',
@@ -77,15 +106,22 @@ const whyRegret = [
         </p>
 
         <div class="mb-6 flex flex-wrap items-center gap-3">
-          <UiButton variant="primary" size="lg" @click="onCtaClick">
-            ⬆ {{ $t('landing.hero.cta_primary') }}
-            <span class="ml-1.5 text-[11px] font-medium opacity-70">
+          <UiButton variant="primary" size="lg" :loading="reuploading" @click="onCtaClick">
+            ⬆ {{ auth.isAuthenticated ? $t('profileCv.reupload') : $t('landing.hero.cta_primary') }}
+            <span v-if="!auth.isAuthenticated" class="ml-1.5 text-[11px] font-medium opacity-70">
               {{ $t('landing.hero.cta_primary_note') }}
             </span>
           </UiButton>
           <UiButton variant="secondary" size="lg" @click="scrollToElement('apercu')">
             <span aria-hidden="true">▶</span> {{ $t('landing.hero.cta_secondary') }}
           </UiButton>
+          <input
+            ref="fileInput"
+            type="file"
+            accept=".pdf,.docx"
+            class="hidden"
+            @change="onReupload"
+          />
         </div>
 
         <div class="flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-gray-500">
