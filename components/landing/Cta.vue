@@ -5,11 +5,38 @@
 
 // Same fix as the hero's own CTA (components/landing/Hero.vue) and the
 // header nav (components/landing/Nav.vue): a logged-in visitor already has
-// an account, so "Importer mon CV" here should go to their dashboard, not
-// back through /register.
+// an account, so "Importer mon CV" here should trigger a real CV re-upload,
+// not send them back through /register or to a dashboard where nothing
+// happens.
 const auth = useAuthStore()
+const onboarding = useOnboardingStore()
+const toast = useToast()
+const { t } = useI18n()
+
+const fileInput = ref(null)
+const reuploading = ref(false)
+
 function onCtaClick() {
-  navigateTo(auth.isAuthenticated ? '/dashboard' : '/register')
+  if (auth.isAuthenticated) {
+    fileInput.value?.click()
+  } else {
+    navigateTo('/register')
+  }
+}
+
+async function onReupload(event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+  if (!file) return
+  reuploading.value = true
+  try {
+    await onboarding.uploadCv(file)
+    toast.success(t('profileCv.reupload_success'))
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.upload_error'))
+  } finally {
+    reuploading.value = false
+  }
 }
 </script>
 
@@ -25,9 +52,10 @@ function onCtaClick() {
       <p class="mx-auto mb-7 max-w-xl text-[15px] leading-relaxed text-white/70">
         {{ $t('landing.cta.sub') }}
       </p>
-      <UiButton variant="primary" size="lg" @click="onCtaClick">
-        ⬆ {{ $t('landing.cta.button') }}
+      <UiButton variant="primary" size="lg" :loading="reuploading" @click="onCtaClick">
+        ⬆ {{ auth.isAuthenticated ? $t('profileCv.reupload') : $t('landing.cta.button') }}
       </UiButton>
+      <input ref="fileInput" type="file" accept=".pdf,.docx" class="hidden" @change="onReupload" />
       <div
         class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[12.5px] text-white/50"
       >
