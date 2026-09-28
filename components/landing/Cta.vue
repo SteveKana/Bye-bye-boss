@@ -2,6 +2,15 @@
 // Simple closing CTA (matchcareer.html mockup's "footer-cta" section) --
 // replaces the earlier 3-column waitlist-form block, since the product now
 // has real signup rather than a pre-launch email list.
+
+// Same fix as the hero's own CTA (components/landing/Hero.vue) and the
+// header nav (components/landing/Nav.vue): a logged-in visitor already has
+// an account, so "Importer mon CV" here should go to their dashboard, not
+// back through /register.
+const auth = useAuthStore()
+function onCtaClick() {
+  navigateTo(auth.isAuthenticated ? '/dashboard' : '/register')
+}
 </script>
 
 <template>
@@ -16,7 +25,7 @@
       <p class="mx-auto mb-7 max-w-xl text-[15px] leading-relaxed text-white/70">
         {{ $t('landing.cta.sub') }}
       </p>
-      <UiButton variant="primary" size="lg" @click="navigateTo('/register')">
+      <UiButton variant="primary" size="lg" @click="onCtaClick">
         ⬆ {{ $t('landing.cta.button') }}
       </UiButton>
       <div
