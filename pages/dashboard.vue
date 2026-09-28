@@ -152,9 +152,18 @@ function openOffer(offer) {
           </span>
 
           <div class="min-w-0 flex-1">
-            <div class="truncate text-sm font-bold text-navy">{{ offer.title }}</div>
-            <div class="flex min-w-0 items-center gap-0.5">
-              <span class="truncate text-[12.5px] text-gray-500">
+            <!-- Was a single-line `truncate` on both the title and the
+            company/location/date line. On mobile, the score columns to the
+            right are already hidden (`hidden ... sm:flex` below) but this
+            text column kept the same narrow width regardless -- so a title
+            as ordinary as "Product Owner Data F/H (CDI)" got cut mid-word,
+            and the location and publication date (decision-critical for a
+            candidate) were pushed off-screen entirely rather than just
+            visually dense. Vertical space in a list is cheap; wrapping onto
+            an extra line keeps the real information instead of hiding it. -->
+            <div class="line-clamp-2 text-sm font-bold text-navy">{{ offer.title }}</div>
+            <div class="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5">
+              <span class="text-[12.5px] text-gray-500">
                 {{ offer.company }} · {{ offer.loc }}
                 <template v-if="offer.publishedAgo"> · {{ offer.publishedAgo }}</template>
               </span>
@@ -188,7 +197,16 @@ function openOffer(offer) {
                 {{ offer.contractTag }}
               </span>
             </div>
-            <p v-if="offer.blockingMessage" class="mt-1 text-[11.5px] text-amber-700">
+            <!-- blockingMessage is the LLM's own free-form explanation, so
+            its length isn't controlled -- with no clamp it could stretch
+            this compact row to several lines and squeeze/overlap the score
+            columns next to it. Clamped to one line here; the full text is
+            still shown unclamped on the opportunity detail page. -->
+            <p
+              v-if="offer.blockingMessage"
+              class="mt-1 truncate text-[11.5px] text-amber-700"
+              :title="offer.blockingMessage"
+            >
               {{ offer.blockingMessage }}
             </p>
           </div>

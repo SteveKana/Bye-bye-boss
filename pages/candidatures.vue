@@ -160,10 +160,14 @@ async function changeStatus(item, newStatus) {
             @click="openMatch(item)"
             @keydown.enter="openMatch(item)"
           >
-            <div class="truncate text-sm font-bold text-navy hover:text-brand">
+            <!-- Same fix as pages/dashboard.vue's identical row pattern:
+            single-line `truncate` cut off ordinary-length titles and hid
+            the location entirely on narrow screens where there was no
+            shortage of vertical room to show them on an extra line. -->
+            <div class="line-clamp-2 text-sm font-bold text-navy hover:text-brand">
               {{ item.offer.title }}
             </div>
-            <div class="truncate text-[12.5px] text-gray-500">
+            <div class="text-[12.5px] text-gray-500">
               {{ item.company_name || item.offer.company_name }}
               <template v-if="item.offer.location"> · {{ item.offer.location }}</template>
             </div>
