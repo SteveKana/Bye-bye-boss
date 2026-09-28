@@ -139,7 +139,7 @@ async function changeStatus(item, newStatus) {
         <li
           v-for="item in applications"
           :key="item.id"
-          class="flex flex-wrap items-center gap-4 py-3.5 sm:flex-nowrap"
+          class="flex flex-wrap items-start gap-4 py-3.5 sm:flex-nowrap"
         >
           <span
             class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-[11px] font-extrabold text-white"

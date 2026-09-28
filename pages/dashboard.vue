@@ -134,7 +134,7 @@ function openOffer(offer) {
         <li
           v-for="offer in topOffers"
           :key="offer.id"
-          class="group -mx-2 flex cursor-pointer items-center gap-4 rounded-lg px-2 py-3.5 transition hover:bg-gray-50"
+          class="group -mx-2 flex cursor-pointer items-start gap-4 rounded-lg px-2 py-3.5 transition hover:bg-gray-50"
           role="button"
           tabindex="0"
           @click="openOffer(offer)"
