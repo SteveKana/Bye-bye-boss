@@ -286,6 +286,35 @@ async function openExternalOffer() {
           </div>
         </UiCard>
 
+        <!-- Mobile-only copy of the "Prêt à candidater ?" CTA (see the
+             desktop original further down, in the RIGHT COLUMN, now
+             lg:hidden). On desktop the two-column grid already puts that
+             card beside the top of this content, visible without
+             scrolling; on mobile the columns stack, so without this copy
+             the CTA landed below the whole description -- reported live
+             (Steve, screenshot from a WhatsApp-alert click on mobile).
+             Duplicated rather than reflowed with `order` because the two
+             columns are separate DOM subtrees, not siblings in one grid. -->
+        <UiCard class="bg-brand-light lg:hidden">
+          <h3 class="mb-2 text-[15px] font-bold text-navy">
+            📝 {{ $t('opportunity.ready_title') }}
+          </h3>
+          <p class="mb-3.5 text-[12.5px] leading-relaxed text-gray-700">
+            {{
+              gapsCount
+                ? $t('opportunity.ready_text', { count: gapsCount })
+                : $t('opportunity.ready_text_no_gaps')
+            }}
+          </p>
+          <UiButton
+            variant="primary"
+            block
+            @click="router.push(`/opportunity/${route.params.id}/cv-optimise`)"
+          >
+            {{ $t('opportunity.adapt_cv_button') }}
+          </UiButton>
+        </UiCard>
+
         <!-- Description -- honest flat rendering of offer.description; the
              mockup's separate structured offer page isn't built (no backend
              data broken out into company/mission/profile sections). -->
@@ -557,7 +586,9 @@ async function openExternalOffer() {
           </div>
         </UiCard>
 
-        <UiCard class="bg-brand-light">
+        <!-- Desktop original -- see the lg:hidden mobile copy above the
+             description for why this is now hidden below lg. -->
+        <UiCard class="hidden bg-brand-light lg:block">
           <h3 class="mb-2 text-[15px] font-bold text-navy">
             📝 {{ $t('opportunity.ready_title') }}
           </h3>

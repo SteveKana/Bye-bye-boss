@@ -4,6 +4,14 @@
 // Career, ATS Potential, Regret), with a mini breakdown of why the regret
 // score is high. Replaces the earlier dashboard-preview hero, which
 // predates this design and still referenced the pre-launch waitlist.
+
+// A logged-in visitor has an account already -- "Importer mon CV" should
+// send them to their dashboard, not back through /register (same fix as
+// the header nav's own CTA, see components/landing/Nav.vue).
+const auth = useAuthStore()
+function onCtaClick() {
+  navigateTo(auth.isAuthenticated ? '/dashboard' : '/register')
+}
 const gauges = [
   {
     key: 'ats',
@@ -69,7 +77,7 @@ const whyRegret = [
         </p>
 
         <div class="mb-6 flex flex-wrap items-center gap-3">
-          <UiButton variant="primary" size="lg" @click="navigateTo('/register')">
+          <UiButton variant="primary" size="lg" @click="onCtaClick">
             ⬆ {{ $t('landing.hero.cta_primary') }}
             <span class="ml-1.5 text-[11px] font-medium opacity-70">
               {{ $t('landing.hero.cta_primary_note') }}
