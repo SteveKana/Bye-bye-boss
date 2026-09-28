@@ -152,33 +152,28 @@ function openOffer(offer) {
           </span>
 
           <div class="min-w-0 flex-1">
-            <!-- Was a single-line `truncate` on both the title and the
-            company/location/date line. On mobile, the score columns to the
-            right are already hidden (`hidden ... sm:flex` below) but this
-            text column kept the same narrow width regardless -- so a title
-            as ordinary as "Product Owner Data F/H (CDI)" got cut mid-word,
-            and the location and publication date (decision-critical for a
-            candidate) were pushed off-screen entirely rather than just
-            visually dense. Vertical space in a list is cheap; wrapping onto
-            an extra line keeps the real information instead of hiding it. -->
+            <!-- Mobile list rows in both Apple's and Google's own guidance
+            top out around 3 lines (88dp/pt) before a row stops reading as a
+            compact list and the rest belongs on a detail screen instead --
+            https://ixdf.org/literature/article/responsive-design-let-the-device-do-the-work
+            (deferred/secondary content) and
+            https://www.designyourway.net/blog/the-simple-yet-complicated-mobile-ui-list-design-43-examples/
+            (row-height budgets, leading icon aligned with the primary text).
+            The previous pass fixed the truncation that was cutting the
+            title and hiding the location, but then let every field
+            (2-line title + company/location/date + badges + a full LLM
+            sentence) stack on top of each other -- the row ballooned past
+            any list-row budget instead of actually using that guidance.
+            Rebalanced now: publishedAgo moves next to the other short
+            badges instead of padding out the metadata line, and
+            blockingMessage -- a full free-form sentence, not the kind of
+            atomic label a badge or a metadata line is for -- comes off this
+            preview row entirely; it was being mangled into a meaningless
+            "Aucun critère bloquant id..." fragment by the one-line clamp
+            anyway. It's still shown in full on the opportunity detail page
+            (pages/opportunity/[id]/index.vue), one tap away. -->
             <div class="line-clamp-2 text-sm font-bold text-navy">{{ offer.title }}</div>
-            <div class="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5">
-              <span class="text-[12.5px] text-gray-500">
-                {{ offer.company }} · {{ offer.loc }}
-                <template v-if="offer.publishedAgo"> · {{ offer.publishedAgo }}</template>
-              </span>
-              <!-- Adzuna's published date is the date its crawler last (re-)
-                   indexed the listing, not necessarily the true original
-                   posting date on the source job board -- see the backend
-                   provider's published_at comment. France Travail's own
-                   dateActualisation doesn't have this issue, so the hint is
-                   Adzuna-only. -->
-              <UiWarningHint
-                v-if="offer.publishedAgo && offer.source === 'adzuna'"
-                :message="$t('common.stale_source_warning')"
-                class="shrink-0"
-              />
-            </div>
+            <div class="text-[12.5px] text-gray-500">{{ offer.company }} · {{ offer.loc }}</div>
             <div class="mt-1 flex flex-wrap items-center gap-1.5">
               <span
                 class="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
@@ -196,19 +191,23 @@ function openOffer(offer) {
               >
                 {{ offer.contractTag }}
               </span>
+              <span
+                v-if="offer.publishedAgo"
+                class="inline-flex items-center gap-0.5 text-[11px] text-gray-400"
+              >
+                {{ offer.publishedAgo }}
+                <!-- Adzuna's published date is the date its crawler last (re-)
+                     indexed the listing, not necessarily the true original
+                     posting date on the source job board -- see the backend
+                     provider's published_at comment. France Travail's own
+                     dateActualisation doesn't have this issue, so the hint is
+                     Adzuna-only. -->
+                <UiWarningHint
+                  v-if="offer.source === 'adzuna'"
+                  :message="$t('common.stale_source_warning')"
+                />
+              </span>
             </div>
-            <!-- blockingMessage is the LLM's own free-form explanation, so
-            its length isn't controlled -- with no clamp it could stretch
-            this compact row to several lines and squeeze/overlap the score
-            columns next to it. Clamped to one line here; the full text is
-            still shown unclamped on the opportunity detail page. -->
-            <p
-              v-if="offer.blockingMessage"
-              class="mt-1 truncate text-[11.5px] text-amber-700"
-              :title="offer.blockingMessage"
-            >
-              {{ offer.blockingMessage }}
-            </p>
           </div>
 
           <div class="hidden shrink-0 gap-5 sm:flex">
