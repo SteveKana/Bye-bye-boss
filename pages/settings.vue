@@ -38,7 +38,10 @@ function applyPreferences(prefs) {
   discordEnabled.value = prefs.discord_enabled
   discordWebhookUrl.value = prefs.discord_webhook_url || ''
   whatsappEnabled.value = prefs.whatsapp_enabled
-  whatsappPhoneNumber.value = prefs.whatsapp_phone_number || ''
+  // The API always stores/returns E.164 (+33...) -- shown back to the user
+  // in the familiar French local format (0X XX XX XX XX) they typed it in,
+  // see formatFrenchPhoneLocal below.
+  whatsappPhoneNumber.value = formatFrenchPhoneLocal(prefs.whatsapp_phone_number) || ''
 }
 
 onMounted(async () => {
@@ -102,19 +105,40 @@ async function disableDiscord() {
   }
 }
 
-// Loose international-format check (+ then 7-15 digits) -- the backend
-// doesn't validate the shape beyond "non-empty", this is just to catch an
-// obviously wrong value before it round-trips to the API.
-const WHATSAPP_PHONE_PATTERN = /^\+[1-9]\d{6,14}$/
+// Steve's call: the field should take a phone number the way every French
+// person actually writes one -- "06 12 34 56 78", not "+33612345678" -- and
+// the app converts to E.164 behind the scenes for WhatsApp/the API. Still
+// accepts a pasted +33.../0033... value too (covers a number copied from
+// somewhere else, and round-tripping an already-saved value unchanged).
+const FRENCH_LOCAL_PHONE_PATTERN = /^0[1-9]\d{8}$/ // 10 digits: 0X XX XX XX XX
+const E164_FRANCE_PATTERN = /^\+33[1-9]\d{8}$/
+
+function toE164France(raw) {
+  const cleaned = raw.replace(/[\s.-]/g, '')
+  if (E164_FRANCE_PATTERN.test(cleaned)) return cleaned
+  if (/^0033[1-9]\d{8}$/.test(cleaned)) return `+33${cleaned.slice(4)}`
+  if (FRENCH_LOCAL_PHONE_PATTERN.test(cleaned)) return `+33${cleaned.slice(1)}`
+  return null
+}
+
+// The reverse, for displaying an already-saved E.164 number back in the
+// familiar local form -- "+33612345678" -> "06 12 34 56 78".
+function formatFrenchPhoneLocal(e164) {
+  if (!e164) return ''
+  if (!E164_FRANCE_PATTERN.test(e164)) return e164 // not a French number -- show as-is
+  const digits = `0${e164.slice(3)}`
+  return digits.replace(/(\d{2})(?=\d)/g, '$1 ')
+}
 
 async function saveWhatsapp() {
   whatsappError.value = ''
-  const phone = whatsappPhoneNumber.value.trim()
-  if (!phone) {
+  const rawPhone = whatsappPhoneNumber.value.trim()
+  if (!rawPhone) {
     whatsappError.value = t('validation.whatsapp_phone_required')
     return
   }
-  if (!WHATSAPP_PHONE_PATTERN.test(phone)) {
+  const phone = toE164France(rawPhone)
+  if (!phone) {
     whatsappError.value = t('validation.whatsapp_phone_invalid')
     return
   }
@@ -302,7 +326,7 @@ const changePassword = handleSubmit(async (values) => {
             <UiInput
               v-model="whatsappPhoneNumber"
               class="flex-1"
-              placeholder="+33612345678"
+              placeholder="06 12 34 56 78"
               :error="whatsappError"
               :disabled="whatsappSaving"
             />

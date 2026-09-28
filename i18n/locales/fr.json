@@ -76,7 +76,7 @@
     "discord_webhook_required": "L'URL du webhook Discord est requise.",
     "discord_webhook_invalid": "L'URL doit commencer par https://discord.com/api/webhooks/",
     "whatsapp_phone_required": "Le numéro de téléphone est requis.",
-    "whatsapp_phone_invalid": "Entrez un numéro au format international, par exemple +33612345678."
+    "whatsapp_phone_invalid": "Entrez un numéro de téléphone français valide, par exemple 06 12 34 56 78."
   },
   "social": {
     "google": "Continuer avec Google",
