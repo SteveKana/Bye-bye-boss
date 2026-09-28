@@ -630,63 +630,73 @@ function selectSort(value) {
               </svg>
             </button>
 
-            <div class="flex flex-wrap gap-4">
-              <span
-                class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold text-white"
-                :style="{ background: offer.bg }"
-              >
-                {{ offer.logo }}
-              </span>
+            <!-- Below `sm`, the three sections below (identity, "why this
+            offer", scores) each get their own full-width row instead of
+            competing as flex siblings -- at narrow widths, a `min-w-[200px]`
+            reasons column left almost no room for the title/company block,
+            which flex-shrank down to a few pixels wide and had its text
+            spill across the card, visually overlapping the reasons text
+            next to it. Stacking below `sm` removes the squeeze entirely;
+            `sm:flex-row sm:flex-wrap` keeps the original desktop layout. -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+              <div class="flex min-w-0 flex-1 gap-4">
+                <span
+                  class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold text-white"
+                  :style="{ background: offer.bg }"
+                >
+                  {{ offer.logo }}
+                </span>
 
-              <div class="min-w-0 flex-1">
-                <div class="mb-1 flex flex-wrap items-center gap-1.5">
-                  <span
-                    class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
-                    :class="
-                      offer.strong
-                        ? 'bg-success-light text-success-text'
-                        : 'bg-amber-100 text-amber-700'
-                    "
-                  >
-                    {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
-                  </span>
-                  <!-- Same colored-pill treatment as dashboard.vue's contract
-                  tag (not the muted "📄 label" text this page used to show
-                  here) so the info reads with the same weight in both
-                  places -- was easy to miss buried among location/salary. -->
-                  <span
-                    v-if="offer.contractTag"
-                    class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
-                  >
-                    {{ offer.contractTag }}
-                  </span>
-                </div>
-                <p class="text-base font-bold text-navy">{{ offer.title }}</p>
-                <p class="text-sm font-semibold text-gray-600">{{ offer.company }}</p>
-                <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400">
-                  <span v-if="offer.loc">📍 {{ offer.loc }}</span>
-                  <span v-if="offer.dailyRateLabel || offer.salaryLabel">{{
-                    offer.dailyRateLabel || offer.salaryLabel
-                  }}</span>
-                </div>
-                <div v-if="tagsFor(offer).shown.length" class="mt-2 flex flex-wrap gap-1.5">
-                  <span
-                    v-for="tag in tagsFor(offer).shown"
-                    :key="tag"
-                    class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
-                  >
-                    {{ tag }}
-                  </span>
-                  <span
-                    v-if="tagsFor(offer).extra"
-                    class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
-                  >
-                    +{{ tagsFor(offer).extra }}
-                  </span>
+                <div class="min-w-0 flex-1">
+                  <div class="mb-1 flex flex-wrap items-center gap-1.5">
+                    <span
+                      class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
+                      :class="
+                        offer.strong
+                          ? 'bg-success-light text-success-text'
+                          : 'bg-amber-100 text-amber-700'
+                      "
+                    >
+                      {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
+                    </span>
+                    <!-- Same colored-pill treatment as dashboard.vue's contract
+                    tag (not the muted "📄 label" text this page used to show
+                    here) so the info reads with the same weight in both
+                    places -- was easy to miss buried among location/salary. -->
+                    <span
+                      v-if="offer.contractTag"
+                      class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
+                    >
+                      {{ offer.contractTag }}
+                    </span>
+                  </div>
+                  <p class="text-base font-bold text-navy">{{ offer.title }}</p>
+                  <p class="text-sm font-semibold text-gray-600">{{ offer.company }}</p>
+                  <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400">
+                    <span v-if="offer.loc">📍 {{ offer.loc }}</span>
+                    <span v-if="offer.dailyRateLabel || offer.salaryLabel">{{
+                      offer.dailyRateLabel || offer.salaryLabel
+                    }}</span>
+                  </div>
+                  <div v-if="tagsFor(offer).shown.length" class="mt-2 flex flex-wrap gap-1.5">
+                    <span
+                      v-for="tag in tagsFor(offer).shown"
+                      :key="tag"
+                      class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
+                    >
+                      {{ tag }}
+                    </span>
+                    <span
+                      v-if="tagsFor(offer).extra"
+                      class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
+                    >
+                      +{{ tagsFor(offer).extra }}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div v-if="reasonsFor(offer).length" class="min-w-[200px] flex-1">
+              <div v-if="reasonsFor(offer).length" class="sm:min-w-[200px] sm:flex-1">
                 <p class="mb-2 text-xs font-semibold text-gray-500">
                   {{ $t('opportunites.reasons_title') }}
                 </p>
@@ -704,7 +714,9 @@ function selectSort(value) {
                 </ul>
               </div>
 
-              <div class="flex shrink-0 flex-col items-end gap-2">
+              <div
+                class="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2"
+              >
                 <div class="flex items-end gap-3.5">
                   <div class="text-center">
                     <p class="text-[10px] font-medium text-gray-400">ATS</p>
