@@ -188,7 +188,16 @@ function openOffer(offer) {
                 {{ offer.contractTag }}
               </span>
             </div>
-            <p v-if="offer.blockingMessage" class="mt-1 text-[11.5px] text-amber-700">
+            <!-- blockingMessage is the LLM's own free-form explanation, so
+            its length isn't controlled -- with no clamp it could stretch
+            this compact row to several lines and squeeze/overlap the score
+            columns next to it. Clamped to one line here; the full text is
+            still shown unclamped on the opportunity detail page. -->
+            <p
+              v-if="offer.blockingMessage"
+              class="mt-1 truncate text-[11.5px] text-amber-700"
+              :title="offer.blockingMessage"
+            >
               {{ offer.blockingMessage }}
             </p>
           </div>
