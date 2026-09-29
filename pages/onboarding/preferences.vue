@@ -4,8 +4,15 @@ definePageMeta({ layout: false, middleware: 'auth' })
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('onboarding.preferences.title')} · Bye Bye Boss`) })
 
+const route = useRoute()
 const onboarding = useOnboardingStore()
 const toast = useToast()
+
+// Set by middleware/onboarding-complete.js when it redirects here because a
+// CV re-import reset the profile's status away from "complete" -- without
+// this, landing here out of nowhere (instead of on the page the visitor
+// actually clicked toward) looks like a bug rather than an explained step.
+const showUpdatedBanner = computed(() => route.query.updated === '1')
 
 const ready = ref(false)
 const saving = ref(false)
@@ -55,6 +62,14 @@ async function onContinue() {
         {{ $t('onboarding.preferences.title') }}
       </h1>
       <p class="mb-7 text-gray-500">{{ $t('onboarding.preferences.subtitle') }}</p>
+
+      <div
+        v-if="showUpdatedBanner"
+        class="mb-5 flex items-start gap-2.5 rounded-xl bg-brand-light px-4 py-3 text-sm text-brand-text"
+      >
+        <span class="mt-0.5 shrink-0" aria-hidden="true">ℹ️</span>
+        <span>{{ $t('onboarding.preferences.updated_banner') }}</span>
+      </div>
 
       <!-- Always mounted (not gated behind v-if) so the template ref exists
            as soon as onMounted runs and can be populated via applyProfile(). -->

@@ -14,7 +14,6 @@ const toast = useToast()
 const { t } = useI18n()
 
 const fileInput = ref(null)
-const reuploading = ref(false)
 
 function onCtaClick() {
   if (auth.isAuthenticated) {
@@ -24,21 +23,20 @@ function onCtaClick() {
   }
 }
 
+// Same shared modal + diff as the hero (see
+// components/landing/CvReuploadModal.vue and stores/onboarding.js).
 async function onReupload(event) {
   const file = event.target.files?.[0]
   event.target.value = ''
   if (!file) return
-  reuploading.value = true
   try {
-    await onboarding.uploadCv(file)
+    await onboarding.reuploadFromHomepage(file)
     toast.success(t('profileCv.reupload_success'))
     // Même choix que le hero -- rester sur la home après import ne montre
     // rien de concret, direction /profile pour voir le nouveau CV.
     navigateTo('/profile')
   } catch (err) {
     toast.error(err?.message || t('profileCv.upload_error'))
-  } finally {
-    reuploading.value = false
   }
 }
 </script>
@@ -55,7 +53,7 @@ async function onReupload(event) {
       <p class="mx-auto mb-7 max-w-xl text-[15px] leading-relaxed text-white/70">
         {{ $t('landing.cta.sub') }}
       </p>
-      <UiButton variant="primary" size="lg" :loading="reuploading" @click="onCtaClick">
+      <UiButton variant="primary" size="lg" @click="onCtaClick">
         ⬆ {{ auth.isAuthenticated ? $t('profileCv.reupload') : $t('landing.cta.button') }}
       </UiButton>
       <input ref="fileInput" type="file" accept=".pdf,.docx" class="hidden" @change="onReupload" />

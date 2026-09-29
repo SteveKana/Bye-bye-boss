@@ -28,5 +28,9 @@ export default defineNuxtRouteMiddleware(async () => {
 
   if (profile.status === 'complete') return
   if (!profile.verification_completed_at) return navigateTo('/onboarding/verification')
-  return navigateTo('/onboarding/preferences')
+  // Already verified before (e.g. a CV re-import outside the wizard just
+  // reset status away from "complete") -- skip straight to preferences, but
+  // flag it with ?updated=1 so that page can explain why the visitor landed
+  // here instead of on the page they actually navigated to (see its banner).
+  return navigateTo({ path: '/onboarding/preferences', query: { updated: '1' } })
 })
