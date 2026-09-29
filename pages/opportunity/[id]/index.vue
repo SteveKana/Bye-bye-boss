@@ -255,11 +255,14 @@ async function openExternalOffer() {
                 </span>
               </div>
 
+              <!-- break-words: same reasoning as pages/opportunites.vue's
+              tag pills -- a raw, unbroken skill key from the matching
+              backend can't wrap on its own and would otherwise overflow. -->
               <div v-if="headerSkillTags.shown.length" class="mt-3 flex flex-wrap gap-2">
                 <span
                   v-for="skill in headerSkillTags.shown"
                   :key="skill"
-                  class="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700"
+                  class="break-words rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700"
                 >
                   {{ skill }}
                 </span>

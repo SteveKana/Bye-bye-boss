@@ -677,17 +677,35 @@ function selectSort(value) {
                   </div>
                   <p class="text-base font-bold text-navy">{{ offer.title }}</p>
                   <p class="text-sm font-semibold text-gray-600">{{ offer.company }}</p>
-                  <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-gray-400">
+                  <div
+                    class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-gray-400"
+                  >
                     <span v-if="offer.loc">📍 {{ offer.loc }}</span>
                     <span v-if="offer.dailyRateLabel || offer.salaryLabel">{{
                       offer.dailyRateLabel || offer.salaryLabel
                     }}</span>
+                    <!-- Moved here from the scores column on the right: it's
+                    metadata about the offer, same family as location/salary,
+                    not something that belongs floating under "Regret". -->
+                    <span v-if="offer.publishedAgo" class="inline-flex items-center gap-0.5">
+                      🕓 {{ offer.publishedAgo }}
+                      <UiWarningHint
+                        v-if="offer.source === 'adzuna'"
+                        :message="$t('common.stale_source_warning')"
+                      />
+                    </span>
                   </div>
+                  <!-- break-words: a raw, human-unreadable skill key from the
+                  matching backend (e.g. "product_owner_data_experience") is
+                  one unbroken word -- without this, it can't wrap and just
+                  overflows the pill into whatever sits next to it. Flagged
+                  separately as a backend content-quality issue, but the
+                  layout shouldn't break either way. -->
                   <div v-if="tagsFor(offer).shown.length" class="mt-2 flex flex-wrap gap-1.5">
                     <span
                       v-for="tag in tagsFor(offer).shown"
                       :key="tag"
-                      class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
+                      class="break-words rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
                     >
                       {{ tag }}
                     </span>
@@ -719,8 +737,13 @@ function selectSort(value) {
                 </ul>
               </div>
 
+              <!-- `sm:pt-6`: on desktop this column sits at the same
+              top-right corner as the always-hoverable reject "✕" (absolute,
+              top-3/right-3) -- without this, "Regret" rendered directly
+              under it. Mobile stacks this column last, well below the
+              button, so no offset needed there. -->
               <div
-                class="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2"
+                class="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2 sm:pt-6"
               >
                 <div class="flex items-end gap-3.5">
                   <div class="text-center">
@@ -743,9 +766,6 @@ function selectSort(value) {
                     <p class="text-lg font-extrabold text-gray-300">—</p>
                   </div>
                 </div>
-                <p v-if="offer.publishedAgo" class="text-xs text-gray-400">
-                  {{ offer.publishedAgo }}
-                </p>
                 <UiButton size="sm" variant="primary" @click.stop="openOffer(offer)">
                   {{ $t('opportunites.see_detail') }} →
                 </UiButton>
