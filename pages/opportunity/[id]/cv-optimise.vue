@@ -572,7 +572,13 @@ const atsDelta = computed(() =>
             <p class="text-[12.5px] leading-relaxed text-gray-700">{{ optimization.advice }}</p>
           </UiCard>
 
-          <UiCard :title="$t('cvOptimize.template_label')">
+          <!-- Desktop only below `lg` -- on mobile this card and the next
+          one (the actual action: pick a format, download) are what Steve
+          had to scroll past the whole CV comparison to reach. They're
+          reproduced as a bar fixed to the bottom of the screen instead (see
+          after this grid), always reachable with no scrolling, regardless
+          of how long the comparison/advice content above is. -->
+          <UiCard :title="$t('cvOptimize.template_label')" class="hidden lg:block">
             <div class="flex flex-col gap-2 sm:flex-row">
               <button
                 v-for="tpl in CV_TEMPLATES"
@@ -599,7 +605,7 @@ const atsDelta = computed(() =>
             </div>
           </UiCard>
 
-          <UiCard>
+          <UiCard class="hidden lg:block">
             <template v-if="optimization.confirmed_at">
               <p class="flex items-center gap-2 text-[13px] font-bold text-success-text">
                 <span aria-hidden="true">✓</span> {{ $t('cvOptimize.confirmed') }}
@@ -630,6 +636,56 @@ const atsDelta = computed(() =>
           </UiCard>
         </div>
       </div>
+
+      <!-- Mobile-only sticky bottom bar: same choice + same action as the
+      two cards hidden above on mobile, always visible, no scrolling. A
+      sibling of the grid (not a 3rd grid item) so it's a plain fixed
+      element -- `h-28` spacer below keeps it from covering the last card. -->
+      <div
+        v-if="optimization"
+        class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] lg:hidden"
+      >
+        <div class="mb-2 flex gap-2">
+          <button
+            v-for="tpl in CV_TEMPLATES"
+            :key="tpl"
+            type="button"
+            class="flex-1 rounded-lg border px-2.5 py-2 text-left transition-colors"
+            :class="
+              selectedTemplate === tpl ? 'border-brand bg-brand-light' : 'border-gray-200 bg-white'
+            "
+            @click="selectedTemplate = tpl"
+          >
+            <p
+              class="text-[12.5px] font-bold"
+              :class="selectedTemplate === tpl ? 'text-brand' : 'text-navy'"
+            >
+              {{ $t(`cvOptimize.template_${tpl}`) }}
+            </p>
+          </button>
+        </div>
+        <UiButton
+          v-if="optimization.confirmed_at"
+          variant="secondary"
+          size="sm"
+          block
+          :loading="downloadingPdf"
+          @click="downloadCvPdf"
+        >
+          {{ $t('cvOptimize.download_again_button') }}
+        </UiButton>
+        <UiButton
+          v-else
+          variant="primary"
+          size="sm"
+          block
+          :loading="confirming || downloadingPdf"
+          @click="confirmVariant"
+        >
+          {{ $t('cvOptimize.confirm_button') }}
+        </UiButton>
+      </div>
+      <div v-if="optimization" class="h-28 lg:hidden" aria-hidden="true" />
     </div>
   </div>
 </template>
