@@ -271,15 +271,15 @@ async function downloadCv() {
         />
         <div>
           <div class="mb-1 text-[11px] text-gray-400">{{ $t('profileCv.location') }}</div>
-          <div
-            class="rounded-md"
-            :class="isUpdated('location') && 'bg-success-light ring-2 ring-success/40'"
-          >
-            <ProfileCityAutocomplete
-              :model-value="profile.location || ''"
-              @commit="(v) => saveField('location', v)"
-            />
-          </div>
+          <!-- Class passed straight to the component (not a wrapping div) so
+               the highlight lands on its own root element, which is capped
+               at max-w-xs -- a wrapper wound up wider than that and left a
+               big blank green rectangle past the actual input. -->
+          <ProfileCityAutocomplete
+            :model-value="profile.location || ''"
+            :class="isUpdated('location') && 'rounded-md bg-success-light ring-2 ring-success/40'"
+            @commit="(v) => saveField('location', v)"
+          />
         </div>
       </div>
 
