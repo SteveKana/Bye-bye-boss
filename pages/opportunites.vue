@@ -611,8 +611,13 @@ function selectSort(value) {
             @click="openOffer(offer)"
             @keydown.enter="openOffer(offer)"
           >
+            <!-- Visible by default; only fades out and reveals-on-hover from
+            `sm` up, where a mouse cursor is available. Below `sm` there's no
+            hover on a touchscreen, so `opacity-0` alone would have hidden
+            this control on mobile permanently -- the reject action would
+            have silently stopped existing on the device most people use. -->
             <button
-              class="absolute right-3 top-3 rounded-md p-1 text-gray-300 opacity-0 transition hover:bg-danger-light hover:text-danger group-hover:opacity-100"
+              class="absolute right-3 top-3 rounded-md p-1 text-gray-300 transition hover:bg-danger-light hover:text-danger sm:opacity-0 sm:group-hover:opacity-100"
               :aria-label="$t('dashboard.reject')"
               @click.stop="reject(offer)"
             >

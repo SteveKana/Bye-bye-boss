@@ -194,7 +194,17 @@ async function openExternalOffer() {
       <div class="flex min-w-0 flex-col gap-4">
         <!-- Header -->
         <UiCard>
-          <div class="flex flex-wrap items-start gap-4">
+          <!-- A shrink-0 sibling ("published X days ago", top-right) used to
+          share this row with the title's `min-w-0 flex-1` column. A min-w-0
+          flex item can always shrink instead of wrapping the row, so the
+          chip kept its reserved width no matter how narrow the row got --
+          this page sits in a 2-column grid past `lg`, so "narrow" isn't
+          just phones, it's also the ~390px center column right after the
+          grid switches to 2 columns. Rather than chase that with more
+          breakpoints, the date now lives in the metadata line below with
+          location/contract/salary, so the title row is just [logo, title]
+          at every width and the squeeze can't recur. -->
+          <div class="flex gap-4">
             <span
               class="flex h-14 w-14 shrink-0 items-center justify-center rounded-[14px] text-lg font-extrabold text-white"
               :style="{
@@ -222,7 +232,9 @@ async function openExternalOffer() {
                 {{ match.company_name || offer.company_name }}
               </p>
 
-              <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-gray-500">
+              <div
+                class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-gray-500"
+              >
                 <span v-if="offer.location">📍 {{ offer.location }}</span>
                 <span v-if="offer.is_full_remote" class="font-semibold text-brand"
                   >🏠 {{ $t('opportunity.full_remote') }}</span
@@ -231,6 +243,16 @@ async function openExternalOffer() {
                   >🗂 {{ contractTag(offer.contract_type) }}</span
                 >
                 <span v-if="salaryLabel">💰 {{ salaryLabel }}</span>
+                <span
+                  v-if="publishedLabel(offer.published_at)"
+                  class="inline-flex items-center gap-0.5"
+                >
+                  🕓 {{ publishedLabel(offer.published_at) }}
+                  <UiWarningHint
+                    v-if="offer.source === 'adzuna'"
+                    :message="$t('common.stale_source_warning')"
+                  />
+                </span>
               </div>
 
               <div v-if="headerSkillTags.shown.length" class="mt-3 flex flex-wrap gap-2">
@@ -248,17 +270,6 @@ async function openExternalOffer() {
                   +{{ headerSkillTags.extra }}
                 </span>
               </div>
-            </div>
-
-            <div
-              v-if="publishedLabel(offer.published_at)"
-              class="flex shrink-0 items-center gap-0.5 text-xs text-gray-400"
-            >
-              <span>{{ publishedLabel(offer.published_at) }}</span>
-              <UiWarningHint
-                v-if="offer.source === 'adzuna'"
-                :message="$t('common.stale_source_warning')"
-              />
             </div>
           </div>
 
