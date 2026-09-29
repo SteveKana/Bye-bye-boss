@@ -93,26 +93,35 @@ export const useOnboardingStore = defineStore('onboarding', () => {
     return changed
   }
 
+  // Shared by every re-import path (homepage buttons AND the CV page's own
+  // "Importer un nouveau CV" button) -- Steve wants the highlight to show
+  // "quelle que soit la page d'où est faite la mise à jour", so the diff
+  // can't live only in the homepage-specific flow below.
+  async function uploadCvWithDiff(file) {
+    let before = profile.value
+    if (!before) {
+      try {
+        before = await fetchProfile()
+      } catch {
+        before = null
+      }
+    }
+    const updated = await uploadCv(file)
+    recentlyUpdatedFields.value = diffProfileFields(before, updated)
+    return updated
+  }
+
   // Re-import triggered from the homepage (Hero/Cta/Nav): unlike a reimport
   // from the CV page itself, this one navigates away and back, so the
   // "before" snapshot has to be captured up front, and what changed has to
   // be carried across that navigation via this store rather than local
-  // component state.
+  // component state. The diff itself is the same for every origin page --
+  // see uploadCvWithDiff above.
   async function reuploadFromHomepage(file) {
     homepageReuploadFilename.value = file.name
     homepageReuploadProcessing.value = true
     try {
-      let before = profile.value
-      if (!before) {
-        try {
-          before = await fetchProfile()
-        } catch {
-          before = null
-        }
-      }
-      const updated = await uploadCv(file)
-      recentlyUpdatedFields.value = diffProfileFields(before, updated)
-      return updated
+      return await uploadCvWithDiff(file)
     } finally {
       homepageReuploadProcessing.value = false
     }
@@ -124,6 +133,7 @@ export const useOnboardingStore = defineStore('onboarding', () => {
     homepageReuploadFilename,
     recentlyUpdatedFields,
     uploadCv,
+    uploadCvWithDiff,
     fetchProfile,
     updateProfile,
     updatePreferences,
