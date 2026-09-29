@@ -133,7 +133,10 @@ async function onReupload(event) {
     // nothing were edited), so a reimport from this page can land straight
     // back here instead of detouring through the onboarding verification +
     // preferences steps again -- everything stays editable inline below.
-    await onboarding.uploadCv(file)
+    // uploadCvWithDiff also refreshes recentlyUpdatedFields, so whatever
+    // actually changed gets highlighted right here, same as a reimport
+    // triggered from the homepage (see stores/onboarding.js).
+    await onboarding.uploadCvWithDiff(file)
     toast.success(t('profileCv.reupload_success'))
   } catch (err) {
     toast.error(err?.message || t('profileCv.upload_error'))

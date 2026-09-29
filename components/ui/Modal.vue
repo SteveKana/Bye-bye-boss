@@ -11,6 +11,10 @@ const props = defineProps({
   size: { type: String, default: 'md' },
   // When true, backdrop click / Escape do not close the modal.
   persistent: { type: Boolean, default: false },
+  // Override the default body padding -- e.g. '' for content (like
+  // CvAnalyzingProgress) that already draws its own bordered/colored box and
+  // would otherwise sit inside a second, redundant white-padded frame.
+  bodyClass: { type: String, default: 'px-5 py-4' },
 })
 
 const emit = defineEmits(['update:modelValue', 'close'])
@@ -83,7 +87,7 @@ onBeforeUnmount(() => {
               </button>
             </header>
 
-            <div class="px-5 py-4">
+            <div :class="bodyClass">
               <slot />
             </div>
 
