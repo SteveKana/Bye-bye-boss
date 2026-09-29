@@ -34,6 +34,9 @@ async function onReupload(event) {
   try {
     await onboarding.uploadCv(file)
     toast.success(t('profileCv.reupload_success'))
+    // Steve: rester sur la home après import ne montre rien de concret --
+    // direction /profile pour que le nouveau CV soit visible tout de suite.
+    navigateTo('/profile')
   } catch (err) {
     toast.error(err?.message || t('profileCv.upload_error'))
   } finally {
