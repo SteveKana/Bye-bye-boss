@@ -8,12 +8,7 @@ const onboarding = useOnboardingStore()
 </script>
 
 <template>
-  <UiModal
-    :model-value="onboarding.homepageReuploadProcessing"
-    persistent
-    size="sm"
-    body-class=""
-  >
+  <UiModal :model-value="onboarding.homepageReuploadProcessing" persistent size="sm" body-class="">
     <CvAnalyzingProgress :filename="onboarding.homepageReuploadFilename" />
   </UiModal>
 </template>
