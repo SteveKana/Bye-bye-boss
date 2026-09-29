@@ -168,7 +168,7 @@
       "dashboard": "Dashboard",
       "opportunities": "Opportunités",
       "applications": "Candidatures",
-      "profile": "Profil",
+      "profile": "CV",
       "preferences": "Préférences",
       "settings": "Paramètres"
     },
@@ -683,7 +683,7 @@
     "pdf_download_error": "Le téléchargement du PDF a échoué. Réessayez."
   },
   "profileCv": {
-    "title": "Profil",
+    "title": "CV",
     "subtitle": "Vos informations personnelles et votre CV, tels qu'utilisés pour le matching.",
     "email": "Email",
     "location": "Localisation",
@@ -714,7 +714,8 @@
     "professional_section_subtitle": "Généré par notre IA à partir de votre CV.",
     "identified_roles_title": "Métiers identifiés",
     "domains_title": "Domaines",
-    "skills_detected_title": "Compétences détectées"
+    "skills_detected_title": "Compétences détectées",
+    "updated_badge": "Mis à jour"
   },
   "settings": {
     "subtitle": "Abonnement, notifications et informations de compte.",

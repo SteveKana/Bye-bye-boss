@@ -29,7 +29,6 @@ const toast = useToast()
 const { t } = useI18n()
 
 const fileInput = ref(null)
-const reuploading = ref(false)
 
 function triggerReupload() {
   fileInput.value?.click()
@@ -37,22 +36,20 @@ function triggerReupload() {
 
 // Same endpoint and feedback as the profile page's own re-upload button
 // (see pages/profile/index.vue) -- no need to navigate to the app first
-// just to change your CV.
+// just to change your CV. Shared modal + diff, same as the hero/footer (see
+// components/landing/CvReuploadModal.vue and stores/onboarding.js).
 async function onReupload(event) {
   const file = event.target.files?.[0]
   event.target.value = ''
   if (!file) return
-  reuploading.value = true
   try {
-    await onboarding.uploadCv(file)
+    await onboarding.reuploadFromHomepage(file)
     toast.success(t('profileCv.reupload_success'))
     // Même choix que le hero/footer -- direction /profile pour voir le
     // nouveau CV tout de suite au lieu de rester sur la home.
     navigateTo('/profile')
   } catch (err) {
     toast.error(err?.message || t('profileCv.upload_error'))
-  } finally {
-    reuploading.value = false
   }
 }
 </script>
@@ -79,7 +76,6 @@ async function onReupload(event) {
           variant="primary"
           size="sm"
           class="hidden sm:inline-flex"
-          :loading="reuploading"
           @click="triggerReupload"
         >
           {{ $t('profileCv.reupload') }}

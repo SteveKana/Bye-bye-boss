@@ -16,7 +16,6 @@ const toast = useToast()
 const { t } = useI18n()
 
 const fileInput = ref(null)
-const reuploading = ref(false)
 
 function onCtaClick() {
   if (auth.isAuthenticated) {
@@ -26,21 +25,22 @@ function onCtaClick() {
   }
 }
 
+// Processing feedback moved from an in-button spinner to a single shared
+// modal (see components/landing/CvReuploadModal.vue) -- reuploadFromHomepage
+// also captures the before/after diff so /profile can highlight what the
+// new CV actually changed.
 async function onReupload(event) {
   const file = event.target.files?.[0]
   event.target.value = ''
   if (!file) return
-  reuploading.value = true
   try {
-    await onboarding.uploadCv(file)
+    await onboarding.reuploadFromHomepage(file)
     toast.success(t('profileCv.reupload_success'))
     // Steve: rester sur la home après import ne montre rien de concret --
     // direction /profile pour que le nouveau CV soit visible tout de suite.
     navigateTo('/profile')
   } catch (err) {
     toast.error(err?.message || t('profileCv.upload_error'))
-  } finally {
-    reuploading.value = false
   }
 }
 
@@ -109,7 +109,7 @@ const whyRegret = [
         </p>
 
         <div class="mb-6 flex flex-wrap items-center gap-3">
-          <UiButton variant="primary" size="lg" :loading="reuploading" @click="onCtaClick">
+          <UiButton variant="primary" size="lg" @click="onCtaClick">
             ⬆ {{ auth.isAuthenticated ? $t('profileCv.reupload') : $t('landing.hero.cta_primary') }}
             <span v-if="!auth.isAuthenticated" class="ml-1.5 text-[11px] font-medium opacity-70">
               {{ $t('landing.hero.cta_primary_note') }}

@@ -56,6 +56,21 @@ const availabilityLabel = computed(() => {
   return t(`availability.display.${status}`)
 })
 
+// A homepage re-import (see stores/onboarding.js's reuploadFromHomepage)
+// carries over which fields actually changed, so they can be highlighted
+// here instead of repeating the whole CV back at the candidate. Plain
+// membership check -- the list is short and this runs per render, not per
+// keystroke.
+function isUpdated(field) {
+  return onboarding.recentlyUpdatedFields.includes(field)
+}
+
+// Stacks a green highlight onto a field's own text classes -- used for the
+// inline editable fields (name, headline, email, total experience).
+function highlightClass(field, base) {
+  return isUpdated(field) ? `${base} rounded bg-success-light px-1 py-0.5` : base
+}
+
 onMounted(async () => {
   try {
     await onboarding.fetchProfile()
@@ -158,6 +173,66 @@ async function downloadCv() {
       <p class="mt-1 text-sm text-gray-500">{{ $t('profileCv.subtitle') }}</p>
     </div>
 
+    <!-- CV summary -- kept first so the CV itself (and the reimport action)
+         is the first thing found on this page, ahead of the editable fields
+         below it. -->
+    <UiCard class="mb-4">
+      <h2 class="mb-3 text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
+
+      <!-- Row 1: download, alone, filename in the label -->
+      <UiButton
+        v-if="profile.cv_filename"
+        variant="secondary"
+        size="sm"
+        class="mb-3 w-full justify-center sm:w-auto"
+        :loading="downloading"
+        @click="downloadCv"
+      >
+        ⬇ {{ $t('profileCv.download_named', { filename: profile.cv_filename }) }}
+      </UiButton>
+
+      <CvAnalyzingProgress v-if="reuploading" class="mb-4" :filename="reuploadFilename" />
+
+      <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div>
+          <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.last_update') }}</div>
+          <div class="text-lg font-extrabold text-navy">{{ updatedAgo }}</div>
+        </div>
+        <div>
+          <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.total_experience') }}</div>
+          <div
+            class="inline-block rounded text-lg font-extrabold text-navy"
+            :class="isUpdated('total_experience') && 'bg-success-light px-1'"
+          >
+            {{ profile.total_experience || '—' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: reimport + edit-fields link, "Ou" sitting between them.
+           Placed last so it never competes with the CV data above it for
+           attention -- these are actions on the CV, not part of its content. -->
+      <div class="flex flex-wrap items-center gap-3">
+        <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
+          ⬆ {{ $t('profileCv.reupload') }}
+        </UiButton>
+        <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
+        <NuxtLink
+          to="/profile/edit"
+          class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
+        >
+          {{ $t('profileCv.edit_fields') }} →
+        </NuxtLink>
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".pdf,.docx"
+          class="hidden"
+          @change="onReupload"
+        />
+      </div>
+    </UiCard>
+
     <!-- Identity -->
     <UiCard class="mb-4">
       <div class="mb-1 flex items-center gap-3.5">
@@ -169,7 +244,7 @@ async function downloadCv() {
         <div>
           <ProfileEditableField
             :model-value="`${profile.first_name || ''} ${profile.last_name || ''}`.trim()"
-            text-class="text-[17px] font-extrabold text-navy"
+            :text-class="highlightClass('name', 'text-[17px] font-extrabold text-navy')"
             @commit="
               (v) => {
                 const [first, ...rest] = v.split(' ')
@@ -180,7 +255,7 @@ async function downloadCv() {
           />
           <ProfileEditableField
             :model-value="profile.headline || ''"
-            text-class="text-[13px] text-gray-500"
+            :text-class="highlightClass('headline', 'text-[13px] text-gray-500')"
             class="mt-0.5"
             @commit="(v) => saveField('headline', v)"
           />
@@ -191,14 +266,20 @@ async function downloadCv() {
         <ProfileEditableField
           :label="$t('profileCv.email')"
           :model-value="profile.email || ''"
+          :text-class="highlightClass('email', 'text-[13.5px] font-semibold text-gray-900')"
           @commit="(v) => saveField('email', v)"
         />
         <div>
           <div class="mb-1 text-[11px] text-gray-400">{{ $t('profileCv.location') }}</div>
-          <ProfileCityAutocomplete
-            :model-value="profile.location || ''"
-            @commit="(v) => saveField('location', v)"
-          />
+          <div
+            class="rounded-md"
+            :class="isUpdated('location') && 'bg-success-light ring-2 ring-success/40'"
+          >
+            <ProfileCityAutocomplete
+              :model-value="profile.location || ''"
+              @commit="(v) => saveField('location', v)"
+            />
+          </div>
         </div>
       </div>
 
@@ -223,7 +304,8 @@ async function downloadCv() {
         />
         <span
           v-else
-          class="inline-flex cursor-pointer items-center gap-1.5 text-[13.5px] font-semibold text-gray-900"
+          class="inline-flex cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-[13.5px] font-semibold text-gray-900"
+          :class="isUpdated('availability') && 'bg-success-light'"
           @click="editingAvailability = true"
         >
           {{ availabilityLabel }}
@@ -252,13 +334,25 @@ async function downloadCv() {
            the name at the top of the page -- repeating it here as a plain
            heading was a pure duplicate, so only the summary paragraph
            (which doesn't appear anywhere else) stays in this section. -->
-      <p v-if="profile.professional_summary" class="mt-1 text-[13.5px] text-gray-600">
+      <p
+        v-if="profile.professional_summary"
+        class="mt-1 rounded text-[13.5px] text-gray-600"
+        :class="isUpdated('professional_summary') && 'bg-success-light px-1.5 py-1'"
+      >
         {{ profile.professional_summary }}
       </p>
 
       <div v-if="profile.identified_roles?.length" class="mt-4">
-        <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+        <h4
+          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500"
+        >
           {{ $t('profileCv.identified_roles_title') }}
+          <span
+            v-if="isUpdated('identified_roles')"
+            class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-success-text"
+          >
+            ✓ {{ $t('profileCv.updated_badge') }}
+          </span>
         </h4>
         <div class="flex flex-wrap gap-2">
           <span
@@ -272,8 +366,16 @@ async function downloadCv() {
       </div>
 
       <div v-if="profile.domains?.length" class="mt-4">
-        <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+        <h4
+          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500"
+        >
           {{ $t('profileCv.domains_title') }}
+          <span
+            v-if="isUpdated('domains')"
+            class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-success-text"
+          >
+            ✓ {{ $t('profileCv.updated_badge') }}
+          </span>
         </h4>
         <div class="flex flex-wrap gap-2">
           <span
@@ -290,8 +392,14 @@ async function downloadCv() {
     <!-- Skills, grouped by category when the CV synthesis provided one;
          falls back to the flat list for profiles not yet reprocessed. -->
     <UiCard v-if="profile.skill_categories?.length || profile.skills?.length" class="mb-4">
-      <h2 class="mb-3 text-base font-bold text-navy">
+      <h2 class="mb-3 flex items-center gap-2 text-base font-bold text-navy">
         {{ $t('profileCv.skills_detected_title') }}
+        <span
+          v-if="isUpdated('skills')"
+          class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[11px] font-bold text-success-text"
+        >
+          ✓ {{ $t('profileCv.updated_badge') }}
+        </span>
       </h2>
 
       <div v-if="profile.skill_categories?.length">
@@ -321,59 +429,6 @@ async function downloadCv() {
           </span>
         </div>
         <p class="mt-2 text-xs text-gray-400">{{ $t('profileCv.key_skills_hint') }}</p>
-      </div>
-    </UiCard>
-
-    <!-- CV summary -->
-    <UiCard>
-      <h2 class="mb-3 text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
-
-      <!-- Row 1: download, alone, filename in the label -->
-      <UiButton
-        v-if="profile.cv_filename"
-        variant="secondary"
-        size="sm"
-        class="mb-3 w-full justify-center sm:w-auto"
-        :loading="downloading"
-        @click="downloadCv"
-      >
-        ⬇ {{ $t('profileCv.download_named', { filename: profile.cv_filename }) }}
-      </UiButton>
-
-      <CvAnalyzingProgress v-if="reuploading" class="mb-4" :filename="reuploadFilename" />
-
-      <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <div>
-          <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.last_update') }}</div>
-          <div class="text-lg font-extrabold text-navy">{{ updatedAgo }}</div>
-        </div>
-        <div>
-          <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.total_experience') }}</div>
-          <div class="text-lg font-extrabold text-navy">{{ profile.total_experience || '—' }}</div>
-        </div>
-      </div>
-
-      <!-- Bottom row: reimport + edit-fields link, "Ou" sitting between them.
-           Placed last so it never competes with the CV data above it for
-           attention -- these are actions on the CV, not part of its content. -->
-      <div class="flex flex-wrap items-center gap-3">
-        <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
-          ⬆ {{ $t('profileCv.reupload') }}
-        </UiButton>
-        <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
-        <NuxtLink
-          to="/profile/edit"
-          class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
-        >
-          {{ $t('profileCv.edit_fields') }} →
-        </NuxtLink>
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".pdf,.docx"
-          class="hidden"
-          @change="onReupload"
-        />
       </div>
     </UiCard>
   </div>

@@ -20,5 +20,6 @@ useHead({
     <LandingSocial />
     <LandingCta />
     <LandingFooter />
+    <LandingCvReuploadModal />
   </div>
 </template>
