@@ -562,6 +562,7 @@
     "preferences": {
       "title": "Your preferences",
       "subtitle": "These criteria refine your job matches. Editable at any time.",
+      "updated_banner": "Your profile was just updated from your new CV. Check that your search preferences are still accurate before continuing.",
       "contract_type_title": "Contract type",
       "contract_type_subtitle": "The contract type you're looking for",
       "multi_choice": "Multiple choices possible",

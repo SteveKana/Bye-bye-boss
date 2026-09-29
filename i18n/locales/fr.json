@@ -562,6 +562,7 @@
     "preferences": {
       "title": "Vos préférences",
       "subtitle": "Ces critères affinent vos correspondances d'offres. Modifiables à tout moment.",
+      "updated_banner": "Ton profil vient d'être mis à jour à partir de ton nouveau CV. Vérifie que tes préférences de recherche sont toujours d'actualité avant de continuer.",
       "contract_type_title": "Type de contrat",
       "contract_type_subtitle": "Le type de contrat que vous recherchez",
       "multi_choice": "Plusieurs choix possibles",
