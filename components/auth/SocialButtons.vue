@@ -1,7 +1,7 @@
 <script setup>
-// Google is wired for real (see below); LinkedIn stays fictive for now --
-// the backend has no LinkedIn OAuth, so that one still just notifies it's
-// coming. Both buttons stay visually faithful to the mockups.
+// Google is wired for real (see below). LinkedIn used to sit here as a
+// fictive "coming soon" button (no backend OAuth for it) -- removed on
+// Steve's call rather than left as a dead-end click.
 const { t } = useI18n()
 const toast = useToast()
 const auth = useAuthStore()
@@ -121,7 +121,7 @@ function soon(provider) {
 
     <!-- Wraps the visible button and Google's real one so the latter can be
     positioned exactly over the former (relative/absolute pair). -->
-    <div class="relative mb-2.5">
+    <div class="relative">
       <button
         type="button"
         class="flex w-full items-center justify-center gap-2.5 rounded-md border-[1.5px] border-gray-200 bg-white py-3 text-sm font-semibold text-gray-900 transition hover:border-gray-300 hover:bg-gray-50"
@@ -161,19 +161,5 @@ function soon(provider) {
         aria-hidden="true"
       />
     </div>
-
-    <button
-      type="button"
-      class="flex w-full items-center justify-center gap-2.5 rounded-md border-[1.5px] border-gray-200 bg-white py-3 text-sm font-semibold text-gray-900 transition hover:border-gray-300 hover:bg-gray-50"
-      @click="soon('LinkedIn')"
-    >
-      <span
-        class="flex h-5 w-5 items-center justify-center rounded bg-[#0A66C2] text-[11px] font-black text-white"
-        aria-hidden="true"
-      >
-        in
-      </span>
-      {{ $t('social.linkedin') }}
-    </button>
   </div>
 </template>
