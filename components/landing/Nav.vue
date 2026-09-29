@@ -46,6 +46,9 @@ async function onReupload(event) {
   try {
     await onboarding.uploadCv(file)
     toast.success(t('profileCv.reupload_success'))
+    // Même choix que le hero/footer -- direction /profile pour voir le
+    // nouveau CV tout de suite au lieu de rester sur la home.
+    navigateTo('/profile')
   } catch (err) {
     toast.error(err?.message || t('profileCv.upload_error'))
   } finally {
