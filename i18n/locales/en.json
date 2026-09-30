@@ -248,7 +248,15 @@
     "sort_regret_asc": "Regret Index (lowest first)",
     "tjm_min": "Minimum daily rate",
     "tjm_min_label": "€{amount}/day",
-    "sort_tjm_desc": "Daily rate (highest first)"
+    "sort_tjm_desc": "Daily rate (highest first)",
+    "score_ats_title": "ATS",
+    "score_ats_text": "How well your CV matches the automated screening software (ATS) recruiters use to filter CVs before a human ever reads them.",
+    "score_career_title": "Career",
+    "score_career_text": "How well this offer fits your profile and career path, independent of the recruiter's automated filters.",
+    "score_potential_title": "ATS Potential",
+    "score_potential_text": "Your real odds of passing the filters and convincing a recruiter, factoring in any blocking issues found (e.g. a missing required skill).",
+    "score_regret_title": "Regret Index",
+    "score_regret_text": "The risk of regretting this job once hired, based on employee reviews of this company. Lower is better; \"—\" means there isn't enough reliable review data on this company yet."
   },
   "opportunity": {
     "back": "← Back to dashboard",

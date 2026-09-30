@@ -11,7 +11,7 @@
 //   - "À propos de l'entreprise" (company facts) -- nothing beyond the
 //     company name is stored anywhere in this codebase.
 //   - The "1er/534" ranking block -- no pool-size/rank is computed.
-//   - Regret Index -- real, Reddit-sourced score when the backend has
+//   - Regret Index -- real, SimplyHired-sourced score when the backend has
 //     enough signal for this employer, else an honest "not enough data"
 //     slot; see CandidateMatch's docstring: this app never fabricates it.
 //   - The mockup's separate structured offer page (company/mission/profile
@@ -91,7 +91,7 @@ const scoreBlocks = computed(() => [
   },
 ])
 
-// Regret Index: real, Reddit-sourced score when the backend has enough
+// Regret Index: real, SimplyHired-sourced score when the backend has enough
 // signal (see CompanyRegretProfile), otherwise stays an honest "not enough
 // data" slot -- never a fabricated number. Higher score = more regret risk,
 // so its color scale runs the opposite way from the other three blocks.
@@ -377,8 +377,8 @@ async function openExternalOffer() {
               </div>
             </div>
 
-            <!-- Regret Index: real score when the backend has enough Reddit
-                 signal for this employer (see CompanyRegretProfile), else an
+            <!-- Regret Index: real score when the backend has enough
+                 SimplyHired signal for this employer (see CompanyRegretProfile), else an
                  honest "not enough data" slot -- never a fabricated number,
                  same policy as CandidateMatch's docstring always held. -->
             <div>
