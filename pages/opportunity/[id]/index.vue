@@ -419,7 +419,7 @@ async function openExternalOffer() {
                 <span
                   v-for="(item, index) in group.items"
                   :key="`${item.skill}-${index}`"
-                  class="rounded-full border px-3 py-1 text-xs font-semibold"
+                  class="max-w-full break-words rounded-full border px-3 py-1 text-xs font-semibold"
                   :class="
                     item.importance === 'preferred' || item.importance === 'nice_to_have'
                       ? 'border-gray-200 bg-gray-50 text-gray-500'
