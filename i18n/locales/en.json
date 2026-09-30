@@ -254,7 +254,7 @@
     "score_career_title": "Career",
     "score_career_text": "How well this offer fits your profile and career path, independent of the recruiter's automated filters.",
     "score_potential_title": "ATS Potential",
-    "score_potential_text": "Your real odds of passing the filters and convincing a recruiter, factoring in any blocking issues found (e.g. a missing required skill).",
+    "score_potential_text": "The highest ATS score you could reach for this offer by optimizing your CV (the \"Adapt my CV for this offer\" button) — not your current match.",
     "score_regret_title": "Regret Index",
     "score_regret_text": "The risk of regretting this job once hired, based on employee reviews of this company. Lower is better; \"—\" means there isn't enough reliable review data on this company yet."
   },
