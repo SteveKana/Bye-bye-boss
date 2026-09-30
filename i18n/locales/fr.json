@@ -245,6 +245,7 @@
     "adjust_link": "Ajuster mes critères de recherche",
     "sort_potential_desc": "Potentiel ATS",
     "sort_career_desc": "Score carrière",
+    "sort_regret_asc": "Regret Index (croissant)",
     "tjm_min": "TJM minimum",
     "tjm_min_label": "{amount} €/jour",
     "sort_tjm_desc": "TJM (décroissant)"
@@ -261,7 +262,7 @@
     "score_career": "Career",
     "score_potential": "ATS Potentiel",
     "regret_index": "Regret Index",
-    "regret_soon": "Bientôt disponible",
+    "regret_unavailable": "Pas assez de données",
     "trust_ok_title": "Aucun blocage rédhibitoire identifié",
     "trust_warning_title": "Point(s) de vigilance identifié(s)",
     "requirements_title": "Ce que recherche cette offre",

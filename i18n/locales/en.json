@@ -245,6 +245,7 @@
     "adjust_link": "Adjust my search criteria",
     "sort_potential_desc": "ATS potential",
     "sort_career_desc": "Career score",
+    "sort_regret_asc": "Regret Index (lowest first)",
     "tjm_min": "Minimum daily rate",
     "tjm_min_label": "€{amount}/day",
     "sort_tjm_desc": "Daily rate (highest first)"
@@ -261,7 +262,7 @@
     "score_career": "Career",
     "score_potential": "ATS Potential",
     "regret_index": "Regret Index",
-    "regret_soon": "Coming soon",
+    "regret_unavailable": "Not enough data",
     "trust_ok_title": "No dealbreaker identified",
     "trust_warning_title": "Point(s) of attention identified",
     "requirements_title": "What this offer is looking for",

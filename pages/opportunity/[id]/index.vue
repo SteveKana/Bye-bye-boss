@@ -11,8 +11,9 @@
 //   - "À propos de l'entreprise" (company facts) -- nothing beyond the
 //     company name is stored anywhere in this codebase.
 //   - The "1er/534" ranking block -- no pool-size/rank is computed.
-//   - Regret Index -- shown as a grayed "Bientôt disponible" slot; see
-//     CandidateMatch's own docstring: this app never fabricates that score.
+//   - Regret Index -- real, Reddit-sourced score when the backend has
+//     enough signal for this employer, else an honest "not enough data"
+//     slot; see CandidateMatch's docstring: this app never fabricates it.
 //   - The mockup's separate structured offer page (company/mission/profile
 //     broken out) -- the backend only stores a flat `description` string,
 //     so that's rendered as-is in a plain "Description du poste" card
@@ -89,6 +90,27 @@ const scoreBlocks = computed(() => [
     barClass: 'bg-brand',
   },
 ])
+
+// Regret Index: real, Reddit-sourced score when the backend has enough
+// signal (see CompanyRegretProfile), otherwise stays an honest "not enough
+// data" slot -- never a fabricated number. Higher score = more regret risk,
+// so its color scale runs the opposite way from the other three blocks.
+const regretAvailable = computed(() => match.value?.regret_availability === 'available')
+const regretScore = computed(() => match.value?.regret_score)
+const regretColorClass = computed(() => {
+  const v = regretScore.value
+  if (v == null) return 'text-gray-300'
+  if (v >= 60) return 'text-red-600'
+  if (v >= 35) return 'text-amber-600'
+  return 'text-green-600'
+})
+const regretBarClass = computed(() => {
+  const v = regretScore.value
+  if (v == null) return ''
+  if (v >= 60) return 'bg-red-600'
+  if (v >= 35) return 'bg-amber-600'
+  return 'bg-green-600'
+})
 
 // hard_blocker anywhere in the list tips the banner into "point(s) of
 // attention" styling; medium/soft-only (or none at all) reads as reassuring.
@@ -355,18 +377,30 @@ async function openExternalOffer() {
               </div>
             </div>
 
-            <!-- Regret Index: never a fabricated score -- see
-                 CandidateMatch's docstring -- so this stays a plain grayed
-                 "coming soon" slot, same honesty policy as the dashboard's
-                 disabled "🔔 Alertes" button. -->
+            <!-- Regret Index: real score when the backend has enough Reddit
+                 signal for this employer (see CompanyRegretProfile), else an
+                 honest "not enough data" slot -- never a fabricated number,
+                 same policy as CandidateMatch's docstring always held. -->
             <div>
               <div class="text-[12.5px] font-semibold text-gray-500">
                 {{ $t('opportunity.regret_index') }}
               </div>
-              <div class="mb-1.5 text-2xl font-extrabold text-gray-300">—</div>
-              <div class="h-1.5 overflow-hidden rounded-full bg-gray-100" />
-              <div class="mt-1.5 text-[11px] text-gray-400">
-                {{ $t('opportunity.regret_soon') }}
+              <div class="mb-1.5 text-2xl font-extrabold" :class="regretColorClass">
+                <template v-if="regretAvailable">
+                  {{ regretScore }}<span class="text-xs font-medium text-gray-400">/100</span>
+                </template>
+                <template v-else>—</template>
+              </div>
+              <div class="h-1.5 overflow-hidden rounded-full bg-gray-100">
+                <div
+                  v-if="regretAvailable"
+                  class="h-full rounded-full"
+                  :class="regretBarClass"
+                  :style="{ width: `${regretScore}%` }"
+                />
+              </div>
+              <div v-if="!regretAvailable" class="mt-1.5 text-[11px] text-gray-400">
+                {{ $t('opportunity.regret_unavailable') }}
               </div>
             </div>
           </div>

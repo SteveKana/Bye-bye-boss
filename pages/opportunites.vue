@@ -21,11 +21,12 @@
 //   - A 3-way "Sur site / Hybride / Full remote" filter -- the backend only
 //     stores a single is_full_remote flag, nothing distinguishing "hybride"
 //     from "sur site", so the filter here is the honest 2-way version.
-//   - A "Localisation" (Paris / Île-de-France / France entière) filter and
-//     a "Regret Index" sort option -- no normalized per-offer region data
-//     and no computed regret score exist to filter/sort on. The Regret
-//     column still appears in the scores cluster for the same layout, but
-//     reads "—" / "Bientôt disponible", exactly like the detail page.
+//   - A "Localisation" (Paris / Île-de-France / France entière) filter --
+//     no normalized per-offer region data exists to filter on. The Regret
+//     column now shows a real score when the backend has enough Reddit
+//     signal for that employer, else "—" / "Pas assez de données", exactly
+//     like the detail page; sorting by it (lowest risk first) is available
+//     below, missing values sorting last like everywhere else on this page.
 //   - The sidebar's "Premium" upsell card -- there's no subscription tier
 //     implemented; the backend spec for this section explicitly puts
 //     "Statut d'abonnement" out of MVP scope.
@@ -202,9 +203,7 @@ const SORT_OPTIONS = computed(() => [
   { value: 'ats_desc', label: t('opportunites.sort_ats_desc') },
   { value: 'ats_potential_desc', label: t('opportunites.sort_potential_desc') },
   { value: 'career_desc', label: t('opportunites.sort_career_desc') },
-  // Regret Index sort (croissant/décroissant) isn't here yet -- same
-  // never-fabricate reasoning as the grayed Regret score below: there's no
-  // computed regret value to sort by until that scoring exists.
+  { value: 'regret_asc', label: t('opportunites.sort_regret_asc') },
 ])
 const sortLabel = computed(
   () => SORT_OPTIONS.value.find((o) => o.value === sortBy.value)?.label || ''
@@ -255,6 +254,15 @@ const offers = computed(() => {
     list.sort((a, b) => b.scores.potential - a.scores.potential)
   } else if (sortBy.value === 'career_desc') {
     list.sort((a, b) => b.scores.career - a.scores.career)
+  } else if (sortBy.value === 'regret_asc') {
+    // Lowest regret risk first; an employer with no score yet (not enough
+    // Reddit signal) sorts last, same "missing value sorts last" rule as
+    // date/salary above.
+    list.sort((a, b) => {
+      if (!a.regretAvailable) return 1
+      if (!b.regretAvailable) return -1
+      return a.regretScore - b.regretScore
+    })
   } else {
     // "Pertinence" -- ats_potential descending, same as the dashboard's
     // top-5 ordering: the best real odds of getting past the recruiter's
@@ -305,6 +313,15 @@ function truncateTag(name) {
 function tagsFor(offer) {
   const names = (offer.analysis.job_skills || []).map((s) => s.skill).filter(Boolean)
   return { shown: names.slice(0, 4).map(truncateTag), extra: Math.max(0, names.length - 4) }
+}
+
+// Higher regret score = more risk, so this color scale runs the opposite
+// way from the ATS/Career/Potential columns -- same thresholds as the
+// detail page's regretColorClass.
+function regretColorClass(score) {
+  if (score >= 60) return 'text-red-600'
+  if (score >= 35) return 'text-amber-600'
+  return 'text-green-600'
 }
 
 onMounted(async () => {
@@ -771,12 +788,20 @@ function selectSort(value) {
                     <p class="text-[10px] font-medium text-gray-400">Potential</p>
                     <p class="text-lg font-extrabold text-brand">{{ offer.scores.potential }}</p>
                   </div>
-                  <!-- Regret Index: never a fabricated score -- see the
-                       detail page's identical note -- so this stays a
-                       grayed "coming soon" slot rather than a real number. -->
+                  <!-- Regret Index: real score when available, else an
+                       honest "—" -- see the detail page's identical note. -->
                   <div class="text-center">
                     <p class="text-[10px] font-medium text-gray-400">Regret</p>
-                    <p class="text-lg font-extrabold text-gray-300">—</p>
+                    <p
+                      class="text-lg font-extrabold"
+                      :class="
+                        offer.regretAvailable
+                          ? regretColorClass(offer.regretScore)
+                          : 'text-gray-300'
+                      "
+                    >
+                      {{ offer.regretAvailable ? offer.regretScore : '—' }}
+                    </p>
                   </div>
                 </div>
                 <UiButton size="sm" variant="primary" @click.stop="openOffer(offer)">
