@@ -21,11 +21,12 @@
 //   - A 3-way "Sur site / Hybride / Full remote" filter -- the backend only
 //     stores a single is_full_remote flag, nothing distinguishing "hybride"
 //     from "sur site", so the filter here is the honest 2-way version.
-//   - A "Localisation" (Paris / Île-de-France / France entière) filter and
-//     a "Regret Index" sort option -- no normalized per-offer region data
-//     and no computed regret score exist to filter/sort on. The Regret
-//     column still appears in the scores cluster for the same layout, but
-//     reads "—" / "Bientôt disponible", exactly like the detail page.
+//   - A "Localisation" (Paris / Île-de-France / France entière) filter --
+//     no normalized per-offer region data exists to filter on. The Regret
+//     column now shows a real score when the backend has enough SimplyHired
+//     signal for that employer, else "—" / "Pas assez de données", exactly
+//     like the detail page; sorting by it (lowest risk first) is available
+//     below, missing values sorting last like everywhere else on this page.
 //   - The sidebar's "Premium" upsell card -- there's no subscription tier
 //     implemented; the backend spec for this section explicitly puts
 //     "Statut d'abonnement" out of MVP scope.
@@ -60,7 +61,6 @@ definePageMeta({ layout: 'app', middleware: ['auth', 'onboarding-complete'], wid
 const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
 
-const toast = useToast()
 const matching = useMatchingStore()
 const route = useRoute()
 const { criteria, load: loadCriteria } = useSearchCriteria()
@@ -202,9 +202,7 @@ const SORT_OPTIONS = computed(() => [
   { value: 'ats_desc', label: t('opportunites.sort_ats_desc') },
   { value: 'ats_potential_desc', label: t('opportunites.sort_potential_desc') },
   { value: 'career_desc', label: t('opportunites.sort_career_desc') },
-  // Regret Index sort (croissant/décroissant) isn't here yet -- same
-  // never-fabricate reasoning as the grayed Regret score below: there's no
-  // computed regret value to sort by until that scoring exists.
+  { value: 'regret_asc', label: t('opportunites.sort_regret_asc') },
 ])
 const sortLabel = computed(
   () => SORT_OPTIONS.value.find((o) => o.value === sortBy.value)?.label || ''
@@ -255,6 +253,15 @@ const offers = computed(() => {
     list.sort((a, b) => b.scores.potential - a.scores.potential)
   } else if (sortBy.value === 'career_desc') {
     list.sort((a, b) => b.scores.career - a.scores.career)
+  } else if (sortBy.value === 'regret_asc') {
+    // Lowest regret risk first; an employer with no score yet (not enough
+    // SimplyHired signal) sorts last, same "missing value sorts last" rule as
+    // date/salary above.
+    list.sort((a, b) => {
+      if (!a.regretAvailable) return 1
+      if (!b.regretAvailable) return -1
+      return a.regretScore - b.regretScore
+    })
   } else {
     // "Pertinence" -- ats_potential descending, same as the dashboard's
     // top-5 ordering: the best real odds of getting past the recruiter's
@@ -307,6 +314,15 @@ function tagsFor(offer) {
   return { shown: names.slice(0, 4).map(truncateTag), extra: Math.max(0, names.length - 4) }
 }
 
+// Higher regret score = more risk, so this color scale runs the opposite
+// way from the ATS/Career/Potential columns -- same thresholds as the
+// detail page's regretColorClass.
+function regretColorClass(score) {
+  if (score >= 60) return 'text-red-600'
+  if (score >= 35) return 'text-amber-600'
+  return 'text-green-600'
+}
+
 onMounted(async () => {
   await loadCriteria()
   try {
@@ -323,7 +339,44 @@ function openOffer(offer) {
   navigateTo(`/opportunity/${offer.id}`)
 }
 
-const soon = () => toast.info(t('app.soon_full'))
+// "Comprendre nos scores" -- was a `soon` placeholder toast; the four
+// blocks it now explains (ATS, Career, Potentiel, Regret) already exist as
+// real, computed scores elsewhere on this page, so there was real content
+// to show instead of stalling behind "bientôt disponible". Same four
+// labels/short codes as the score cluster on each offer card and on the
+// detail page (opportunity/[id]/index.vue's scoreBlocks) -- kept in sync
+// with those, not a separate vocabulary.
+const scoresModalOpen = ref(false)
+const SCORE_EXPLANATIONS = computed(() => [
+  {
+    key: 'ats',
+    short: 'ATS',
+    title: t('opportunites.score_ats_title'),
+    text: t('opportunites.score_ats_text'),
+    badgeClass: 'bg-green-100 text-green-700',
+  },
+  {
+    key: 'career',
+    short: 'CAR',
+    title: t('opportunites.score_career_title'),
+    text: t('opportunites.score_career_text'),
+    badgeClass: 'bg-blue-100 text-blue-700',
+  },
+  {
+    key: 'potential',
+    short: 'POT',
+    title: t('opportunites.score_potential_title'),
+    text: t('opportunites.score_potential_text'),
+    badgeClass: 'bg-brand-light text-brand-text',
+  },
+  {
+    key: 'regret',
+    short: 'REG',
+    title: t('opportunites.score_regret_title'),
+    text: t('opportunites.score_regret_text'),
+    badgeClass: 'bg-red-100 text-red-700',
+  },
+])
 
 // Dropdown open/close, including click-outside -- mirrors the mockup's own
 // toggleDropdown()/outside-click JS, ported to Vue refs instead of DOM
@@ -655,16 +708,45 @@ function selectSort(value) {
             next to it. Stacking below `sm` removes the squeeze entirely;
             `sm:flex-row sm:flex-wrap` keeps the original desktop layout. -->
             <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-              <div class="flex min-w-0 flex-1 gap-4">
-                <span
-                  class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-lg font-extrabold text-white"
-                  :style="{ background: offer.bg }"
-                >
-                  {{ offer.logo }}
-                </span>
+              <!-- Logo shrunk ~1/3 (was h-14/56px) to give the title/company/
+              location/tags row more horizontal room, and -- from `sm` up --
+              the fit/contract badges now sit beside it instead of stacked
+              above the title, with the rest of the identity block moved to
+              its own full-width row below both (Steve's reference
+              screenshot, 2026-09-30). Below `sm`, width is tight enough that
+              the original stacked-beside-the-logo arrangement stays: the
+              badges are duplicated (`sm:hidden` / `hidden sm:flex`), not
+              moved, so each breakpoint renders exactly one copy. -->
+              <div class="flex min-w-0 flex-1 flex-wrap gap-x-4 gap-y-3 sm:gap-y-2">
+                <div class="flex shrink-0 items-center gap-3">
+                  <span
+                    class="flex h-[37px] w-[37px] shrink-0 items-center justify-center rounded-lg text-sm font-extrabold text-white"
+                    :style="{ background: offer.bg }"
+                  >
+                    {{ offer.logo }}
+                  </span>
+                  <div class="hidden flex-wrap items-center gap-1.5 sm:flex">
+                    <span
+                      class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
+                      :class="
+                        offer.strong
+                          ? 'bg-success-light text-success-text'
+                          : 'bg-amber-100 text-amber-700'
+                      "
+                    >
+                      {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
+                    </span>
+                    <span
+                      v-if="offer.contractTag"
+                      class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
+                    >
+                      {{ offer.contractTag }}
+                    </span>
+                  </div>
+                </div>
 
-                <div class="min-w-0 flex-1">
-                  <div class="mb-1 flex flex-wrap items-center gap-1.5">
+                <div class="min-w-0 flex-1 sm:w-full sm:flex-none">
+                  <div class="mb-1 flex flex-wrap items-center gap-1.5 sm:hidden">
                     <span
                       class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
                       :class="
@@ -771,12 +853,20 @@ function selectSort(value) {
                     <p class="text-[10px] font-medium text-gray-400">Potential</p>
                     <p class="text-lg font-extrabold text-brand">{{ offer.scores.potential }}</p>
                   </div>
-                  <!-- Regret Index: never a fabricated score -- see the
-                       detail page's identical note -- so this stays a
-                       grayed "coming soon" slot rather than a real number. -->
+                  <!-- Regret Index: real score when available, else an
+                       honest "—" -- see the detail page's identical note. -->
                   <div class="text-center">
                     <p class="text-[10px] font-medium text-gray-400">Regret</p>
-                    <p class="text-lg font-extrabold text-gray-300">—</p>
+                    <p
+                      class="text-lg font-extrabold"
+                      :class="
+                        offer.regretAvailable
+                          ? regretColorClass(offer.regretScore)
+                          : 'text-gray-300'
+                      "
+                    >
+                      {{ offer.regretAvailable ? offer.regretScore : '—' }}
+                    </p>
                   </div>
                 </div>
                 <UiButton size="sm" variant="primary" @click.stop="openOffer(offer)">
@@ -838,7 +928,7 @@ function selectSort(value) {
         <button
           type="button"
           class="flex items-center gap-2 rounded-xl border border-brand-light bg-brand-light px-4 py-2.5 text-sm font-semibold text-brand-text hover:bg-brand-light/70"
-          @click="soon"
+          @click="scoresModalOpen = true"
         >
           ℹ️ {{ $t('opportunites.understand_scores') }}
         </button>
@@ -886,5 +976,26 @@ function selectSort(value) {
         </div>
       </aside>
     </div>
+
+    <UiModal v-model="scoresModalOpen" :title="$t('opportunites.understand_scores')" size="lg">
+      <div class="space-y-4">
+        <div
+          v-for="score in SCORE_EXPLANATIONS"
+          :key="score.key"
+          class="flex gap-3 rounded-xl bg-gray-50 p-3.5"
+        >
+          <span
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-extrabold"
+            :class="score.badgeClass"
+          >
+            {{ score.short }}
+          </span>
+          <div>
+            <p class="text-sm font-bold text-navy">{{ score.title }}</p>
+            <p class="mt-0.5 text-xs leading-relaxed text-gray-500">{{ score.text }}</p>
+          </div>
+        </div>
+      </div>
+    </UiModal>
   </div>
 </template>
