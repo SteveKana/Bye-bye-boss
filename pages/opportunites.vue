@@ -725,16 +725,12 @@ function selectSort(value) {
                   >
                     {{ offer.logo }}
                   </span>
-                  <!-- No `flex-wrap` here on purpose: with it, "CDI" could
-                  split onto its own line under "Très forte compatibilité"
-                  once the column got tight, leaving it stranded next to the
-                  logo instead of moving with it (caught from Steve's own
-                  screenshot, 2026-09-30). `flex-nowrap` (the default, so not
-                  even a class) keeps both badges one unit -- if that unit
-                  doesn't fit the current line, the *whole* avatar+badges
-                  block wraps down together (this div's parent is
-                  `shrink-0`, so it never gets compressed piecemeal). -->
-                  <div class="hidden items-center gap-1.5 sm:flex">
+                  <!-- `flex-col` here is intentional: the fit badge and the
+                  contract tag always stack as two separate lines next to the
+                  logo, never squeezed onto one row even when there's room --
+                  Steve's reference screenshot, confirmed again 2026-09-30
+                  after a wrong attempt at "fixing" this away. -->
+                  <div class="hidden flex-col items-start gap-1.5 sm:flex">
                     <span
                       class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
                       :class="
