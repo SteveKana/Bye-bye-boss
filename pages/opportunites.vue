@@ -291,9 +291,20 @@ function reasonsFor(offer) {
   return [...positives, ...negative]
 }
 
+// Some skill values coming back from the matching backend are raw internal
+// keys rather than short human labels (e.g. "product_owner_data_experience")
+// -- long enough as a single unbroken word to overflow the pill regardless
+// of CSS wrapping. Truncating here guarantees a clean pill no matter what
+// the backend sends; the underlying "why is this a raw key" question is a
+// separate backend content-quality issue, not a layout one.
+const MAX_TAG_LENGTH = 22
+function truncateTag(name) {
+  return name.length > MAX_TAG_LENGTH ? `${name.slice(0, MAX_TAG_LENGTH - 1)}…` : name
+}
+
 function tagsFor(offer) {
   const names = (offer.analysis.job_skills || []).map((s) => s.skill).filter(Boolean)
-  return { shown: names.slice(0, 4), extra: Math.max(0, names.length - 4) }
+  return { shown: names.slice(0, 4).map(truncateTag), extra: Math.max(0, names.length - 4) }
 }
 
 onMounted(async () => {
@@ -695,17 +706,19 @@ function selectSort(value) {
                       />
                     </span>
                   </div>
-                  <!-- break-words: a raw, human-unreadable skill key from the
-                  matching backend (e.g. "product_owner_data_experience") is
-                  one unbroken word -- without this, it can't wrap and just
-                  overflows the pill into whatever sits next to it. Flagged
-                  separately as a backend content-quality issue, but the
-                  layout shouldn't break either way. -->
+                  <!-- A raw, human-unreadable skill key from the matching
+                  backend (e.g. "product_owner_data_experience") is one
+                  unbroken word long enough to overflow the pill on its own --
+                  break-words alone didn't stop that in practice (flex items
+                  don't shrink below content width by default), so tagsFor()
+                  truncates with an ellipsis instead. break-words stays as a
+                  safety net. Key is the index, not the (possibly truncated,
+                  possibly duplicate) text. -->
                   <div v-if="tagsFor(offer).shown.length" class="mt-2 flex flex-wrap gap-1.5">
                     <span
-                      v-for="tag in tagsFor(offer).shown"
-                      :key="tag"
-                      class="break-words rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
+                      v-for="(tag, index) in tagsFor(offer).shown"
+                      :key="index"
+                      class="max-w-full break-words rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
                     >
                       {{ tag }}
                     </span>
