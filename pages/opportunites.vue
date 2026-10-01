@@ -62,6 +62,7 @@ const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
 
 const matching = useMatchingStore()
+const onboarding = useOnboardingStore()
 const route = useRoute()
 const { criteria, load: loadCriteria } = useSearchCriteria()
 
@@ -90,177 +91,156 @@ const lastUpdatedLabel = computed(() => {
   })
 })
 
-const CONTRACT_OPTIONS = ['CDI', 'CDD', 'Freelance', 'Alternance']
-const SALARY_OPTIONS = [30000, 40000, 50000, 60000, 70000]
-// TJM scale for Freelance -- separate unit and range from the annual-salary
-// options above (see the freelanceSelected-driven switch below).
-const DAILY_RATE_OPTIONS = [300, 400, 500, 600, 700, 800]
+// Contract-type and remote-work filtering now reads directly from the
+// candidate's saved /preferences (profile.contract_types/remote_preferences)
+// instead of duplicate manual toggles on this page. Those toggles used to
+// update their own local state that `filteredOffers` never actually
+// consulted -- a real bug Steve flagged (2026-10-01): picking "CDI" in the
+// old "Filtres" panel visibly selected the chip but never hid a single CDD
+// offer. There is no control here to change these two anymore; that only
+// happens on /preferences, same source of truth the "Votre recherche" bar
+// above already reads via useSearchCriteria.
+const profileContractTypes = computed(() => onboarding.profile?.contract_types || [])
+const profileRemotePreferences = computed(() => onboarding.profile?.remote_preferences || [])
+// An offer only ever carries a single is_full_remote boolean (see
+// geo_filter.py's docstring on why no "Hybride" distinction exists
+// server-side) -- so only an unambiguous single choice ("Full remote" alone,
+// or "Sur site" alone) can actually filter anything. No choice, or several
+// boxes checked (Hybride included), means "don't restrict".
+const remoteFilterMode = computed(() => {
+  const prefs = profileRemotePreferences.value
+  if (prefs.length === 1 && prefs[0] === 'Full remote') return 'remote'
+  if (prefs.length === 1 && prefs[0] === 'Sur site') return 'onsite'
+  return ''
+})
 
-const contractFilters = ref([])
-const remoteFilter = ref('') // '' | 'onsite' | 'remote'
-const salaryMin = ref('')
-// 'relevance' | 'date_desc' | 'date_asc' | 'salary_desc' | 'ats_desc' | 'ats_potential_desc' | 'career_desc'
+// The "Salaire" modal shows a TJM slider, an annual-salary slider, or both,
+// depending on what the candidate's contract-type preference can actually
+// produce in the results: Freelance-only shows just TJM, any salaried type
+// (CDI/CDD/Intérim) without Freelance shows just salary, a mix of both (or
+// no contract preference at all, meaning either kind can appear) shows both
+// -- each filtering only the offers of its own matching contract type (see
+// filteredOffers below), never misapplying one scale to the other.
+const showsFreelanceSlider = computed(
+  () => !profileContractTypes.value.length || profileContractTypes.value.includes('Freelance')
+)
+const showsSalarySlider = computed(
+  () =>
+    !profileContractTypes.value.length ||
+    profileContractTypes.value.some((type) => type !== 'Freelance')
+)
+
+const SALARY_SLIDER_MAX = 100000 // € brut/an
+const SALARY_SLIDER_STEP = 1000
+const TJM_SLIDER_MAX = 1000 // €/jour
+const TJM_SLIDER_STEP = 10
+
+const salaryMin = ref(0)
+const tjmMin = ref(0)
+const onlySalaryKnown = ref(false)
+const salaryModalOpen = ref(false)
+// 'relevance' | 'date_desc'
 const sortBy = ref('relevance')
 const page = ref(1)
 const PAGE_SIZE = 10
 
-// The salary_min/salary_max the backend stores is whatever a permanent-role
-// salary the source reported -- an annual figure, the wrong unit for a
-// freelance mission's TJM. The filter/sort below switch to the separate
-// daily_rate_min/max field (extracted from offer text -- see
-// core/daily_rate.py on the API side) whenever Freelance is selected, rather
-// than misapplying an annual threshold to it.
-const freelanceSelected = computed(() => contractFilters.value.includes('Freelance'))
-// The two scales (annual salary vs. daily TJM) don't share a numeric range,
-// so any selected threshold is cleared on toggle rather than silently
-// reinterpreted -- e.g. "50000" as a minimum makes no sense once the field
-// switches to a per-day rate.
-watch(freelanceSelected, () => {
-  salaryMin.value = ''
-})
-
-function toggleContractFilter(value) {
-  const index = contractFilters.value.indexOf(value)
-  if (index === -1) contractFilters.value.push(value)
-  else contractFilters.value.splice(index, 1)
+// French legal convention for a 35h week (151.67 paid hours/month) -- matches
+// the "Estimation salaire brut 35h/sem." caption in the Salaire modal.
+const MONTHLY_HOURS_35 = 151.67
+function monthlyFromAnnual(annual) {
+  return annual / 12
 }
-
-function toggleRemoteFilter(value) {
-  remoteFilter.value = remoteFilter.value === value ? '' : value
+function hourlyFromAnnual(annual) {
+  return monthlyFromAnnual(annual) / MONTHLY_HOURS_35
+}
+function formatEuros(amount, { decimals = 0 } = {}) {
+  return (amount || 0).toLocaleString('fr-FR', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })
 }
 
 function resetFilters() {
-  contractFilters.value = []
-  remoteFilter.value = ''
-  salaryMin.value = ''
+  salaryMin.value = 0
+  tjmMin.value = 0
+  onlySalaryKnown.value = false
 }
 
 const hasActiveFilters = computed(
-  () => contractFilters.value.length > 0 || !!remoteFilter.value || !!salaryMin.value
+  () => salaryMin.value > 0 || tjmMin.value > 0 || onlySalaryKnown.value
 )
 
 // Individually removable chips shown under the filter/sort row -- each
-// knows how to clear just itself, same "Filtres actifs" pattern as the
-// mockup.
+// knows how to clear just itself, same "Filtres actifs" pattern as before.
 const activeFilterChips = computed(() => {
-  const chips = contractFilters.value.map((value) => ({
-    key: `contract-${value}`,
-    label: value,
-    clear: () => toggleContractFilter(value),
-  }))
-  if (remoteFilter.value) {
-    chips.push({
-      key: 'remote',
-      label:
-        remoteFilter.value === 'remote' ? t('opportunity.full_remote') : t('opportunites.onsite'),
-      clear: () => (remoteFilter.value = ''),
-    })
-  }
-  if (salaryMin.value) {
+  const chips = []
+  if (salaryMin.value > 0) {
     chips.push({
       key: 'salary',
-      label: t(
-        freelanceSelected.value ? 'opportunites.tjm_min_label' : 'opportunites.salary_min_label',
-        {
-          amount: Number(salaryMin.value).toLocaleString('fr-FR'),
-        }
-      ),
-      clear: () => (salaryMin.value = ''),
+      label: t('opportunites.salary_min_label', { amount: formatEuros(salaryMin.value) }),
+      clear: () => (salaryMin.value = 0),
+    })
+  }
+  if (tjmMin.value > 0) {
+    chips.push({
+      key: 'tjm',
+      label: t('opportunites.tjm_min_label', { amount: formatEuros(tjmMin.value) }),
+      clear: () => (tjmMin.value = 0),
+    })
+  }
+  if (onlySalaryKnown.value) {
+    chips.push({
+      key: 'only-known',
+      label: t('opportunites.only_salary_known'),
+      clear: () => (onlySalaryKnown.value = false),
     })
   }
   return chips
 })
 
-const salaryOptions = computed(() =>
-  freelanceSelected.value
-    ? [
-        { value: '', label: t('opportunites.salary_any') },
-        ...DAILY_RATE_OPTIONS.map((amount) => ({
-          value: amount,
-          label: t('opportunites.tjm_min_label', { amount: amount.toLocaleString('fr-FR') }),
-        })),
-      ]
-    : [
-        { value: '', label: t('opportunites.salary_any') },
-        ...SALARY_OPTIONS.map((amount) => ({
-          value: amount,
-          label: t('opportunites.salary_min_label', { amount: amount.toLocaleString('fr-FR') }),
-        })),
-      ]
-)
-
 const SORT_OPTIONS = computed(() => [
   { value: 'relevance', label: t('dashboard.sort_relevance') },
   { value: 'date_desc', label: t('dashboard.sort_date_desc') },
-  { value: 'date_asc', label: t('dashboard.sort_date_asc') },
-  {
-    value: 'salary_desc',
-    label: t(
-      freelanceSelected.value ? 'opportunites.sort_tjm_desc' : 'opportunites.sort_salary_desc'
-    ),
-  },
-  { value: 'ats_desc', label: t('opportunites.sort_ats_desc') },
-  { value: 'ats_potential_desc', label: t('opportunites.sort_potential_desc') },
-  { value: 'career_desc', label: t('opportunites.sort_career_desc') },
-  { value: 'regret_asc', label: t('opportunites.sort_regret_asc') },
 ])
 const sortLabel = computed(
   () => SORT_OPTIONS.value.find((o) => o.value === sortBy.value)?.label || ''
 )
 
 const filteredOffers = computed(() =>
-  matchedOffers.value.filter(
-    (offer) =>
-      (!contractFilters.value.length || contractFilters.value.includes(offer.contractTag)) &&
-      (!remoteFilter.value ||
-        (remoteFilter.value === 'remote' ? offer.isFullRemote : !offer.isFullRemote)) &&
-      // No salary/TJM data at all can't be confirmed to meet a minimum, so
-      // it's excluded once a threshold is set -- same reasoning as a missing
-      // date/salary always sorting last below, just applied as a filter.
-      // Freelance switches to dailyRateValue -- see freelanceSelected above.
-      (!salaryMin.value ||
-        ((freelanceSelected.value ? offer.dailyRateValue : offer.salaryValue) || 0) >=
-          Number(salaryMin.value)) &&
-      (!debugSourceFilter.value || offer.source === debugSourceFilter.value)
-  )
+  matchedOffers.value.filter((offer) => {
+    if (
+      profileContractTypes.value.length &&
+      !profileContractTypes.value.includes(offer.contractTag)
+    ) {
+      return false
+    }
+    if (remoteFilterMode.value === 'remote' && !offer.isFullRemote) return false
+    if (remoteFilterMode.value === 'onsite' && offer.isFullRemote) return false
+    if (debugSourceFilter.value && offer.source !== debugSourceFilter.value) return false
+
+    // Freelance offers are compared against the TJM slider, every other
+    // contract type against the annual-salary slider -- never the other
+    // scale, same split as the modal's two sliders above.
+    const isFreelanceOffer = offer.contractTag === 'Freelance'
+    const value = isFreelanceOffer ? offer.dailyRateValue : offer.salaryValue
+    const threshold = isFreelanceOffer ? tjmMin.value : salaryMin.value
+
+    if (onlySalaryKnown.value && !value) return false
+    if (threshold > 0 && (value || 0) < threshold) return false
+
+    return true
+  })
 )
 
-// Missing values (date or salary) always sort last, whichever direction is
-// chosen -- an offer with no known value is neither "recent"/"well-paid"
-// nor its opposite.
+// Missing values (date) always sort last, whichever direction is chosen --
+// an offer with no known publish date is neither "recent" nor its opposite.
 const offers = computed(() => {
   const list = [...filteredOffers.value]
-  if (sortBy.value === 'date_desc' || sortBy.value === 'date_asc') {
-    const sign = sortBy.value === 'date_desc' ? -1 : 1
+  if (sortBy.value === 'date_desc') {
     list.sort((a, b) => {
       if (!a.publishedAt) return 1
       if (!b.publishedAt) return -1
-      return sign * (a.publishedAt - b.publishedAt)
-    })
-  } else if (sortBy.value === 'salary_desc') {
-    // Freelance switches to dailyRateValue -- see freelanceSelected above;
-    // relabeled "TJM (décroissant)" in SORT_OPTIONS so it's clear which
-    // figure is being sorted.
-    const key = freelanceSelected.value ? 'dailyRateValue' : 'salaryValue'
-    list.sort((a, b) => {
-      if (!a[key]) return 1
-      if (!b[key]) return -1
-      return b[key] - a[key]
-    })
-  } else if (sortBy.value === 'ats_desc') {
-    list.sort((a, b) => b.scores.ats - a.scores.ats)
-  } else if (sortBy.value === 'ats_potential_desc') {
-    list.sort((a, b) => b.scores.potential - a.scores.potential)
-  } else if (sortBy.value === 'career_desc') {
-    list.sort((a, b) => b.scores.career - a.scores.career)
-  } else if (sortBy.value === 'regret_asc') {
-    // Lowest regret risk first; an employer with no score yet (not enough
-    // SimplyHired signal) sorts last, same "missing value sorts last" rule as
-    // date/salary above.
-    list.sort((a, b) => {
-      if (!a.regretAvailable) return 1
-      if (!b.regretAvailable) return -1
-      return a.regretScore - b.regretScore
+      return b.publishedAt - a.publishedAt
     })
   } else {
     // "Pertinence" -- ats_potential descending, same as the dashboard's
@@ -276,7 +256,7 @@ const pagedOffers = computed(() =>
   offers.value.slice((page.value - 1) * PAGE_SIZE, page.value * PAGE_SIZE)
 )
 
-watch([contractFilters, remoteFilter, salaryMin, sortBy], () => {
+watch([salaryMin, tjmMin, onlySalaryKnown, sortBy], () => {
   page.value = 1
 })
 watch(totalPages, (total) => {
@@ -381,15 +361,13 @@ const SCORE_EXPLANATIONS = computed(() => [
 // Dropdown open/close, including click-outside -- mirrors the mockup's own
 // toggleDropdown()/outside-click JS, ported to Vue refs instead of DOM
 // classList toggling.
-const filtersOpen = ref(false)
 const sortOpen = ref(false)
-const filtersRef = ref(null)
 const sortRef = ref(null)
 
+// The Salaire panel is now a real UiModal (backdrop click/Escape handled by
+// that component itself) -- only the Trier par dropdown still needs manual
+// click-outside handling.
 function onDocumentClick(event) {
-  if (filtersOpen.value && filtersRef.value && !filtersRef.value.contains(event.target)) {
-    filtersOpen.value = false
-  }
   if (sortOpen.value && sortRef.value && !sortRef.value.contains(event.target)) {
     sortOpen.value = false
   }
@@ -442,112 +420,24 @@ function selectSort(value) {
       <div class="min-w-0">
         <!-- Filters / sort row -->
         <div class="mb-3 flex flex-wrap items-center gap-3">
-          <div ref="filtersRef" class="relative">
-            <button
-              type="button"
-              class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft hover:bg-gray-50"
-              @click="filtersOpen = !filtersOpen"
+          <!-- Type de contrat / télétravail sont désormais de vrais filtres,
+               appliqués automatiquement depuis /preferences -- plus de
+               cases à cocher ici (voir profileContractTypes/
+               remoteFilterMode). Seul le salaire/TJM reste un réglage
+               ponctuel propre à cette page, d'où sa propre modale. -->
+          <button
+            type="button"
+            class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft hover:bg-gray-50"
+            @click="salaryModalOpen = true"
+          >
+            {{ $t('opportunites.salary_button') }}
+            <span
+              v-if="hasActiveFilters"
+              class="flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="h-[15px] w-[15px]"
-                aria-hidden="true"
-              >
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-              </svg>
-              {{ $t('opportunites.filters') }}
-              <span
-                v-if="hasActiveFilters"
-                class="flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"
-              >
-                {{ activeFilterChips.length }}
-              </span>
-            </button>
-            <div
-              v-if="filtersOpen"
-              class="absolute left-0 top-[calc(100%+6px)] z-20 w-72 rounded-xl border border-gray-200 bg-white p-4 shadow-card"
-            >
-              <div class="mb-3">
-                <p class="mb-2 text-xs font-semibold text-gray-500">
-                  {{ $t('opportunites.contract_type') }}
-                </p>
-                <div class="flex flex-wrap gap-2">
-                  <button
-                    v-for="opt in CONTRACT_OPTIONS"
-                    :key="opt"
-                    type="button"
-                    class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
-                    :class="
-                      contractFilters.includes(opt)
-                        ? 'border-brand bg-brand-light text-brand-text'
-                        : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                    "
-                    @click="toggleContractFilter(opt)"
-                  >
-                    {{ opt }}
-                  </button>
-                </div>
-              </div>
-              <div class="mb-3">
-                <p class="mb-2 text-xs font-semibold text-gray-500">
-                  {{ $t('opportunites.remote_work') }}
-                </p>
-                <div class="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
-                    :class="
-                      remoteFilter === 'onsite'
-                        ? 'border-brand bg-brand-light text-brand-text'
-                        : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                    "
-                    @click="toggleRemoteFilter('onsite')"
-                  >
-                    {{ $t('opportunites.onsite') }}
-                  </button>
-                  <button
-                    type="button"
-                    class="rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition"
-                    :class="
-                      remoteFilter === 'remote'
-                        ? 'border-brand bg-brand-light text-brand-text'
-                        : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                    "
-                    @click="toggleRemoteFilter('remote')"
-                  >
-                    {{ $t('opportunity.full_remote') }}
-                  </button>
-                </div>
-              </div>
-              <div class="mb-4">
-                <p class="mb-2 text-xs font-semibold text-gray-500">
-                  {{ $t(freelanceSelected ? 'opportunites.tjm_min' : 'opportunites.salary_min') }}
-                </p>
-                <UiSelect v-model="salaryMin" :options="salaryOptions" />
-              </div>
-              <div class="flex items-center justify-between">
-                <button
-                  type="button"
-                  class="text-xs font-semibold text-gray-500 hover:text-gray-700"
-                  @click="resetFilters"
-                >
-                  {{ $t('dashboard.filter_reset') }}
-                </button>
-                <button
-                  type="button"
-                  class="rounded-lg bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
-                  @click="filtersOpen = false"
-                >
-                  {{ $t('opportunites.apply') }}
-                </button>
-              </div>
-            </div>
-          </div>
+              {{ activeFilterChips.length }}
+            </span>
+          </button>
 
           <div ref="sortRef" class="relative">
             <button
@@ -1001,6 +891,80 @@ function selectSort(value) {
           </div>
         </div>
       </div>
+    </UiModal>
+
+    <UiModal v-model="salaryModalOpen" :title="$t('opportunites.salary_modal_title')" size="sm">
+      <div v-if="showsSalarySlider" class="mb-6">
+        <p class="mb-1 text-sm font-bold text-navy">{{ $t('opportunites.salary_min') }}</p>
+        <p class="mb-3 text-xs text-gray-500">{{ $t('opportunites.salary_estimate_caption') }}</p>
+        <div class="mb-4 grid grid-cols-3 text-center">
+          <div>
+            <p class="text-[11px] uppercase text-gray-400">{{ $t('opportunites.annual') }}</p>
+            <p class="text-base font-extrabold text-navy">{{ formatEuros(salaryMin) }} €</p>
+          </div>
+          <div>
+            <p class="text-[11px] uppercase text-gray-400">{{ $t('opportunites.monthly') }}</p>
+            <p class="text-base font-extrabold text-navy">
+              {{ formatEuros(monthlyFromAnnual(salaryMin)) }} €
+            </p>
+          </div>
+          <div>
+            <p class="text-[11px] uppercase text-gray-400">{{ $t('opportunites.hourly') }}</p>
+            <p class="text-base font-extrabold text-navy">
+              {{ formatEuros(hourlyFromAnnual(salaryMin), { decimals: 2 }) }} €
+            </p>
+          </div>
+        </div>
+        <input
+          v-model.number="salaryMin"
+          type="range"
+          min="0"
+          :max="SALARY_SLIDER_MAX"
+          :step="SALARY_SLIDER_STEP"
+          class="w-full accent-brand"
+          :aria-label="$t('opportunites.salary_min')"
+        />
+      </div>
+
+      <div v-if="showsFreelanceSlider" class="mb-6">
+        <p class="mb-3 text-sm font-bold text-navy">{{ $t('opportunites.tjm_min') }}</p>
+        <p class="mb-3 text-center text-base font-extrabold text-navy">
+          {{ $t('opportunites.tjm_min_label', { amount: formatEuros(tjmMin) }) }}
+        </p>
+        <input
+          v-model.number="tjmMin"
+          type="range"
+          min="0"
+          :max="TJM_SLIDER_MAX"
+          :step="TJM_SLIDER_STEP"
+          class="w-full accent-brand"
+          :aria-label="$t('opportunites.tjm_min')"
+        />
+      </div>
+
+      <label class="flex items-center justify-between gap-3">
+        <span class="text-sm text-navy">{{ $t('opportunites.only_salary_known') }}</span>
+        <UiToggle v-model="onlySalaryKnown" />
+      </label>
+
+      <template #footer>
+        <div class="flex items-center justify-between">
+          <button
+            type="button"
+            class="text-xs font-semibold text-gray-500 hover:text-gray-700"
+            @click="resetFilters"
+          >
+            {{ $t('dashboard.filter_reset') }}
+          </button>
+          <button
+            type="button"
+            class="rounded-lg bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
+            @click="salaryModalOpen = false"
+          >
+            {{ $t('opportunites.show_n_offers', { count: filteredOffers.length }) }}
+          </button>
+        </div>
+      </template>
     </UiModal>
   </div>
 </template>
