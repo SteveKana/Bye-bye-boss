@@ -225,8 +225,17 @@ const filteredOffers = computed(() =>
     const value = isFreelanceOffer ? offer.dailyRateValue : offer.salaryValue
     const threshold = isFreelanceOffer ? tjmMin.value : salaryMin.value
 
+    // "Afficher uniquement les offres avec un salaire renseigné" is the ONLY
+    // thing that excludes an offer for lacking salary/TJM data. Moving the
+    // slider above 0 must not silently do the same thing -- most offers
+    // simply never state a salary (see useMatchedOffers.js's salaryValue
+    // comment), so treating "unknown" as "below threshold" meant any minimum
+    // over 0 wiped out nearly the whole list (the bug Steve hit 2026-10-01:
+    // "systématiquement 0 résultats"). An unknown value is neither confirmed
+    // to meet the bar nor to miss it, so a threshold alone leaves it in;
+    // only a *known* value below the threshold is excluded.
     if (onlySalaryKnown.value && !value) return false
-    if (threshold > 0 && (value || 0) < threshold) return false
+    if (threshold > 0 && value !== null && value < threshold) return false
 
     return true
   })
