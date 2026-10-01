@@ -446,6 +446,18 @@ function selectSort(value) {
             >
               {{ activeFilterChips.length }}
             </span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-3.5 w-3.5"
+              aria-hidden="true"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </button>
 
           <div ref="sortRef" class="relative">
