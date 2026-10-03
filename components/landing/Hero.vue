@@ -1,9 +1,11 @@
 <script setup>
 // Faithful reproduction of the new landing hero (matchcareer.html mockup):
-// an "analysis card" showing one example offer scored on 4 axes (ATS,
-// Career, ATS Potential, Regret), with a mini breakdown of why the regret
-// score is high. Replaces the earlier dashboard-preview hero, which
+// an "analysis card" showing one example offer scored on 3 axes (ATS,
+// Career, ATS Potential). Replaces the earlier dashboard-preview hero, which
 // predates this design and still referenced the pre-launch waitlist.
+// The Regret gauge + "why the regret score is high" breakdown that used to
+// sit alongside this were removed 2026-10-03 (Steve: masquer toute mention
+// à l'indice de regret côté front).
 
 // A logged-in visitor has an account already -- clicking "Importer mon CV"
 // should actually let them import a CV (re-upload it), not send them to
@@ -76,13 +78,6 @@ const circumference = 163.36
 function offsetFor(value) {
   return (circumference * (100 - value)) / 100
 }
-
-const whyRegret = [
-  { key: 'landing.hero.why_regret_1', bad: true },
-  { key: 'landing.hero.why_regret_2', bad: false },
-  { key: 'landing.hero.why_regret_3', bad: true },
-  { key: 'landing.hero.why_regret_4', bad: true },
-]
 </script>
 
 <template>
@@ -163,7 +158,7 @@ const whyRegret = [
         </div>
 
         <!-- Score gauges -->
-        <div class="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div class="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
           <div v-for="g in gauges" :key="g.key" class="text-center">
             <div class="mb-1.5 text-[10.5px] font-semibold text-gray-500">
               {{ $t(g.labelKey) }}
@@ -191,60 +186,11 @@ const whyRegret = [
             </div>
             <div class="mt-1.5 text-[10px] leading-tight text-gray-500">{{ $t(g.subKey) }}</div>
           </div>
-
-          <!-- Regret gauge (its own colour scheme, so kept out of the loop) -->
-          <div class="text-center">
-            <div class="mb-1.5 text-[10.5px] font-semibold text-gray-500">
-              {{ $t('landing.hero.regret_label') }}
-            </div>
-            <div class="relative mx-auto h-16 w-16">
-              <svg viewBox="0 0 64 64" class="h-16 w-16 -rotate-90">
-                <circle cx="32" cy="32" r="26" fill="none" stroke="#FECDCD" stroke-width="6" />
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="26"
-                  fill="none"
-                  stroke="#FF4D4D"
-                  stroke-width="6"
-                  stroke-linecap="round"
-                  :stroke-dasharray="circumference"
-                  :stroke-dashoffset="offsetFor(72)"
-                />
-              </svg>
-              <div
-                class="absolute inset-0 flex items-center justify-center text-sm font-extrabold text-navy"
-              >
-                72<span class="text-[9px] font-medium text-gray-400">/100</span>
-              </div>
-            </div>
-            <div class="mt-1.5 text-[10px] font-semibold leading-tight text-danger">
-              {{ $t('landing.hero.regret_sub') }}
-            </div>
-          </div>
         </div>
 
-        <!-- Why the regret score is high -->
-        <div class="rounded-xl bg-gray-50 p-4">
-          <div class="mb-2.5 text-[11.5px] font-bold text-navy">
-            {{ $t('landing.hero.why_regret_title') }}
-          </div>
-          <div class="grid gap-2 sm:grid-cols-2">
-            <div
-              v-for="(item, i) in whyRegret"
-              :key="i"
-              class="flex items-start gap-2 text-[11.5px] text-gray-600"
-            >
-              <span
-                class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white"
-                :class="item.bad ? 'bg-danger' : 'bg-success'"
-              >
-                {{ item.bad ? '✕' : '✓' }}
-              </span>
-              {{ $t(item.key) }}
-            </div>
-          </div>
-        </div>
+        <!-- Regret gauge + "why the regret score is high" breakdown removed
+             2026-10-03 (Steve: masquer toute mention à l'indice de regret
+             côté front). -->
 
         <div class="mt-3 cursor-pointer text-center text-xs font-semibold text-brand">
           {{ $t('landing.hero.see_more') }}

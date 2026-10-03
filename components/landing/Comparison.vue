@@ -1,12 +1,13 @@
 <script setup>
 // Only the last column is a "yes" for everything — that is the point of the table.
+// 'regret' row removed 2026-10-03 (Steve: masquer toute mention à l'indice
+// de regret côté front).
 const rows = [
   { key: 'search', others: true },
   { key: 'ats', others: false },
   { key: 'career', others: false },
   { key: 'potential', others: false },
   { key: 'cv', others: false },
-  { key: 'regret', others: false, exclusive: true },
   { key: 'advice', others: false },
 ]
 const competitors = ['LinkedIn', 'Indeed', 'Welcome to the Jungle']

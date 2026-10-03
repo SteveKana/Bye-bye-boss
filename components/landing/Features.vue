@@ -1,4 +1,6 @@
 <script setup>
+// "regret" key removed from both offers' scores 2026-10-03 (Steve: masquer
+// toute mention à l'indice de regret côté front).
 const mailOffers = [
   {
     logo: 'DL',
@@ -7,7 +9,7 @@ const mailOffers = [
     company: 'Doctolib',
     loc: 'Paris, France · Hybride',
     tags: ['SQL', 'Python', 'Dashboard'],
-    scores: { ats: 91, career: 93, potential: 95, regret: 16 },
+    scores: { ats: 91, career: 93, potential: 95 },
     faded: false,
   },
   {
@@ -17,19 +19,18 @@ const mailOffers = [
     company: 'Inetum',
     loc: 'Paris, France · Hybride',
     tags: [],
-    scores: { ats: 84, career: 86, potential: 90, regret: 28 },
+    scores: { ats: 84, career: 86, potential: 90 },
     faded: true,
   },
 ]
 
-const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential', regret: 'Regret' }
+const scoreLabels = { ats: 'ATS', career: 'Career', potential: 'Potential' }
 
 // Full class names: Tailwind cannot generate classes built at runtime.
 const scoreColors = {
   ats: 'text-preview-ats',
   career: 'text-preview-career',
   potential: 'text-preview-potential',
-  regret: 'text-preview-regret',
 }
 </script>
 

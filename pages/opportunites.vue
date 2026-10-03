@@ -12,8 +12,7 @@
 // design work; this rebuild restores it.
 //
 // A few things from that mockup are still deliberately left out rather than
-// faked, same "never fabricate" policy as elsewhere in this app (see
-// pages/opportunity/[id].vue's header comment about the Regret Index):
+// faked, same "never fabricate" policy as elsewhere in this app:
 //   - The mockup's "534 offres analysées" badge and page-2-of-54 pagination
 //     scale -- this app has no such volume. GET /matching/top is the full
 //     scored pool there is, so the count shown here is its real length, and
@@ -22,20 +21,21 @@
 //     stores a single is_full_remote flag, nothing distinguishing "hybride"
 //     from "sur site", so the filter here is the honest 2-way version.
 //   - A "Localisation" (Paris / Île-de-France / France entière) filter --
-//     no normalized per-offer region data exists to filter on. The Regret
-//     column now shows a real score when the backend has enough SimplyHired
-//     signal for that employer, else "—" / "Pas assez de données", exactly
-//     like the detail page; sorting by it (lowest risk first) is available
-//     below, missing values sorting last like everywhere else on this page.
+//     no normalized per-offer region data exists to filter on.
 //   - The sidebar's "Premium" upsell card -- there's no subscription tier
 //     implemented; the backend spec for this section explicitly puts
 //     "Statut d'abonnement" out of MVP scope.
 //
+// The Regret Index column, its "Comprendre nos scores" entry and its sort
+// option were all removed 2026-10-03 (Steve: masquer/désactiver tout
+// l'indice de regret, front et back) -- the backend no longer sends
+// regret_availability/regret_score at all (see the API's CandidateMatchRead
+// schema), so there's nothing left to show here either.
+//
 // Polish pass after the first mockup-fidelity delivery: the funnel/chevron/
 // checkmark icons are now the mockup's real inline SVGs (an emoji had been
 // used as a placeholder and rendered inconsistently across platforms); two
-// sort options were added ("Potentiel ATS", "Score carrière" -- Regret Index
-// sort still deliberately left out, same reasoning as above).
+// sort options were added ("Potentiel ATS", "Score carrière").
 //
 // Also from that feedback: the shared app layout centers most pages at a
 // max-w-5xl (1024px) reading width, which is fine for a single list but
@@ -303,14 +303,9 @@ function tagsFor(offer) {
   return { shown: names.slice(0, 4).map(truncateTag), extra: Math.max(0, names.length - 4) }
 }
 
-// Higher regret score = more risk, so this color scale runs the opposite
-// way from the ATS/Career/Potential columns -- same thresholds as the
-// detail page's regretColorClass.
-function regretColorClass(score) {
-  if (score >= 60) return 'text-red-600'
-  if (score >= 35) return 'text-amber-600'
-  return 'text-green-600'
-}
+// regretColorClass removed 2026-10-03 (Steve: masquer toute mention à
+// l'indice de regret côté front) -- was only used by the card score
+// cluster below, also removed.
 
 onMounted(async () => {
   await loadCriteria()
@@ -328,13 +323,14 @@ function openOffer(offer) {
   navigateTo(`/opportunity/${offer.id}`)
 }
 
-// "Comprendre nos scores" -- was a `soon` placeholder toast; the four
-// blocks it now explains (ATS, Career, Potentiel, Regret) already exist as
-// real, computed scores elsewhere on this page, so there was real content
-// to show instead of stalling behind "bientôt disponible". Same four
-// labels/short codes as the score cluster on each offer card and on the
-// detail page (opportunity/[id]/index.vue's scoreBlocks) -- kept in sync
-// with those, not a separate vocabulary.
+// "Comprendre nos scores" -- was a `soon` placeholder toast; the blocks it
+// now explains (ATS, Career, Potentiel) already exist as real, computed
+// scores elsewhere on this page, so there was real content to show instead
+// of stalling behind "bientôt disponible". Same labels/short codes as the
+// score cluster on each offer card and on the detail page
+// (opportunity/[id]/index.vue's scoreBlocks) -- kept in sync with those,
+// not a separate vocabulary. The "regret" entry was removed 2026-10-03
+// (Steve: masquer toute mention à l'indice de regret côté front).
 const scoresModalOpen = ref(false)
 const SCORE_EXPLANATIONS = computed(() => [
   {
@@ -357,13 +353,6 @@ const SCORE_EXPLANATIONS = computed(() => [
     title: t('opportunites.score_potential_title'),
     text: t('opportunites.score_potential_text'),
     badgeClass: 'bg-brand-light text-brand-text',
-  },
-  {
-    key: 'regret',
-    short: 'REG',
-    title: t('opportunites.score_regret_title'),
-    text: t('opportunites.score_regret_text'),
-    badgeClass: 'bg-red-100 text-red-700',
   },
 ])
 
@@ -694,8 +683,7 @@ function selectSort(value) {
                       offer.dailyRateLabel || offer.salaryLabel
                     }}</span>
                     <!-- Moved here from the scores column on the right: it's
-                    metadata about the offer, same family as location/salary,
-                    not something that belongs floating under "Regret". -->
+                    metadata about the offer, same family as location/salary. -->
                     <span v-if="offer.publishedAgo" class="inline-flex items-center gap-0.5">
                       🕓 {{ offer.publishedAgo }}
                       <UiWarningHint
@@ -750,9 +738,9 @@ function selectSort(value) {
 
               <!-- `sm:pt-6`: on desktop this column sits at the same
               top-right corner as the always-hoverable reject "✕" (absolute,
-              top-3/right-3) -- without this, "Regret" rendered directly
-              under it. Mobile stacks this column last, well below the
-              button, so no offset needed there. -->
+              top-3/right-3) -- without this, the score cluster rendered
+              directly under it. Mobile stacks this column last, well below
+              the button, so no offset needed there. -->
               <div
                 class="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2 sm:pt-6"
               >
@@ -769,21 +757,8 @@ function selectSort(value) {
                     <p class="text-[10px] font-medium text-gray-400">Potential</p>
                     <p class="text-lg font-extrabold text-brand">{{ offer.scores.potential }}</p>
                   </div>
-                  <!-- Regret Index: real score when available, else an
-                       honest "—" -- see the detail page's identical note. -->
-                  <div class="text-center">
-                    <p class="text-[10px] font-medium text-gray-400">Regret</p>
-                    <p
-                      class="text-lg font-extrabold"
-                      :class="
-                        offer.regretAvailable
-                          ? regretColorClass(offer.regretScore)
-                          : 'text-gray-300'
-                      "
-                    >
-                      {{ offer.regretAvailable ? offer.regretScore : '—' }}
-                    </p>
-                  </div>
+                  <!-- Regret Index block removed 2026-10-03 (Steve: masquer
+                       toute mention à l'indice de regret côté front). -->
                 </div>
                 <UiButton size="sm" variant="primary" @click.stop="openOffer(offer)">
                   {{ $t('opportunites.see_detail') }} →
