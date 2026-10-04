@@ -96,7 +96,7 @@
       "features": {
         "scores": {
           "title": "Scores transparents",
-          "text": "ATS, Career, Potential et Regret Index™ pour chaque offre."
+          "text": "ATS, Career et Potential pour chaque offre."
         },
         "reco": {
           "title": "Recommandations personnalisées",
@@ -253,7 +253,6 @@
     "adjust_link": "Ajuster mes critères de recherche",
     "sort_potential_desc": "Potentiel ATS",
     "sort_career_desc": "Score carrière",
-    "sort_regret_asc": "Regret Index (croissant)",
     "tjm_min": "TJM minimum",
     "tjm_min_label": "{amount} €/jour",
     "sort_tjm_desc": "TJM (décroissant)",
@@ -262,9 +261,7 @@
     "score_career_title": "Career",
     "score_career_text": "À quel point cette offre correspond à votre profil et à votre trajectoire, indépendamment des filtres automatiques du recruteur.",
     "score_potential_title": "ATS Potentiel",
-    "score_potential_text": "Le score ATS maximal que vous pourriez atteindre pour cette offre en optimisant votre CV (bouton « Adapter mon CV pour cette offre »), pas votre compatibilité actuelle.",
-    "score_regret_title": "Regret Index",
-    "score_regret_text": "Le risque de regretter ce poste une fois en poste, basé sur les avis de salariés de cette entreprise. Plus le chiffre est bas, mieux c'est ; « — » veut dire qu'on n'a pas assez d'avis fiables sur cette entreprise."
+    "score_potential_text": "Le score ATS maximal que vous pourriez atteindre pour cette offre en optimisant votre CV (bouton « Adapter mon CV pour cette offre »), pas votre compatibilité actuelle."
   },
   "opportunity": {
     "back": "← Retour au tableau de bord",
@@ -277,8 +274,6 @@
     "score_ats": "ATS",
     "score_career": "Career",
     "score_potential": "ATS Potentiel",
-    "regret_index": "Regret Index",
-    "regret_unavailable": "Pas assez de données",
     "trust_ok_title": "Aucun blocage rédhibitoire identifié",
     "trust_warning_title": "Point(s) de vigilance identifié(s)",
     "requirements_title": "Ce que recherche cette offre",
@@ -385,14 +380,6 @@
       "career_sub": "Fort potentiel d'évolution",
       "potential_label": "ATS Potential",
       "potential_sub": "+18 points possibles avec quelques optimisations",
-      "regret_label": "Indice de regret à 12 mois",
-      "regret_badge": "Élevé",
-      "regret_sub": "Risque élevé de regret selon les retours des salariés",
-      "why_regret_title": "Pourquoi cet indice de regret ?",
-      "why_regret_1": "Management souvent critiqué sur Reddit (micro-management)",
-      "why_regret_2": "Peu d'opportunités d'évolution en interne",
-      "why_regret_3": "Turn-over élevé dans l'équipe Product",
-      "why_regret_4": "Écart entre les promesses de l'offre et la réalité",
       "see_more": "Voir l'analyse complète et les recommandations →"
     },
     "waitlist": {
@@ -418,10 +405,6 @@
         "targeting": {
           "title": "Mauvais ciblage",
           "text": "Vous postulez à des offres trop éloignées de vos objectifs."
-        },
-        "regret": {
-          "title": "Risque de regret",
-          "text": "L'entreprise ou le poste pourrait vous décevoir à moyen terme."
         }
       }
     },
@@ -468,7 +451,6 @@
         "career": "Compatibilité carrière",
         "potential": "ATS Potential (potentiel d'amélioration)",
         "cv": "CV mis à jour automatiquement selon l'offre",
-        "regret": "Indice de regret à 12 mois (avis salariés & ex-salariés)",
         "advice": "Conseils d'optimisation personnalisés"
       }
     },
@@ -485,13 +467,7 @@
       "ats_sub": "Parfois, quelques ajustements suffisent à tout changer.",
       "ats_current": "ATS actuel",
       "ats_potential": "ATS potentiel",
-      "ats_btn": "Améliorations suggérées automatiquement",
-      "regret_title": "Ne passez pas à côté… ni à côté de vous-même.",
-      "regret_sub": "Notre indice de regret est basé sur les avis réels des salariés et ex-salariés.",
-      "regret_level": "Risque de regret :",
-      "regret_high": "ÉLEVÉ",
-      "regret_desc": "De nombreux retours négatifs sur le management, le turn-over et l'évolution interne.",
-      "regret_source": "Données collectées via Reddit et analysées par notre IA"
+      "ats_btn": "Améliorations suggérées automatiquement"
     },
     "cta": {
       "title": "Découvrez les offres qui valent votre temps.",

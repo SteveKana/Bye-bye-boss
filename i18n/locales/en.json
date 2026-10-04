@@ -96,7 +96,7 @@
       "features": {
         "scores": {
           "title": "Transparent scores",
-          "text": "ATS, Career, Potential and Regret Index™ for every offer."
+          "text": "ATS, Career and Potential for every offer."
         },
         "reco": {
           "title": "Personalised recommendations",
@@ -253,7 +253,6 @@
     "adjust_link": "Adjust my search criteria",
     "sort_potential_desc": "ATS potential",
     "sort_career_desc": "Career score",
-    "sort_regret_asc": "Regret Index (lowest first)",
     "tjm_min": "Minimum daily rate",
     "tjm_min_label": "€{amount}/day",
     "sort_tjm_desc": "Daily rate (highest first)",
@@ -262,9 +261,7 @@
     "score_career_title": "Career",
     "score_career_text": "How well this offer fits your profile and career path, independent of the recruiter's automated filters.",
     "score_potential_title": "ATS Potential",
-    "score_potential_text": "The highest ATS score you could reach for this offer by optimizing your CV (the \"Adapt my CV for this offer\" button) — not your current match.",
-    "score_regret_title": "Regret Index",
-    "score_regret_text": "The risk of regretting this job once hired, based on employee reviews of this company. Lower is better; \"—\" means there isn't enough reliable review data on this company yet."
+    "score_potential_text": "The highest ATS score you could reach for this offer by optimizing your CV (the \"Adapt my CV for this offer\" button) — not your current match."
   },
   "opportunity": {
     "back": "← Back to dashboard",
@@ -277,8 +274,6 @@
     "score_ats": "ATS",
     "score_career": "Career",
     "score_potential": "ATS Potential",
-    "regret_index": "Regret Index",
-    "regret_unavailable": "Not enough data",
     "trust_ok_title": "No dealbreaker identified",
     "trust_warning_title": "Point(s) of attention identified",
     "requirements_title": "What this offer is looking for",
@@ -385,14 +380,6 @@
       "career_sub": "Strong growth potential",
       "potential_label": "ATS Potential",
       "potential_sub": "+18 points possible with a few tweaks",
-      "regret_label": "12-month regret index",
-      "regret_badge": "High",
-      "regret_sub": "High risk of regret based on employee feedback",
-      "why_regret_title": "Why this regret index?",
-      "why_regret_1": "Management often criticized on Reddit (micro-management)",
-      "why_regret_2": "Few internal growth opportunities",
-      "why_regret_3": "High turnover in the Product team",
-      "why_regret_4": "Gap between the job posting's promises and reality",
       "see_more": "See the full analysis and recommendations →"
     },
     "waitlist": {
@@ -418,10 +405,6 @@
         "targeting": {
           "title": "Poor targeting",
           "text": "You apply to offers too far from your goals."
-        },
-        "regret": {
-          "title": "Regret risk",
-          "text": "The company or role could disappoint you mid-term."
         }
       }
     },
@@ -468,7 +451,6 @@
         "career": "Career fit",
         "potential": "ATS Potential (improvement headroom)",
         "cv": "Resume auto-tailored to the offer",
-        "regret": "12-month regret index (employee & former-employee reviews)",
         "advice": "Personalised optimisation tips"
       }
     },
@@ -485,13 +467,7 @@
       "ats_sub": "Sometimes a few adjustments change everything.",
       "ats_current": "Current ATS",
       "ats_potential": "Potential ATS",
-      "ats_btn": "Improvements suggested automatically",
-      "regret_title": "Don't miss out… or miss yourself.",
-      "regret_sub": "Our regret index is based on real reviews from employees and former employees.",
-      "regret_level": "Regret risk:",
-      "regret_high": "HIGH",
-      "regret_desc": "Many negative reports about management, turnover and internal growth.",
-      "regret_source": "Data collected via Reddit and analysed by our AI"
+      "ats_btn": "Improvements suggested automatically"
     },
     "cta": {
       "title": "Discover the offers worth your time.",

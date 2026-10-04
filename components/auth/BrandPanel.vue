@@ -25,11 +25,12 @@ const icons = {
 const keys = computed(() => featureKeys[props.variant] || featureKeys.login)
 
 // Static preview data (mockup values).
+// Regret Index™ entry removed 2026-10-03 (Steve: masquer toute mention à
+// l'indice de regret côté front).
 const scores = [
   { label: 'ATS Score', value: 74, bar: 'bg-score-ats', width: '74%' },
   { label: 'Career Score', value: 89, bar: 'bg-score-career', width: '89%' },
   { label: 'ATS Potential', value: 92, bar: 'bg-score-potential', width: '92%' },
-  { label: 'Regret Index™', value: 72, bar: 'bg-score-regret', width: '72%' },
 ]
 const avatars = ['🧑🏾', '👨🏻', '👩🏼', '👨🏽', '👩🏾']
 </script>
@@ -84,7 +85,7 @@ const avatars = ['🧑🏾', '👨🏻', '👩🏼', '👨🏽', '👩🏾']
         <div class="mb-3 text-[11px] font-semibold text-white/50">
           {{ $t('brand.login.preview_label') }}
         </div>
-        <div class="mb-3 grid grid-cols-4 gap-2.5">
+        <div class="mb-3 grid grid-cols-3 gap-2.5">
           <div v-for="s in scores" :key="s.label" class="rounded-lg bg-white/[0.06] px-2 py-2.5">
             <div class="mb-1 whitespace-nowrap text-[9px] font-semibold text-white/40">
               {{ s.label }}

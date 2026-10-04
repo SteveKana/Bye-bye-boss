@@ -51,11 +51,9 @@ export function useMatchedOffers(rawMatches) {
           ats: match.ats_score,
           potential: match.ats_potential,
         },
-        // Real, Reddit-sourced score when the backend has enough signal for
-        // this employer (see CompanyRegretProfile), else null -- never a
-        // fabricated number.
-        regretAvailable: match.regret_availability === 'available',
-        regretScore: match.regret_score,
+        // regretAvailable/regretScore removed 2026-10-03 (Steve: masquer/
+        // désactiver tout l'indice de regret, front et back) -- the backend
+        // no longer sends these fields at all.
         // Full LLM analysis (job_skills/matches/ats_gaps/...) -- GET
         // /matching/top returns the same shape as GET /matching/{id}, not a
         // lighter list shape, so this is free to carry along. Only the

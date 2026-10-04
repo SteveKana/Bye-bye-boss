@@ -17,11 +17,13 @@ export default {
         danger: { DEFAULT: '#DC2626', light: '#FEE2E2' },
         warning: { DEFAULT: '#F59E0B', light: '#FFEDD5' },
         // Score accents used by the auth preview widget (from the mockups).
+        // "regret" tokens removed 2026-10-03 (Steve: masquer toute mention
+        // à l'indice de regret côté front) -- bg-score-regret/text-preview-
+        // regret are no longer referenced anywhere.
         score: {
           ats: '#5B3FE8',
           career: '#00C48C',
           potential: '#22D3EE',
-          regret: '#FF6B6B',
         },
         // Landing product-preview accents (the landing mockup uses its own
         // score palette, different from the auth panel above).
@@ -29,7 +31,6 @@ export default {
           ats: '#00C48C',
           career: '#2D9CDB',
           potential: '#9B51E0',
-          regret: '#FFB547',
         },
       },
       fontFamily: {

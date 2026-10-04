@@ -1,9 +1,10 @@
 <script setup>
+// 'regret' card removed 2026-10-03 (Steve: masquer toute mention à
+// l'indice de regret côté front).
 const cards = [
   { key: 'profile', icon: '👤', tone: 'bg-success-light' },
   { key: 'ats', icon: '📄', tone: 'bg-warning-light' },
   { key: 'targeting', icon: '🎯', tone: 'bg-danger-light' },
-  { key: 'regret', icon: '😟', tone: 'bg-brand-light' },
 ]
 </script>
 
@@ -15,7 +16,7 @@ const cards = [
       </div>
       <h2 class="mb-10 text-3xl font-extrabold text-navy">{{ $t('landing.why.title') }}</h2>
 
-      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <div
           v-for="c in cards"
           :key="c.key"
