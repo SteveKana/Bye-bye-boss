@@ -122,7 +122,7 @@ const requirementGroups = computed(() => {
 })
 
 const headerSkillTags = computed(() => {
-  const names = (analysis.value.job_skills || []).map((s) => s.skill).filter(Boolean)
+  const names = (analysis.value.job_skills || []).map((s) => s.label || s.skill).filter(Boolean)
   return { shown: names.slice(0, 4), extra: Math.max(0, names.length - 4) }
 })
 
@@ -422,7 +422,7 @@ async function openExternalOffer() {
                       : 'border-brand-light bg-brand-light text-brand-dark'
                   "
                 >
-                  {{ item.skill }}
+                  {{ item.label || item.skill }}
                 </span>
               </div>
             </div>
@@ -455,7 +455,7 @@ async function openExternalOffer() {
                 <span
                   class="w-0 flex-1 truncate text-[12.5px] font-medium text-navy sm:w-60 sm:flex-none"
                 >
-                  {{ item.skill }}
+                  {{ item.label || item.skill }}
                 </span>
                 <div class="hidden h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100 sm:block">
                   <div
@@ -520,7 +520,9 @@ async function openExternalOffer() {
               :key="index"
               class="rounded-lg bg-gray-50 p-3.5"
             >
-              <div class="mb-1.5 text-[13.5px] font-bold text-navy">{{ gap.skill }}</div>
+              <div class="mb-1.5 text-[13.5px] font-bold text-navy">
+                {{ gap.label || gap.skill }}
+              </div>
               <p v-if="gap.why_it_matters" class="mb-1 text-[12.5px] leading-relaxed text-gray-700">
                 <strong class="font-bold text-navy">{{ $t('opportunity.gap_why_label') }}</strong>
                 {{ gap.why_it_matters }}
