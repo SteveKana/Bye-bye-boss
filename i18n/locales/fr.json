@@ -669,6 +669,7 @@
     "confirm_note": "Cette action enregistre votre choix d'utiliser cette version pour cette candidature, et télécharge le CV au format PDF.",
     "confirmed": "Variante créée pour cette candidature",
     "download_again_button": "Télécharger à nouveau le PDF",
+    "apply_button": "Postuler à l'offre →",
     "confirm_success": "Variante de CV créée et téléchargée.",
     "confirm_error": "Impossible d'enregistrer cette variante pour le moment.",
     "pdf_download_error": "Le téléchargement du PDF a échoué. Réessayez."
