@@ -299,7 +299,7 @@ function reasonsFor(offer) {
     .map((text) => ({ ok: true, text }))
   const gap = (offer.analysis.ats_gaps || [])[0]
   const negative = gap
-    ? [{ ok: false, text: t('opportunites.gap_reason', { skill: gap.skill }) }]
+    ? [{ ok: false, text: t('opportunites.gap_reason', { skill: gap.label || gap.skill }) }]
     : []
   return [...positives, ...negative]
 }
@@ -316,7 +316,7 @@ function truncateTag(name) {
 }
 
 function tagsFor(offer) {
-  const names = (offer.analysis.job_skills || []).map((s) => s.skill).filter(Boolean)
+  const names = (offer.analysis.job_skills || []).map((s) => s.label || s.skill).filter(Boolean)
   return { shown: names.slice(0, 4).map(truncateTag), extra: Math.max(0, names.length - 4) }
 }
 
