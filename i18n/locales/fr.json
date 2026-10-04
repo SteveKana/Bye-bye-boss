@@ -1,5 +1,6 @@
 {
   "common": {
+    "load_error": "Impossible de charger vos informations pour le moment. Réessayez dans quelques instants.",
     "or": "ou",
     "email": "Email",
     "password": "Mot de passe",
@@ -740,7 +741,20 @@
     "frequency_fixed_hint": "Fixée à un envoi quotidien, vers 18h30.",
     "frequency_daily": "Résumé quotidien",
     "account": "Compte",
-    "delete_account": "Supprimer mon compte"
+    "delete_account": "Supprimer mon compte",
+    "delete_title": "Supprimer mon compte",
+    "delete_warning": "Cette action est définitive et ne peut pas être annulée. Seront supprimés :",
+    "delete_items": [
+      "votre compte et votre profil",
+      "votre CV importé",
+      "vos offres et leurs analyses",
+      "vos CV optimisés",
+      "vos préférences et notifications"
+    ],
+    "delete_confirm_label": "Pour confirmer, saisissez votre adresse email ({email})",
+    "delete_cancel": "Annuler",
+    "delete_confirm_button": "Supprimer définitivement",
+    "delete_error": "La suppression du compte a échoué. Merci de réessayer."
   },
   "availability": {
     "opt_immediate": "Immédiatement",

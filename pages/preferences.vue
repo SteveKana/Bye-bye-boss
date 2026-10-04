@@ -22,7 +22,11 @@ onMounted(async () => {
     const profile = onboarding.profile || (await onboarding.fetchProfile())
     location.value = profile.location || ''
     formRef.value.applyProfile(profile)
-  } catch {
+  } catch (err) {
+    if (!isNoProfileError(err)) {
+      toast.error(t('common.load_error'))
+      return
+    }
     // No profile yet (CV not imported) -- send to the importer, same as
     // every other profile-dependent page.
     await navigateTo('/onboarding/upload')

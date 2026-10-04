@@ -22,7 +22,11 @@ onMounted(async () => {
     const profile = onboarding.profile || (await onboarding.fetchProfile())
     formRef.value.applyProfile(profile)
     ready.value = true
-  } catch {
+  } catch (err) {
+    if (!isNoProfileError(err)) {
+      toast.error(t('common.load_error'))
+      return
+    }
     // No profile to edit -- send back to the importer rather than showing
     // an empty form with nothing to save onto.
     await navigateTo('/onboarding/upload')

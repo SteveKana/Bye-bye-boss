@@ -122,6 +122,15 @@ export const useAuthStore = defineStore('auth', () => {
     clear()
   }
 
+  // Permanently deletes the account and all its data (DELETE /auth/me). The
+  // caller re-types their own email as the explicit confirmation. On
+  // success the local session is cleared too -- the old tokens are dead
+  // anyway.
+  async function deleteAccount(email) {
+    await useApi()('auth/me', { method: 'DELETE', body: { email } })
+    clear()
+  }
+
   return {
     accessToken,
     user,
@@ -141,5 +150,6 @@ export const useAuthStore = defineStore('auth', () => {
     changePassword,
     setTokens,
     clear,
+    deleteAccount,
   }
 })

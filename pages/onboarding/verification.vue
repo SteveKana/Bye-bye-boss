@@ -16,7 +16,11 @@ onMounted(async () => {
     const profile = onboarding.profile || (await onboarding.fetchProfile())
     formRef.value.applyProfile(profile)
     ready.value = true
-  } catch {
+  } catch (err) {
+    if (!isNoProfileError(err)) {
+      toast.error(t('common.load_error'))
+      return
+    }
     // No draft profile yet (no CV imported) — send the user back to step 1.
     await navigateTo('/onboarding/upload')
   }

@@ -20,9 +20,14 @@ export default defineNuxtRouteMiddleware(async () => {
   if (!profile) {
     try {
       profile = await onboarding.fetchProfile()
-    } catch {
+    } catch (err) {
       // No CV imported at all.
-      return navigateTo('/onboarding/upload')
+      if (isNoProfileError(err)) return navigateTo('/onboarding/upload')
+      // Server unreachable / erroring (e.g. mid-restart): that says nothing
+      // about whether a CV exists, so don't bounce the visitor to the
+      // importer. Let the page load; the profile is simply fetched again on
+      // the next navigation.
+      return
     }
   }
 

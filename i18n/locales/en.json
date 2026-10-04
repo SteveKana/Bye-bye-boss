@@ -1,5 +1,6 @@
 {
   "common": {
+    "load_error": "We couldn't load your information right now. Please try again in a moment.",
     "or": "or",
     "email": "Email",
     "password": "Password",
@@ -740,7 +741,20 @@
     "frequency_fixed_hint": "Fixed to one daily send, around 6:30 PM.",
     "frequency_daily": "Daily digest",
     "account": "Account",
-    "delete_account": "Delete my account"
+    "delete_account": "Delete my account",
+    "delete_title": "Delete my account",
+    "delete_warning": "This is permanent and cannot be undone. The following will be deleted:",
+    "delete_items": [
+      "your account and profile",
+      "your imported CV",
+      "your offers and their analyses",
+      "your optimised CVs",
+      "your preferences and notifications"
+    ],
+    "delete_confirm_label": "To confirm, type your email address ({email})",
+    "delete_cancel": "Cancel",
+    "delete_confirm_button": "Delete permanently",
+    "delete_error": "Deleting the account failed. Please try again."
   },
   "availability": {
     "opt_immediate": "Immediately",

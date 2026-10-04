@@ -12,6 +12,31 @@ const v = useValidators()
 
 const soon = () => toast.info(t('app.soon_full'))
 
+// --- Delete account ----------------------------------------------------
+const deleteModalOpen = ref(false)
+const deleteConfirmEmail = ref('')
+const deleting = ref(false)
+const deleteEmailMatches = computed(
+  () =>
+    !!auth.user?.email &&
+    deleteConfirmEmail.value.trim().toLowerCase() === auth.user.email.trim().toLowerCase()
+)
+
+async function confirmDeleteAccount() {
+  if (!deleteEmailMatches.value || deleting.value) return
+  deleting.value = true
+  try {
+    await auth.deleteAccount(deleteConfirmEmail.value.trim())
+    // Full page load (not a client-side route change): drops everything the
+    // stores still hold in memory about the deleted account.
+    await navigateTo('/', { external: true })
+  } catch (err) {
+    toast.error(err.message || t('settings.delete_error'))
+  } finally {
+    deleting.value = false
+  }
+}
+
 // --- Notifications (email/Discord/WhatsApp) --------------------------
 // See app/modules/notifications on the API. Email is a plain on/off toggle;
 // Discord and WhatsApp each need a value (webhook URL / phone number)
@@ -431,11 +456,52 @@ const changePassword = handleSubmit(async (values) => {
       </form>
 
       <div class="mt-6 border-t border-gray-100 pt-5">
-        <UiButton variant="secondary" class="border-danger/30 text-danger" @click="soon">
+        <UiButton
+          variant="secondary"
+          class="border-danger/30 text-danger"
+          @click="deleteModalOpen = true"
+        >
           {{ $t('settings.delete_account') }}
         </UiButton>
       </div>
     </UiCard>
+
+    <!-- Delete account: irreversible, so the visitor must re-type their own
+         email (Google-created accounts have no password to ask for). -->
+    <UiModal
+      v-model="deleteModalOpen"
+      :title="$t('settings.delete_title')"
+      size="sm"
+      :persistent="deleting"
+    >
+      <p class="mb-3 text-sm text-gray-700">{{ $t('settings.delete_warning') }}</p>
+      <ul class="mb-4 list-disc space-y-1 pl-5 text-[13px] text-gray-600">
+        <li v-for="item in $tm('settings.delete_items')" :key="item">{{ item }}</li>
+      </ul>
+      <UiInput
+        v-model="deleteConfirmEmail"
+        :label="$t('settings.delete_confirm_label', { email: auth.user?.email })"
+        type="email"
+        autocomplete="off"
+        @keyup.enter="confirmDeleteAccount"
+      />
+      <template #footer="{ close }">
+        <div class="flex justify-end gap-3">
+          <UiButton variant="secondary" :disabled="deleting" @click="close">
+            {{ $t('settings.delete_cancel') }}
+          </UiButton>
+          <UiButton
+            variant="primary"
+            class="!bg-danger"
+            :loading="deleting"
+            :disabled="!deleteEmailMatches"
+            @click="confirmDeleteAccount"
+          >
+            {{ $t('settings.delete_confirm_button') }}
+          </UiButton>
+        </div>
+      </template>
+    </UiModal>
 
     <!-- Language -->
     <UiCard :title="$t('profile.preferences')">
