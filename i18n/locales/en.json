@@ -669,6 +669,7 @@
     "confirm_note": "This records your choice to use this version for this application, and downloads the CV as a PDF.",
     "confirmed": "Variant created for this application",
     "download_again_button": "Download the PDF again",
+    "apply_button": "Apply to the listing →",
     "confirm_success": "CV variant created and downloaded.",
     "confirm_error": "Couldn't save this variant right now.",
     "pdf_download_error": "The PDF download failed. Please try again."

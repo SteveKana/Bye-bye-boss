@@ -24,6 +24,7 @@ const route = useRoute()
 const api = useApi()
 const toast = useToast()
 const onboarding = useOnboardingStore()
+const { markApplied } = useApplicationStatus()
 
 const loading = ref(true)
 const notFound = ref(false)
@@ -149,6 +150,19 @@ async function confirmVariant() {
   // here (network hiccup, etc.) gets its own toast from downloadCvPdf and
   // the "download again" button on the confirmed state below covers it.
   await downloadCvPdf()
+}
+
+// "Postuler à l'offre" -- shown once the variant is created, so the candidate
+// isn't left hanging after downloading the CV. Same behaviour as "Voir
+// l'offre" on the opportunity page: open the listing, and record the
+// application (idempotent, never blocks the navigation -- see
+// useApplicationStatus's markApplied()). window.open runs before anything
+// is awaited so the browser's popup blocker lets it through.
+async function applyToOffer() {
+  if (!offer.value?.url) return
+  window.open(offer.value.url, '_blank', 'noopener')
+  const updated = await markApplied(route.params.id)
+  if (updated) match.value = updated
 }
 
 // side_by_side | changes_only -- a real, working toggle (see docstring
@@ -634,6 +648,14 @@ const atsDelta = computed(() =>
               </p>
             </template>
           </UiCard>
+
+          <!-- Next step once the variant exists (desktop; the mobile bar
+          below has its own copy). -->
+          <UiCard v-if="optimization.confirmed_at && offer?.url" class="hidden lg:block">
+            <UiButton variant="primary" block @click="applyToOffer">
+              {{ $t('cvOptimize.apply_button') }}
+            </UiButton>
+          </UiCard>
         </div>
       </div>
 
@@ -664,16 +686,27 @@ const atsDelta = computed(() =>
             </p>
           </button>
         </div>
-        <UiButton
-          v-if="optimization.confirmed_at"
-          variant="secondary"
-          size="sm"
-          block
-          :loading="downloadingPdf"
-          @click="downloadCvPdf"
-        >
-          {{ $t('cvOptimize.download_again_button') }}
-        </UiButton>
+        <template v-if="optimization.confirmed_at">
+          <UiButton
+            variant="secondary"
+            size="sm"
+            block
+            :loading="downloadingPdf"
+            @click="downloadCvPdf"
+          >
+            {{ $t('cvOptimize.download_again_button') }}
+          </UiButton>
+          <UiButton
+            v-if="offer?.url"
+            class="mt-2"
+            variant="primary"
+            size="sm"
+            block
+            @click="applyToOffer"
+          >
+            {{ $t('cvOptimize.apply_button') }}
+          </UiButton>
+        </template>
         <UiButton
           v-else
           variant="primary"
@@ -685,7 +718,12 @@ const atsDelta = computed(() =>
           {{ $t('cvOptimize.confirm_button') }}
         </UiButton>
       </div>
-      <div v-if="optimization" class="h-28 lg:hidden" aria-hidden="true" />
+      <div
+        v-if="optimization"
+        class="lg:hidden"
+        :class="optimization.confirmed_at && offer?.url ? 'h-44' : 'h-28'"
+        aria-hidden="true"
+      />
     </div>
   </div>
 </template>
