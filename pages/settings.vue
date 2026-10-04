@@ -268,7 +268,7 @@ const changePassword = handleSubmit(async (values) => {
     </UiCard>
 
     <!-- Notifications -->
-    <UiCard class="mb-4" :title="$t('settings.notifications')">
+    <UiCard id="notifications" class="mb-4 scroll-mt-20" :title="$t('settings.notifications')">
       <p class="mb-4 text-[13px] text-gray-500">{{ $t('settings.notifications_sub') }}</p>
 
       <div v-if="prefsLoading" class="py-6 text-center text-sm text-gray-500">
