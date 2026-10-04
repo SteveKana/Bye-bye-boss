@@ -1,6 +1,8 @@
 <script setup>
-// Dashboard -- a 5-row preview of the best matches, no filters/sort. The
-// exhaustive list (all scored matches, with real filters) lives on the
+// Dashboard -- today's "Top 5 des opportunités": only offers the candidate
+// has not been shown yet (the backend's GET /matching/dashboard counts the
+// 24h from the last time they were exposed to them), never one they already
+// applied to. The history (25 most recent offers, with an ATS filter) lives on the
 // separate "Opportunités" page (pages/opportunites.vue), linked via
 // "Voir toutes les opportunités" below -- see the mockups (dashboard.html
 // vs opportunites.html): they're deliberately two different views over the
@@ -16,7 +18,10 @@ const { criteria, load: loadCriteria } = useSearchCriteria()
 const loadingOpportunities = ref(true)
 
 const TOP_COUNT = 5
-const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOpportunities))
+const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.dashboardOpportunities))
+
+// "Top 5 des opportunités pour vous au jj/mm/aaaa" -- today's date.
+const todayLabel = new Date().toLocaleDateString('fr-FR')
 
 // A brand-new profile's very first matching run fires in the background
 // right after onboarding completes (see the backend's
@@ -45,12 +50,18 @@ const { pause: stopPolling, resume: startPolling } = useIntervalFn(
   async () => {
     pollAttempts += 1
     try {
-      await matching.fetchTop()
+      await matching.fetchDashboard()
     } catch {
       // Same as the initial fetch below -- keep retrying silently rather
       // than surfacing an error toast for what reads as "no offers yet".
     }
-    if (topOffers.value.length > 0 || pollAttempts >= MAX_POLL_ATTEMPTS) {
+    if (topOffers.value.length > 0) loadingOpportunities.value = false
+    // Keep going while offers are shown without their scores yet -- the
+    // scores land when the nightly OpenAI batch finishes (usually within
+    // minutes to a few hours, see the loading copy); the 4-minute cap then
+    // just stops the polling, the next visit shows them.
+    if (!hasPending.value && topOffers.value.length > 0) stopPolling()
+    if (pollAttempts >= MAX_POLL_ATTEMPTS) {
       stopPolling()
       loadingOpportunities.value = false
     }
@@ -59,20 +70,19 @@ const { pause: stopPolling, resume: startPolling } = useIntervalFn(
   { immediate: false }
 )
 
-// Best real odds of getting past the recruiter's ATS once the CV is
-// adapted (ats_potential), not just a good abstract career fit -- same
-// "Pertinence" ordering the full Opportunités page defaults to.
+// Same order as the backend's answer (best first, offers still being
+// analysed after the scored ones) -- the 5-offer cap is applied by the
+// backend too, this slice is only a safety net.
 const topOffers = computed(() =>
-  [...matchedOffers.value]
-    .sort((a, b) => b.scores.potential - a.scores.potential)
-    .slice(0, TOP_COUNT)
-    .map((offer, index) => ({ ...offer, rank: index + 1 }))
+  matchedOffers.value.slice(0, TOP_COUNT).map((offer, index) => ({ ...offer, rank: index + 1 }))
 )
+
+const hasPending = computed(() => topOffers.value.some((offer) => offer.isPending))
 
 onMounted(async () => {
   await loadCriteria()
   try {
-    await matching.fetchTop()
+    await matching.fetchDashboard()
   } catch {
     // No profile yet, profile not "complete", or nothing scored yet -- all
     // read as "no opportunities yet", same honest empty state as before,
@@ -80,6 +90,8 @@ onMounted(async () => {
   } finally {
     if (topOffers.value.length > 0) {
       loadingOpportunities.value = false
+      // Offers already there but some still without scores: keep refreshing.
+      if (hasPending.value) startPolling()
     } else {
       // Still nothing: could be a first-time profile whose immediate
       // matching run hasn't finished yet, so keep the skeleton up and poll
@@ -106,7 +118,6 @@ function openOffer(offer) {
         <h1 class="text-2xl font-extrabold text-navy">
           {{ $t('dashboard.greeting', { name: firstName }) }} 👋
         </h1>
-        <p class="mt-1 text-sm text-gray-500">{{ $t('dashboard.greeting_sub') }}</p>
       </div>
       <UiButton variant="secondary" size="sm" @click="navigateTo('/settings')"
         >🔔 {{ $t('dashboard.alerts') }}</UiButton
@@ -125,7 +136,9 @@ function openOffer(offer) {
           >
             ⭐
           </span>
-          <h2 class="text-lg font-bold text-navy">{{ $t('dashboard.top_title') }}</h2>
+          <h2 class="text-lg font-bold text-navy">
+            {{ $t('dashboard.top_title', { date: todayLabel }) }}
+          </h2>
         </div>
         <p class="mt-1 text-[13px] text-gray-500">{{ $t('dashboard.top_sub') }}</p>
       </template>
@@ -175,15 +188,12 @@ function openOffer(offer) {
             <div class="line-clamp-2 text-sm font-bold text-navy">{{ offer.title }}</div>
             <div class="text-[12.5px] text-gray-500">{{ offer.company }} · {{ offer.loc }}</div>
             <div class="mt-1 flex flex-wrap items-center gap-1.5">
+              <AppFitBadge :fit="offer.fit" />
               <span
-                class="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-                :class="
-                  offer.strong
-                    ? 'bg-success-light text-success-text'
-                    : 'bg-amber-100 text-amber-700'
-                "
+                v-if="offer.isPending"
+                class="inline-block rounded-full bg-gray-100 px-2.5 py-0.5 text-[10px] font-bold text-gray-500"
               >
-                {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
+                {{ $t('dashboard.analysis_pending') }}
               </span>
               <span
                 v-if="offer.contractTag"
@@ -210,17 +220,17 @@ function openOffer(offer) {
             </div>
           </div>
 
-          <div class="hidden shrink-0 gap-5 sm:flex">
-            <div class="min-w-[40px] text-center">
-              <div class="text-[10.5px] font-semibold text-gray-400">ATS</div>
-              <div class="text-sm font-extrabold text-green-600">{{ offer.scores.ats }}</div>
-            </div>
+          <div v-if="!offer.isPending" class="hidden shrink-0 gap-5 sm:flex">
             <div class="min-w-[40px] text-center">
               <div class="text-[10.5px] font-semibold text-gray-400">Career</div>
               <div class="text-sm font-extrabold text-blue-600">{{ offer.scores.career }}</div>
             </div>
             <div class="min-w-[40px] text-center">
-              <div class="text-[10.5px] font-semibold text-gray-400">Potential</div>
+              <div class="text-[10.5px] font-semibold text-gray-400">ATS</div>
+              <div class="text-sm font-extrabold text-green-600">{{ offer.scores.ats }}</div>
+            </div>
+            <div class="min-w-[40px] text-center">
+              <div class="text-[10.5px] font-semibold text-gray-400">ATS Potential</div>
               <div class="text-sm font-extrabold text-brand">{{ offer.scores.potential }}</div>
             </div>
           </div>

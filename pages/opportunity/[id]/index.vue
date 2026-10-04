@@ -65,7 +65,14 @@ useHead({
 const offer = computed(() => match.value?.offer || null)
 const analysis = computed(() => match.value?.analysis || {})
 
-const strongFit = computed(() => !!match.value && match.value.ats_potential >= STRONG_FIT_THRESHOLD)
+// An offer still being analysed (status placeholder/pending) has no scores or
+// analysis yet -- the scores card and the "adapt my CV" buttons are replaced
+// by an "analyse en cours" notice (the backend refuses a CV optimisation for
+// it anyway).
+const isPending = computed(() => !!match.value && match.value.status !== 'scored')
+const fit = computed(() =>
+  match.value && !isPending.value ? fitLevel(match.value.ats_potential) : null
+)
 
 const salaryLabel = computed(() => offerSalaryLabel(offer.value))
 
@@ -223,16 +230,7 @@ async function openExternalOffer() {
             <div class="min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-2">
                 <h1 class="text-xl font-extrabold text-navy">{{ offer.title }}</h1>
-                <span
-                  class="inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold"
-                  :class="
-                    strongFit
-                      ? 'bg-success-light text-success-text'
-                      : 'bg-warning-light text-warning'
-                  "
-                >
-                  ★ {{ strongFit ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
-                </span>
+                <AppFitBadge :fit="fit" />
               </div>
               <p class="mt-0.5 text-[14.5px] font-semibold text-gray-700">
                 {{ match.company_name || offer.company_name }}
@@ -315,7 +313,7 @@ async function openExternalOffer() {
              (Steve, screenshot from a WhatsApp-alert click on mobile).
              Duplicated rather than reflowed with `order` because the two
              columns are separate DOM subtrees, not siblings in one grid. -->
-        <UiCard class="bg-brand-light lg:hidden">
+        <UiCard v-if="!isPending" class="bg-brand-light lg:hidden">
           <h3 class="mb-2 text-[15px] font-bold text-navy">
             📝 {{ $t('opportunity.ready_title') }}
           </h3>
@@ -345,7 +343,12 @@ async function openExternalOffer() {
         </UiCard>
 
         <!-- Scores -->
-        <UiCard>
+        <UiCard v-if="isPending">
+          <p class="text-sm font-semibold text-gray-500">
+            ⏳ {{ $t('opportunity.analysis_pending') }}
+          </p>
+        </UiCard>
+        <UiCard v-else>
           <div class="grid grid-cols-2 gap-5 sm:grid-cols-3">
             <div v-for="block in scoreBlocks" :key="block.key">
               <div class="text-[12.5px] font-semibold text-gray-500">{{ block.label }}</div>
@@ -595,7 +598,7 @@ async function openExternalOffer() {
 
         <!-- Desktop original -- see the lg:hidden mobile copy above the
              description for why this is now hidden below lg. -->
-        <UiCard class="hidden bg-brand-light lg:block">
+        <UiCard v-if="!isPending" class="hidden bg-brand-light lg:block">
           <h3 class="mb-2 text-[15px] font-bold text-navy">
             📝 {{ $t('opportunity.ready_title') }}
           </h3>

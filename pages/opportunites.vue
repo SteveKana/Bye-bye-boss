@@ -75,6 +75,12 @@ const debugSourceFilter = computed(() => route.query.source || null)
 const loading = ref(true)
 const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOpportunities))
 
+// ATS filter (Steve, 2026-10-04): by default only offers with an ATS score
+// of 75 or more are listed; the candidate can lower/raise the bar. An offer
+// still being analysed has no ATS score yet, so it is never hidden by this
+// filter -- that is what a brand-new profile sees first.
+const minAts = ref(DEFAULT_MIN_ATS)
+
 // The freshest computed_at among the current matches, as the spec for this
 // section asks for ("L'horodatage de la dernière mise à jour du classement
 // est affiché à l'utilisateur") -- real per-match timestamps, not a
@@ -161,11 +167,14 @@ function formatEuros(amount, { decimals = 0 } = {}) {
 }
 
 function resetFilters() {
+  minAts.value = DEFAULT_MIN_ATS
   salaryMin.value = 0
   tjmMin.value = 0
   onlySalaryKnown.value = false
 }
 
+// The ATS bar is not counted here: it is always on (75 by default) and has
+// its own control next to the sort dropdown, unlike the salary modal.
 const hasActiveFilters = computed(
   () => salaryMin.value > 0 || tjmMin.value > 0 || onlySalaryKnown.value
 )
@@ -217,6 +226,7 @@ const filteredOffers = computed(() =>
     if (remoteFilterMode.value === 'remote' && !offer.isFullRemote) return false
     if (remoteFilterMode.value === 'onsite' && offer.isFullRemote) return false
     if (debugSourceFilter.value && offer.source !== debugSourceFilter.value) return false
+    if (!offer.isPending && offer.scores.ats < minAts.value) return false
 
     // Freelance offers are compared against the TJM slider, every other
     // contract type against the annual-salary slider -- never the other
@@ -255,7 +265,10 @@ const offers = computed(() => {
     // "Pertinence" -- ats_potential descending, same as the dashboard's
     // top-5 ordering: the best real odds of getting past the recruiter's
     // ATS once the CV is adapted, not just an abstract career fit.
-    list.sort((a, b) => b.scores.potential - a.scores.potential)
+    // Offers still being analysed (no score yet) come after the scored ones.
+    list.sort(
+      (a, b) => Number(a.isPending) - Number(b.isPending) || b.scores.potential - a.scores.potential
+    )
   }
   return list
 })
@@ -265,7 +278,7 @@ const pagedOffers = computed(() =>
   offers.value.slice((page.value - 1) * PAGE_SIZE, page.value * PAGE_SIZE)
 )
 
-watch([salaryMin, tjmMin, onlySalaryKnown, sortBy], () => {
+watch([minAts, salaryMin, tjmMin, onlySalaryKnown, sortBy], () => {
   page.value = 1
 })
 watch(totalPages, (total) => {
@@ -334,18 +347,18 @@ function openOffer(offer) {
 const scoresModalOpen = ref(false)
 const SCORE_EXPLANATIONS = computed(() => [
   {
-    key: 'ats',
-    short: 'ATS',
-    title: t('opportunites.score_ats_title'),
-    text: t('opportunites.score_ats_text'),
-    badgeClass: 'bg-green-100 text-green-700',
-  },
-  {
     key: 'career',
     short: 'CAR',
     title: t('opportunites.score_career_title'),
     text: t('opportunites.score_career_text'),
     badgeClass: 'bg-blue-100 text-blue-700',
+  },
+  {
+    key: 'ats',
+    short: 'ATS',
+    title: t('opportunites.score_ats_title'),
+    text: t('opportunites.score_ats_text'),
+    badgeClass: 'bg-green-100 text-green-700',
   },
   {
     key: 'potential',
@@ -390,7 +403,7 @@ function selectSort(value) {
             v-if="!loading"
             class="rounded-full bg-brand-light px-3 py-0.5 text-sm font-bold text-brand-text"
           >
-            {{ $t('opportunites.count', { count: matchedOffers.length }) }}
+            {{ $t('opportunites.results_found', { count: offers.length }) }}
           </span>
         </div>
         <p class="mt-1 text-sm text-gray-500">{{ $t('opportunites.subtitle') }}</p>
@@ -499,9 +512,21 @@ function selectSort(value) {
             </div>
           </div>
 
-          <p class="ml-1 text-sm text-gray-500">
-            {{ $t('opportunites.results_found', { count: offers.length }) }}
-          </p>
+          <label
+            class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft"
+          >
+            <span>{{ $t('opportunites.ats_filter_label') }}</span>
+            <input
+              v-model.number="minAts"
+              type="range"
+              min="0"
+              max="100"
+              step="5"
+              class="w-28 accent-brand"
+              :aria-label="$t('opportunites.ats_filter_label')"
+            />
+            <span class="w-7 text-right font-extrabold text-green-600">{{ minAts }}</span>
+          </label>
         </div>
 
         <!-- Active filter chips -->
@@ -631,16 +656,7 @@ function selectSort(value) {
                   Steve's reference screenshot, confirmed again 2026-09-30
                   after a wrong attempt at "fixing" this away. -->
                   <div class="hidden flex-col items-start gap-1.5 sm:flex">
-                    <span
-                      class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
-                      :class="
-                        offer.strong
-                          ? 'bg-success-light text-success-text'
-                          : 'bg-amber-100 text-amber-700'
-                      "
-                    >
-                      {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
-                    </span>
+                    <AppFitBadge :fit="offer.fit" />
                     <span
                       v-if="offer.contractTag"
                       class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
@@ -652,16 +668,7 @@ function selectSort(value) {
 
                 <div class="min-w-0 flex-1 sm:w-full sm:flex-none">
                   <div class="mb-1 flex flex-wrap items-center gap-1.5 sm:hidden">
-                    <span
-                      class="inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
-                      :class="
-                        offer.strong
-                          ? 'bg-success-light text-success-text'
-                          : 'bg-amber-100 text-amber-700'
-                      "
-                    >
-                      {{ offer.strong ? $t('dashboard.fit_strong') : $t('dashboard.fit_good') }}
-                    </span>
+                    <AppFitBadge :fit="offer.fit" />
                     <!-- Same colored-pill treatment as dashboard.vue's contract
                     tag (not the muted "📄 label" text this page used to show
                     here) so the info reads with the same weight in both
@@ -744,17 +751,23 @@ function selectSort(value) {
               <div
                 class="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2 sm:pt-6"
               >
-                <div class="flex items-end gap-3.5">
-                  <div class="text-center">
-                    <p class="text-[10px] font-medium text-gray-400">ATS</p>
-                    <p class="text-lg font-extrabold text-green-600">{{ offer.scores.ats }}</p>
-                  </div>
+                <p
+                  v-if="offer.isPending"
+                  class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500"
+                >
+                  {{ $t('dashboard.analysis_pending') }}
+                </p>
+                <div v-else class="flex items-end gap-3.5">
                   <div class="text-center">
                     <p class="text-[10px] font-medium text-gray-400">Career</p>
                     <p class="text-lg font-extrabold text-blue-600">{{ offer.scores.career }}</p>
                   </div>
                   <div class="text-center">
-                    <p class="text-[10px] font-medium text-gray-400">Potential</p>
+                    <p class="text-[10px] font-medium text-gray-400">ATS</p>
+                    <p class="text-lg font-extrabold text-green-600">{{ offer.scores.ats }}</p>
+                  </div>
+                  <div class="text-center">
+                    <p class="text-[10px] font-medium text-gray-400">ATS Potential</p>
                     <p class="text-lg font-extrabold text-brand">{{ offer.scores.potential }}</p>
                   </div>
                   <!-- Regret Index block removed 2026-10-03 (Steve: masquer
@@ -826,17 +839,18 @@ function selectSort(value) {
 
         <UiCard>
           <h3 class="mb-3 flex items-center gap-2 text-sm font-bold text-navy">
-            📊 {{ $t('opportunites.how_we_rank_title') }}
+            🏷️ {{ $t('opportunites.fit_tags_title') }}
           </h3>
-          <ol class="space-y-2 text-xs text-gray-500">
-            <li
-              v-for="(step, index) in $tm('opportunites.how_we_rank_steps')"
-              :key="index"
-              class="flex gap-2"
-            >
-              <span class="font-semibold text-brand">{{ index + 1 }}.</span>{{ step }}
+          <ul class="space-y-3 text-xs text-gray-500">
+            <li>
+              <AppFitBadge fit="very_strong" />
+              <p class="mt-1">{{ $t('opportunites.fit_very_strong_text') }}</p>
             </li>
-          </ol>
+            <li>
+              <AppFitBadge fit="strong" />
+              <p class="mt-1">{{ $t('opportunites.fit_strong_text') }}</p>
+            </li>
+          </ul>
         </UiCard>
 
         <div class="rounded-xl bg-amber-50 p-4">
