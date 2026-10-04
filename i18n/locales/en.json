@@ -1,5 +1,6 @@
 {
   "common": {
+    "load_error": "We couldn't load your information right now. Please try again in a moment.",
     "or": "or",
     "email": "Email",
     "password": "Password",

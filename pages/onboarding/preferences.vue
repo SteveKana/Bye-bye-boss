@@ -25,7 +25,11 @@ onMounted(async () => {
     location.value = profile.location || ''
     formRef.value.applyProfile(profile)
     ready.value = true
-  } catch {
+  } catch (err) {
+    if (!isNoProfileError(err)) {
+      toast.error(t('common.load_error'))
+      return
+    }
     await navigateTo('/onboarding/upload')
   }
 })

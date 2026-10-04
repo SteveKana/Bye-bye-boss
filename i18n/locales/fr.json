@@ -1,5 +1,6 @@
 {
   "common": {
+    "load_error": "Impossible de charger vos informations pour le moment. Réessayez dans quelques instants.",
     "or": "ou",
     "email": "Email",
     "password": "Mot de passe",

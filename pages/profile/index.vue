@@ -74,7 +74,11 @@ function highlightClass(field, base) {
 onMounted(async () => {
   try {
     await onboarding.fetchProfile()
-  } catch {
+  } catch (err) {
+    if (!isNoProfileError(err)) {
+      toast.error(t('common.load_error'))
+      return
+    }
     // No CV imported yet -- send the user to the importer instead of
     // showing an empty profile page.
     await navigateTo('/onboarding/upload')
