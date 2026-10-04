@@ -15,12 +15,12 @@ defineProps({
     <span
       v-for="c in criteria"
       :key="c"
-      class="rounded-full bg-white px-3 py-1 text-[13px] font-medium text-gray-700 shadow-soft"
+      class="rounded-full bg-brand px-3 py-1 text-[13px] font-medium text-white shadow-soft"
     >
       {{ c }}
     </span>
     <NuxtLink to="/preferences" class="font-semibold text-brand hover:underline">
-      {{ $t('dashboard.edit') }} →
+      {{ $t('dashboard.edit_preferences') }} →
     </NuxtLink>
   </div>
 </template>

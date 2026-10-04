@@ -1,5 +1,5 @@
 // Shared reshaping + client-side reject for the scored match pool returned
-// by GET /matching/top -- used by both the "Dashboard" page (a 5-row
+// by GET /matching/top (history) or GET /matching/dashboard -- used by both the "Dashboard" page (a 5-row
 // preview, no filters) and the "Opportunités" page (the same pool, shown in
 // full with real filters/sort), per the mockups' split: dashboard.html shows
 // only the top 5, opportunites.html is the exhaustive list. Reject has no
@@ -26,7 +26,12 @@ export function useMatchedOffers(rawMatches) {
         company: match.company_name || match.offer.company_name || '',
         loc: match.offer.location || '',
         source: match.offer.source,
-        strong: match.ats_potential >= STRONG_FIT_THRESHOLD,
+        // Offers still being analysed (status placeholder/pending) carry no
+        // scores yet (all 0) -- the pages show "analyse en cours" for them
+        // instead of 0s, and give them no compatibility tag.
+        status: match.status,
+        isPending: match.status !== 'scored',
+        fit: match.status === 'scored' ? fitLevel(match.ats_potential) : null,
         blockingMessage: match.blocking_message || '',
         contractTag: contractTag(match.offer.contract_type),
         isFullRemote: !!match.offer.is_full_remote,

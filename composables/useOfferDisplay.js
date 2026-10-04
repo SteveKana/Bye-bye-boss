@@ -1,11 +1,23 @@
-// An ats_potential at or above this is shown as "very strong fit" rather
-// than just "strong fit" -- an editorial threshold, easy to tune later.
-// Based on ats_potential rather than career_score: a high career_score alone
-// doesn't mean much if the CV, as it stands, has little chance of getting
-// past the recruiter's ATS software for this offer. Shared between the
-// dashboard list and the opportunity detail page so the same match is never
-// labelled "strong" on one view and merely "good" on the other.
-export const STRONG_FIT_THRESHOLD = 75
+// Compatibility tags (Steve, 2026-10-04): "Très forte compatibilité" from
+// 95, "Forte compatibilité" from 80 up to 94, and NO tag below 80. Based on
+// ats_potential rather than career_score: a high career_score alone doesn't
+// mean much if the CV, as it stands, has little chance of getting past the
+// recruiter's ATS software for this offer. Shared between the dashboard,
+// the Opportunités list and the opportunity detail page so the same match
+// is never labelled differently from one view to the next.
+export const VERY_STRONG_FIT_THRESHOLD = 95
+export const STRONG_FIT_THRESHOLD = 80
+
+// Default minimum ATS score of the Opportunités page filter (Steve,
+// 2026-10-04) -- same value as the backend's pre-filter cut-off.
+export const DEFAULT_MIN_ATS = 75
+
+// 'very_strong' | 'strong' | null (no tag).
+export function fitLevel(potential) {
+  if (potential >= VERY_STRONG_FIT_THRESHOLD) return 'very_strong'
+  if (potential >= STRONG_FIT_THRESHOLD) return 'strong'
+  return null
+}
 
 // Shared display helpers for rendering an offer/company consistently
 // wherever it appears -- currently the dashboard's opportunity list and the

@@ -8,12 +8,20 @@ import { defineStore } from 'pinia'
 // the backend if there's no profile at all) -- both are treated as "nothing
 // yet" by the dashboard, not as errors.
 export const useMatchingStore = defineStore('matching', () => {
+  // /opportunites: the 25 most recent offers (history).
   const topOpportunities = ref([])
+  // /dashboard: today's new top 5 only (see the backend's /matching/dashboard).
+  const dashboardOpportunities = ref([])
 
   async function fetchTop() {
     topOpportunities.value = await useApi()('matching/top')
     return topOpportunities.value
   }
 
-  return { topOpportunities, fetchTop }
+  async function fetchDashboard() {
+    dashboardOpportunities.value = await useApi()('matching/dashboard')
+    return dashboardOpportunities.value
+  }
+
+  return { topOpportunities, dashboardOpportunities, fetchTop, fetchDashboard }
 })
