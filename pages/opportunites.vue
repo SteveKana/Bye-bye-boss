@@ -80,6 +80,10 @@ const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOp
 // still being analysed has no ATS score yet, so it is never hidden by this
 // filter -- that is what a brand-new profile sees first.
 const minAts = ref(DEFAULT_MIN_ATS)
+// The filter only means something once at least one offer has its ATS score:
+// while every offer is still "Analyse en cours" there is nothing to filter on,
+// so the control is hidden (and the filter not applied -- see filteredOffers).
+const hasScoredOffers = computed(() => matchedOffers.value.some((o) => !o.isPending))
 
 // The freshest computed_at among the current matches, as the spec for this
 // section asks for ("L'horodatage de la dernière mise à jour du classement
@@ -406,7 +410,6 @@ function selectSort(value) {
             {{ $t('opportunites.results_found', { count: offers.length }) }}
           </span>
         </div>
-        <p class="mt-1 text-sm text-gray-500">{{ $t('opportunites.subtitle') }}</p>
       </div>
       <div
         v-if="lastUpdatedLabel"
@@ -513,6 +516,7 @@ function selectSort(value) {
           </div>
 
           <label
+            v-if="hasScoredOffers"
             class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft"
           >
             <span>{{ $t('opportunites.ats_filter_label') }}</span>

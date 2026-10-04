@@ -208,7 +208,6 @@
     "empty_filtered": "No offers match these filters."
   },
   "opportunites": {
-    "subtitle": "Your 25 most recent offers, analyzed and ranked for you.",
     "ats_filter_label": "Minimum ATS score",
     "sort_salary_desc": "Salary (highest first)",
     "sort_ats_desc": "ATS score",
