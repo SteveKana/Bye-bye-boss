@@ -208,7 +208,6 @@
     "empty_filtered": "Aucune offre ne correspond à ces filtres."
   },
   "opportunites": {
-    "subtitle": "Vos 25 offres les plus récentes, analysées et classées pour vous.",
     "ats_filter_label": "Score ATS minimum",
     "sort_salary_desc": "Salaire (décroissant)",
     "sort_ats_desc": "Score ATS",
