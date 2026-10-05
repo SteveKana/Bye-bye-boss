@@ -142,7 +142,7 @@ function openOffer(offer) {
           {{ $t('dashboard.greeting', { name: firstName }) }} 👋
         </h1>
       </div>
-      <UiButton variant="secondary" size="sm" @click="navigateTo('/settings')"
+      <UiButton variant="secondary" size="sm" @click="navigateTo('/settings#notifications')"
         >🔔 {{ $t('dashboard.alerts') }}</UiButton
       >
     </div>
