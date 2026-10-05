@@ -73,8 +73,8 @@ const debugSourceFilter = computed(() => route.query.source || null)
 const loading = ref(true)
 const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.topOpportunities))
 
-// ATS filter (Steve, 2026-10-04): by default only offers with an ATS score
-// of 75 or more are listed; the candidate can lower/raise the bar. An offer
+// ATS filter: nothing is hidden by default (0); the candidate can raise the
+// bar themselves. An offer
 // still being analysed has no ATS score yet, so it is never hidden by this
 // filter -- that is what a brand-new profile sees first.
 const minAts = ref(DEFAULT_MIN_ATS)
@@ -194,7 +194,7 @@ function resetFilters() {
   onlySalaryKnown.value = false
 }
 
-// The ATS bar is not counted here: it is always on (75 by default) and has
+// The ATS bar is not counted here: it has
 // its own control next to the sort dropdown.
 const salaryFilterCount = computed(
   () => Number(salaryMin.value > 0) + Number(tjmMin.value > 0) + Number(onlySalaryKnown.value)
@@ -219,6 +219,13 @@ const activeFilterChips = computed(() => {
   }
   if (cityQuery.value) {
     chips.push({ key: 'city', label: cityQuery.value, clear: () => (cityQuery.value = '') })
+  }
+  if (minAts.value > 0) {
+    chips.push({
+      key: 'ats',
+      label: `${t('opportunites.ats_filter_label')} : ${minAts.value}`,
+      clear: () => (minAts.value = DEFAULT_MIN_ATS),
+    })
   }
   if (salaryMin.value > 0) {
     chips.push({
