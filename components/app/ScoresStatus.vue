@@ -3,7 +3,7 @@
 // /opportunites: when the scores were last refreshed, and when the next
 // refresh starts.
 //
-// The backend recomputes matches once a day at 18:00 Paris time (see
+// The backend recomputes matches once a day at 08:00 Paris time (see
 // sync_matches in the API's app/modules/matching/jobs.py) -- keep
 // SYNC_HOUR_PARIS in line with it if that schedule ever changes.
 const props = defineProps({
@@ -11,7 +11,7 @@ const props = defineProps({
   dates: { type: Array, default: () => [] },
 })
 
-const SYNC_HOUR_PARIS = 18
+const SYNC_HOUR_PARIS = 8
 const TIMEZONE = 'Europe/Paris'
 
 const lastUpdatedLabel = computed(() => {
@@ -25,7 +25,7 @@ const lastUpdatedLabel = computed(() => {
   })
 })
 
-// Next 18:00 in Paris: today if it hasn't happened yet, tomorrow otherwise.
+// Next 08:00 in Paris: today if it hasn't happened yet, tomorrow otherwise.
 const nextUpdateLabel = computed(() => {
   const parts = Object.fromEntries(
     new Intl.DateTimeFormat('en-GB', {

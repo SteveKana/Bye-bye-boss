@@ -665,7 +665,7 @@
     "test_send_success": "Successfully sent on: {channels}",
     "test_send_error": "The test send failed.",
     "frequency_label": "Frequency",
-    "frequency_fixed_hint": "Fixed to one daily send, around 6:30 PM.",
+    "frequency_fixed_hint": "Fixed to one daily send, around 8:30 AM.",
     "frequency_daily": "Daily digest",
     "account": "Account",
     "delete_account": "Delete my account",
