@@ -1,8 +1,8 @@
 <script setup>
-// Dashboard -- today's "Top 5 des opportunités": only offers the candidate
-// has not been shown yet (the backend's GET /matching/dashboard counts the
-// 24h from the last time they were exposed to them), never one they already
-// applied to. The history (25 most recent offers, with an ATS filter) lives on the
+// Dashboard -- today's "Top 5 des opportunités": only the offers of the day
+// (the backend's GET /matching/dashboard returns offers never shown, or first
+// shown today -- from the next day on they live in /opportunites), never one
+// they already applied to. The history (25 most recent offers, with an ATS filter) lives on the
 // separate "Opportunités" page (pages/opportunites.vue), linked via
 // "Voir toutes les opportunités" below -- see the mockups (dashboard.html
 // vs opportunites.html): they're deliberately two different views over the
@@ -79,6 +79,9 @@ const topOffers = computed(() =>
 
 const hasPending = computed(() => topOffers.value.some((offer) => offer.isPending))
 
+// The candidate already has offers in their history (/opportunites).
+const hasHistory = computed(() => matching.topOpportunities.length > 0)
+
 onMounted(async () => {
   await loadCriteria()
   try {
@@ -93,11 +96,23 @@ onMounted(async () => {
       // Offers already there but some still without scores: keep refreshing.
       if (hasPending.value) startPolling()
     } else {
-      // Still nothing: could be a first-time profile whose immediate
-      // matching run hasn't finished yet, so keep the skeleton up and poll
-      // for it instead of assuming this is the final, honest "empty" state
-      // right away -- see the comment above useIntervalFn.
-      startPolling()
+      // Nothing for today. A candidate who already has offers in their
+      // history (/opportunites) is simply between two daily runs: say so
+      // right away instead of a 4-minute loading skeleton.
+      try {
+        await matching.fetchTop()
+      } catch {
+        // No history to read -- treated as a first-time profile below.
+      }
+      if (hasHistory.value) {
+        loadingOpportunities.value = false
+      } else {
+        // Could be a first-time profile whose immediate matching run
+        // hasn't finished yet, so keep the skeleton up and poll for it
+        // instead of assuming this is the final, honest "empty" state right
+        // away -- see the comment above useIntervalFn.
+        startPolling()
+      }
     }
   }
 })
@@ -327,7 +342,7 @@ function openOffer(offer) {
         </ul>
       </div>
       <p v-else-if="!topOffers.length" class="py-6 text-center text-sm text-gray-400">
-        {{ $t('dashboard.empty') }}
+        {{ hasHistory ? $t('dashboard.empty_today') : $t('dashboard.empty') }}
       </p>
 
       <template #footer>
