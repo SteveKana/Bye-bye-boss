@@ -167,7 +167,6 @@
       "opportunities": "Opportunités",
       "applications": "Candidatures",
       "profile": "CV",
-      "preferences": "Préférences",
       "settings": "Paramètres"
     },
     "soon": "bientôt",
@@ -179,9 +178,7 @@
   "dashboard": {
     "greeting": "Bonjour {name}",
     "alerts": "Activer les alertes",
-    "your_search": "Vos préférences :",
     "edit": "Modifier",
-    "edit_preferences": "Modifier mes préférences",
     "top_title": "Top 5 des opportunités pour vous au {date}",
     "top_sub": "Les nouvelles offres qui vous correspondent le mieux, classées par compatibilité avec votre profil.",
     "loading": "Analyse de votre profil en cours…",
@@ -245,8 +242,6 @@
     "fit_strong_text": "Une très bonne adéquation, avec quelques ajustements possibles de votre CV (ATS Potential de 80 à 94).",
     "alerts_title": "Ne manquez aucune opportunité",
     "alerts_text": "Recevez une alerte dès qu'une nouvelle offre correspond fortement à votre profil.",
-    "adjust_title": "Vos critères ne correspondent plus ?",
-    "adjust_link": "Ajuster mes critères de recherche",
     "sort_potential_desc": "Potentiel ATS",
     "sort_career_desc": "Score carrière",
     "tjm_min": "TJM minimum",
@@ -257,7 +252,15 @@
     "score_career_title": "Career",
     "score_career_text": "À quel point cette offre correspond à votre profil et à votre trajectoire, indépendamment des filtres automatiques du recruteur.",
     "score_potential_title": "ATS Potentiel",
-    "score_potential_text": "Le score ATS maximal que vous pourriez atteindre pour cette offre en optimisant votre CV (bouton « Adapter mon CV pour cette offre »), pas votre compatibilité actuelle."
+    "score_potential_text": "Le score ATS maximal que vous pourriez atteindre pour cette offre en optimisant votre CV (bouton « Adapter mon CV pour cette offre »), pas votre compatibilité actuelle.",
+    "contract_filter": "Contrat",
+    "remote_filter": "Télétravail",
+    "location_filter": "Localisation",
+    "location_city": "Ville",
+    "location_city_placeholder": "Ex. Lyon, Saint-Ouen…",
+    "location_region": "Région",
+    "location_region_any": "Toutes les régions",
+    "location_region_hint": "Les offres dont la région n'est pas indiquée par leur source sont masquées quand une région est choisie."
   },
   "opportunity": {
     "back": "← Retour au tableau de bord",
@@ -322,14 +325,6 @@
     "updated": "Statut mis à jour.",
     "removed": "Retiré de vos candidatures.",
     "update_error": "La mise à jour du statut a échoué. Merci de réessayer."
-  },
-  "preferencesPage": {
-    "title": "Préférences",
-    "subtitle": "Ces critères affinent vos correspondances d'offres. Modifiables à tout moment.",
-    "save": "Enregistrer",
-    "saved": "Préférences mises à jour.",
-    "error_required": "Merci de sélectionner au moins une option pour chaque critère obligatoire.",
-    "error_generic": "La mise à jour des préférences a échoué. Merci de réessayer."
   },
   "profile": {
     "subtitle": "Vos informations personnelles, utilisées pour le matching.",
@@ -495,8 +490,7 @@
   "onboarding": {
     "steps": {
       "upload": "Import CV",
-      "verification": "Vérification",
-      "preferences": "Préférences"
+      "verification": "Vérification"
     },
     "upload": {
       "title": "Importez votre CV",
@@ -545,75 +539,9 @@
       "location": "Localisation",
       "availability": "Disponibilité",
       "previous": "Précédent",
-      "continue": "Continuer",
+      "continue": "Terminer",
       "error_generic": "La mise à jour du profil a échoué. Merci de réessayer.",
       "headline": "Titre / poste actuel"
-    },
-    "preferences": {
-      "title": "Vos préférences",
-      "subtitle": "Ces critères affinent vos correspondances d'offres. Modifiables à tout moment.",
-      "updated_banner": "Ton profil vient d'être mis à jour à partir de ton nouveau CV. Vérifie que tes préférences de recherche sont toujours d'actualité avant de continuer.",
-      "contract_type_title": "Type de contrat",
-      "contract_type_subtitle": "Le type de contrat que vous recherchez",
-      "multi_choice": "Plusieurs choix possibles",
-      "remote_title": "Télétravail souhaité",
-      "remote_subtitle": "Votre préférence de travail à distance",
-      "mobility_title": "Mobilité géographique",
-      "mobility_subtitle": "La zone géographique où vous souhaitez travailler",
-      "single_choice": "Un seul choix — « France entière » couvre déjà toutes les zones",
-      "mobility_city_named": "{city} uniquement",
-      "mobility_hint_no_location": "Renseignez votre ville dans votre profil pour activer l'option « Ville uniquement ».",
-      "mobility_region_placeholder": "Choisissez votre région",
-      "salary_title": "Salaire cible (facultatif)",
-      "salary_subtitle": "Votre salaire brut annuel souhaité",
-      "salary_placeholder": "Ex : 55000",
-      "salary_suffix": "€ brut / an",
-      "salary_hint": "Vous pourrez le modifier à tout moment",
-      "daily_rate_title": "TJM (Taux Journalier Moyen)",
-      "daily_rate_subtitle": "Votre taux journalier moyen souhaité pour vos missions freelance",
-      "daily_rate_placeholder": "Ex : 500",
-      "daily_rate_suffix": "€ / jour",
-      "note": "Pas d'inquiétude, vous pourrez modifier toutes ces préférences à tout moment depuis votre profil.",
-      "previous": "Précédent",
-      "continue": "Continuer",
-      "error_required": "Veuillez sélectionner au moins une option pour chaque catégorie obligatoire.",
-      "error_generic": "L'enregistrement de vos préférences a échoué. Merci de réessayer."
-    },
-    "contract_types": {
-      "CDI": "CDI",
-      "CDD": "CDD",
-      "Freelance": "Freelance",
-      "Intérim": "Intérim"
-    },
-    "remote_options": {
-      "Sur site": "Sur site",
-      "Hybride": "Hybride",
-      "Full remote": "Full remote"
-    },
-    "mobility_options": {
-      "France entière": "France entière",
-      "Région uniquement": "Une région en particulier",
-      "Ville uniquement": "Ville uniquement"
-    },
-    "mobility_regions": {
-      "Auvergne-Rhône-Alpes": "Auvergne-Rhône-Alpes",
-      "Bourgogne-Franche-Comté": "Bourgogne-Franche-Comté",
-      "Bretagne": "Bretagne",
-      "Centre-Val de Loire": "Centre-Val de Loire",
-      "Corse": "Corse",
-      "Grand Est": "Grand Est",
-      "Hauts-de-France": "Hauts-de-France",
-      "Île-de-France": "Île-de-France",
-      "Normandie": "Normandie",
-      "Nouvelle-Aquitaine": "Nouvelle-Aquitaine",
-      "Occitanie": "Occitanie",
-      "Pays de la Loire": "Pays de la Loire",
-      "Provence-Alpes-Côte d'Azur": "Provence-Alpes-Côte d'Azur",
-      "Guadeloupe": "Guadeloupe",
-      "Martinique": "Martinique",
-      "Guyane": "Guyane",
-      "La Réunion": "La Réunion",
-      "Mayotte": "Mayotte"
     }
   },
   "cvAnalyzing": {

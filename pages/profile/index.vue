@@ -135,8 +135,8 @@ async function onReupload(event) {
     // The upload endpoint already persists the freshly extracted profile
     // (it's what /onboarding/verification would just re-save unchanged if
     // nothing were edited), so a reimport from this page can land straight
-    // back here instead of detouring through the onboarding verification +
-    // preferences steps again -- everything stays editable inline below.
+    // back here instead of detouring through the onboarding verification
+    // step again -- everything stays editable inline below.
     // uploadCvWithDiff also refreshes recentlyUpdatedFields, so whatever
     // actually changed gets highlighted right here, same as a reimport
     // triggered from the homepage (see stores/onboarding.js).

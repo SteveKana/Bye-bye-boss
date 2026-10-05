@@ -38,14 +38,6 @@ export const useOnboardingStore = defineStore('onboarding', () => {
     return profile.value
   }
 
-  async function updatePreferences(payload) {
-    profile.value = await useApi()('cv/profile/preferences', {
-      method: 'PUT',
-      body: payload,
-    })
-    return profile.value
-  }
-
   function reset() {
     profile.value = null
   }
@@ -136,7 +128,6 @@ export const useOnboardingStore = defineStore('onboarding', () => {
     uploadCvWithDiff,
     fetchProfile,
     updateProfile,
-    updatePreferences,
     reuploadFromHomepage,
     reset,
   }

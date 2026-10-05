@@ -8,11 +8,7 @@
 // canEverMatch check, now redundant with this middleware in place but left
 // as a defensive fallback).
 //
-// Order matters: a profile with status "complete" is always let through
-// FIRST, regardless of verification_completed_at -- that field is new
-// (only backfilled for profiles that were already complete, see the
-// migration) and must never bounce an already-finished profile into the
-// wizard by mistake.
+// A profile with status "complete" is always let through.
 export default defineNuxtRouteMiddleware(async () => {
   const onboarding = useOnboardingStore()
   let profile = onboarding.profile
@@ -32,10 +28,8 @@ export default defineNuxtRouteMiddleware(async () => {
   }
 
   if (profile.status === 'complete') return
-  if (!profile.verification_completed_at) return navigateTo('/onboarding/verification')
-  // Already verified before (e.g. a CV re-import outside the wizard just
-  // reset status away from "complete") -- skip straight to preferences, but
-  // flag it with ?updated=1 so that page can explain why the visitor landed
-  // here instead of on the page they actually navigated to (see its banner).
-  return navigateTo({ path: '/onboarding/preferences', query: { updated: '1' } })
+  // Not finished yet: the verification step is now the last one (it
+  // completes the profile), so that is always where an unfinished profile
+  // goes -- including one re-imported before ever being verified.
+  return navigateTo('/onboarding/verification')
 })

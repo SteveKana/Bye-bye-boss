@@ -8,9 +8,10 @@
 export const VERY_STRONG_FIT_THRESHOLD = 95
 export const STRONG_FIT_THRESHOLD = 80
 
-// Default minimum ATS score of the Opportunités page filter (Steve,
-// 2026-10-04) -- same value as the backend's pre-filter cut-off.
-export const DEFAULT_MIN_ATS = 75
+// Default minimum ATS score of the Opportunités page filter. 0 = nothing is
+// hidden: the candidate raises the bar themselves (Steve, 2026-10-05, after
+// first defaulting it to 75 on 2026-10-04).
+export const DEFAULT_MIN_ATS = 0
 
 // 'very_strong' | 'strong' | null (no tag).
 export function fitLevel(potential) {

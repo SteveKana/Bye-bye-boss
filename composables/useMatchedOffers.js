@@ -25,6 +25,7 @@ export function useMatchedOffers(rawMatches) {
         title: match.offer.title,
         company: match.company_name || match.offer.company_name || '',
         loc: match.offer.location || '',
+        region: match.offer.region || null,
         source: match.offer.source,
         // Offers still being analysed (status placeholder/pending) carry no
         // scores yet (all 0) -- the pages show "analyse en cours" for them

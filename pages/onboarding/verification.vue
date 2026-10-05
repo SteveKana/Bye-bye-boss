@@ -30,7 +30,10 @@ async function onContinue() {
   saving.value = true
   try {
     await onboarding.updateProfile({ ...formRef.value.form })
-    await navigateTo('/onboarding/preferences')
+    // Saving the verified CV is now the end of onboarding (the preferences
+    // step is gone): the backend marks the profile complete and launches
+    // the first matching run.
+    await navigateTo('/dashboard')
   } catch (err) {
     toast.error(err.message || t('onboarding.verification.error_generic'))
   } finally {

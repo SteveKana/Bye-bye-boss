@@ -1,6 +1,6 @@
 <script setup>
-// Step indicator for the 3-step CV onboarding wizard (upload -> verification
-// -> preferences). `current` is 1-indexed and drives which circles are done
+// Step indicator for the 2-step CV onboarding wizard (upload ->
+// verification). `current` is 1-indexed and drives which circles are done
 // (checkmark), active (filled), or upcoming (muted).
 defineProps({
   current: { type: Number, required: true },
@@ -9,7 +9,6 @@ defineProps({
 const STEPS = [
   { step: 1, labelKey: 'onboarding.steps.upload' },
   { step: 2, labelKey: 'onboarding.steps.verification' },
-  { step: 3, labelKey: 'onboarding.steps.preferences' },
 ]
 </script>
 
