@@ -238,6 +238,7 @@
     "next_page": "Page suivante",
     "scores_computed": "Tous les scores sont calculés pour votre CV",
     "last_updated": "Dernière mise à jour le {date}",
+    "next_update": "Prochaine mise à jour le {date}",
     "understand_scores": "Comprendre nos scores",
     "fit_tags_title": "Nos niveaux de compatibilité",
     "fit_very_strong_text": "Votre CV a toutes les chances de passer les filtres du recruteur pour cette offre (ATS Potential de 95 ou plus).",

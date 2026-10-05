@@ -85,21 +85,9 @@ const minAts = ref(DEFAULT_MIN_ATS)
 // so the control is hidden (and the filter not applied -- see filteredOffers).
 const hasScoredOffers = computed(() => matchedOffers.value.some((o) => !o.isPending))
 
-// The freshest computed_at among the current matches, as the spec for this
-// section asks for ("L'horodatage de la dernière mise à jour du classement
-// est affiché à l'utilisateur") -- real per-match timestamps, not a
-// fabricated single "batch run" time we don't actually track.
-const lastUpdatedLabel = computed(() => {
-  const dates = matchedOffers.value.map((o) => o.computedAt).filter(Boolean)
-  if (!dates.length) return ''
-  const latest = new Date(Math.max(...dates.map((d) => d.getTime())))
-  return latest.toLocaleString('fr-FR', {
-    day: 'numeric',
-    month: 'short',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-})
+// Real per-match timestamps (not a fabricated "batch run" time) -- the
+// banner itself picks the freshest one.
+const scoreDates = computed(() => matchedOffers.value.map((o) => o.computedAt))
 
 // Contract-type and remote-work filtering now reads directly from the
 // candidate's saved /preferences (profile.contract_types/remote_preferences)
@@ -411,20 +399,7 @@ function selectSort(value) {
           </span>
         </div>
       </div>
-      <div
-        v-if="lastUpdatedLabel"
-        class="flex items-center gap-2 rounded-xl border border-success-light bg-success-light/60 px-4 py-2.5 text-sm"
-      >
-        <span class="text-success" aria-hidden="true">✓</span>
-        <div>
-          <p class="text-xs font-semibold text-success-text">
-            {{ $t('opportunites.scores_computed') }}
-          </p>
-          <p class="text-xs text-success-text/80">
-            {{ $t('opportunites.last_updated', { date: lastUpdatedLabel }) }}
-          </p>
-        </div>
-      </div>
+      <AppScoresStatus :dates="scoreDates" />
     </div>
 
     <AppCriteriaBar :criteria="criteria" />

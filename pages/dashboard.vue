@@ -82,6 +82,14 @@ const hasPending = computed(() => topOffers.value.some((offer) => offer.isPendin
 // The candidate already has offers in their history (/opportunites).
 const hasHistory = computed(() => matching.topOpportunities.length > 0)
 
+// Freshest score time across today's offers and the history, so the banner
+// also shows on a day with no new offer.
+const scoreDates = computed(() =>
+  [...matching.dashboardOpportunities, ...matching.topOpportunities].map((m) =>
+    m.computed_at ? new Date(m.computed_at) : null
+  )
+)
+
 onMounted(async () => {
   await loadCriteria()
   try {
@@ -138,6 +146,8 @@ function openOffer(offer) {
         >🔔 {{ $t('dashboard.alerts') }}</UiButton
       >
     </div>
+
+    <AppScoresStatus :dates="scoreDates" class="mb-6" />
 
     <AppCriteriaBar :criteria="criteria" />
 
