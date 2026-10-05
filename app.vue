@@ -4,4 +4,5 @@
   </NuxtLayout>
   <!-- Global toast host — mount once for the whole app. -->
   <UiToaster />
+  <CookieBanner />
 </template>

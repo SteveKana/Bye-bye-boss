@@ -8,10 +8,19 @@
 
       <div class="text-sm font-medium text-ink/60">{{ $t('landing.footer.copy') }}</div>
 
-      <div class="flex gap-5 text-sm font-bold text-ink">
-        <a href="#" class="hover:text-brand">{{ $t('landing.footer.legal') }}</a>
-        <a href="#" class="hover:text-brand">{{ $t('landing.footer.privacy') }}</a>
-        <a href="#" class="hover:text-brand">{{ $t('landing.footer.contact') }}</a>
+      <div class="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm font-bold text-ink">
+        <NuxtLink to="/mentions-legales" class="hover:text-brand">
+          {{ $t('landing.footer.legal') }}
+        </NuxtLink>
+        <NuxtLink to="/confidentialite" class="hover:text-brand">
+          {{ $t('landing.footer.privacy') }}
+        </NuxtLink>
+        <NuxtLink to="/cookies" class="hover:text-brand">
+          {{ $t('landing.footer.cookies') }}
+        </NuxtLink>
+        <NuxtLink to="/contact" class="hover:text-brand">
+          {{ $t('landing.footer.contact') }}
+        </NuxtLink>
       </div>
     </div>
   </footer>

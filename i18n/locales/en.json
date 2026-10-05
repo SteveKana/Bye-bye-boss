@@ -478,7 +478,8 @@
       "copy": "© 2026 Bye Bye Boss – All rights reserved.",
       "legal": "Legal notice",
       "privacy": "Privacy",
-      "contact": "Contact"
+      "contact": "Contact",
+      "cookies": "Cookies"
     },
     "social": {
       "stat1_num": "2,384",
@@ -776,5 +777,42 @@
   },
   "location": {
     "all_districts": "all districts"
+  },
+  "cookies": {
+    "banner_title": "Your privacy, your choices",
+    "banner_text": "We use cookies that are essential for the site to work (sign-in, language). With your consent, we also load the Google sign-in service.",
+    "learn_more": "Learn more",
+    "accept": "Accept",
+    "refuse": "Refuse",
+    "manage": "Manage my cookies"
+  },
+  "legal": {
+    "updated": "Last updated:"
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "A question, a problem, a request about your data? Write to us and we'll get back to you as soon as possible.",
+    "name": "Name",
+    "name_placeholder": "Your name",
+    "email": "Email",
+    "topic": "Topic",
+    "topics": {
+      "question": "A question",
+      "personal_data": "Personal data (GDPR)",
+      "problem": "A technical problem",
+      "partnership": "Partnership",
+      "other": "Other"
+    },
+    "message": "Message",
+    "message_placeholder": "Write your message here…",
+    "submit": "Send message",
+    "success_title": "Message sent ✅",
+    "success": "Thanks, your message has been sent. We'll get back to you as soon as possible.",
+    "send_another": "Send another message",
+    "error": "We couldn't send your message right now. Please try again in a moment.",
+    "too_many": "Too many messages sent. Please try again in a few minutes.",
+    "name_required": "Name required",
+    "message_required": "Message required",
+    "message_short": "10 characters minimum"
   }
 }
