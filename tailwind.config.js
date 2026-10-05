@@ -13,6 +13,12 @@ export default {
           DEFAULT: '#0F0B2E',
           light: '#1C1147',
         },
+        // Playful palette (2026-10-05 redesign): thick ink outlines + bright
+        // sun / blush / lavender blocks.
+        ink: '#16122E',
+        sun: { DEFAULT: '#FFD93D', light: '#FFF3B8' },
+        blush: '#FFB4C6',
+        lav: '#E4E0FF',
         success: { DEFAULT: '#10B981', text: '#16A34A', light: '#DCFCE7' },
         danger: { DEFAULT: '#DC2626', light: '#FEE2E2' },
         warning: { DEFAULT: '#F59E0B', light: '#FFEDD5' },
@@ -48,11 +54,11 @@ export default {
         '2xl': '22px',
       },
       borderRadius: {
-        sm: '6px',
-        DEFAULT: '8px',
-        md: '10px',
-        lg: '12px',
-        xl: '20px',
+        sm: '8px',
+        DEFAULT: '12px',
+        md: '14px',
+        lg: '18px',
+        xl: '24px',
         full: '9999px',
       },
       boxShadow: {

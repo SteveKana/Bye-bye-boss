@@ -52,8 +52,8 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div>
-    <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">{{ $t('register.title') }}</h1>
-    <p class="mb-7 text-gray-500">{{ $t('register.subtitle') }}</p>
+    <h1 class="mb-1.5 text-2xl font-black text-ink">{{ $t('register.title') }}</h1>
+    <p class="mb-7 text-ink/60">{{ $t('register.subtitle') }}</p>
 
     <form novalidate @submit.prevent="onSubmit">
       <div class="mb-4 grid gap-4 sm:grid-cols-2">

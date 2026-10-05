@@ -30,8 +30,8 @@ defineEmits(['update:modelValue'])
     :aria-checked="modelValue"
     :aria-label="label || undefined"
     :disabled="disabled"
-    class="inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors disabled:opacity-60"
-    :class="modelValue ? 'bg-success' : 'bg-gray-200'"
+    class="inline-flex h-7 w-12 shrink-0 items-center rounded-full border-2 border-ink transition-colors disabled:opacity-60"
+    :class="modelValue ? 'bg-success' : 'bg-ink/20'"
     @click="$emit('update:modelValue', !modelValue)"
   >
     <span

@@ -43,7 +43,7 @@ const elapsedLabel = computed(() => {
 </script>
 
 <template>
-  <div class="rounded-lg border-2 border-brand/30 bg-brand-light px-5 py-4">
+  <div class="rounded-2xl border-2 border-brand/30 bg-brand-light px-5 py-4">
     <div class="flex items-center gap-3.5">
       <span
         class="h-6 w-6 shrink-0 animate-spin rounded-full border-[3px] border-brand border-t-transparent"

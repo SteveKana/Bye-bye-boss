@@ -17,7 +17,7 @@
 //   - The "Suppressions" legend/count: this feature only rewords or adds
 //     bullets, it never removes one (see the backend schema's
 //     BulletStatus), so only Ajouts/Modifications are ever shown.
-definePageMeta({ layout: 'app', middleware: 'auth', wide: true })
+definePageMeta({ layout: 'app', middleware: 'auth', wide: true, hideTabBar: true })
 
 const { t } = useI18n()
 const route = useRoute()
@@ -172,7 +172,7 @@ const viewMode = ref('side_by_side')
 function bulletClass(status) {
   if (status === 'added') return 'bg-success-light text-success-text'
   if (status === 'modified') return 'bg-warning-light text-warning'
-  return 'text-gray-700'
+  return 'text-ink/80'
 }
 
 // Pairs profile.experiences[i] with optimization.experiences[i] -- the
@@ -242,7 +242,7 @@ const atsDelta = computed(() =>
     <div class="mb-4">
       <NuxtLink
         :to="`/opportunity/${route.params.id}`"
-        class="text-[13.5px] font-medium text-gray-500 hover:text-navy"
+        class="text-[13.5px] font-medium text-ink/60 hover:text-ink"
       >
         {{ $t('cvOptimize.back') }}
       </NuxtLink>
@@ -262,13 +262,13 @@ const atsDelta = computed(() =>
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
         />
       </svg>
-      <p class="text-sm font-semibold text-navy">{{ $t('cvOptimize.loading') }}</p>
+      <p class="text-sm font-semibold text-ink">{{ $t('cvOptimize.loading') }}</p>
     </div>
 
     <UiCard v-else-if="notFound">
       <div class="py-6 text-center">
-        <p class="text-base font-bold text-navy">{{ $t('opportunity.not_found_title') }}</p>
-        <p class="mt-1 text-sm text-gray-500">{{ $t('opportunity.not_found_text') }}</p>
+        <p class="text-base font-bold text-ink">{{ $t('opportunity.not_found_title') }}</p>
+        <p class="mt-1 text-sm text-ink/60">{{ $t('opportunity.not_found_text') }}</p>
         <NuxtLink
           to="/dashboard"
           class="mt-4 inline-block text-sm font-semibold text-brand hover:underline"
@@ -280,8 +280,8 @@ const atsDelta = computed(() =>
 
     <div v-else class="flex flex-col gap-4">
       <UiCard>
-        <h1 class="text-lg font-extrabold text-navy">{{ offer.title }}</h1>
-        <p class="mt-0.5 text-[13px] font-semibold text-gray-600">
+        <h1 class="text-lg font-black text-ink">{{ offer.title }}</h1>
+        <p class="mt-0.5 text-[13px] font-semibold text-ink/70">
           {{ match.company_name || offer.company_name }}
         </p>
       </UiCard>
@@ -290,8 +290,8 @@ const atsDelta = computed(() =>
 
       <UiCard v-else-if="generationFailed">
         <div class="py-6 text-center">
-          <p class="text-base font-bold text-navy">{{ $t('cvOptimize.error_title') }}</p>
-          <p class="mt-1 text-sm text-gray-500">{{ $t('cvOptimize.error_text') }}</p>
+          <p class="text-base font-bold text-ink">{{ $t('cvOptimize.error_title') }}</p>
+          <p class="mt-1 text-sm text-ink/60">{{ $t('cvOptimize.error_text') }}</p>
           <UiButton class="mt-4" variant="primary" @click="generateOptimization">
             {{ $t('cvOptimize.retry_button') }}
           </UiButton>
@@ -305,17 +305,15 @@ const atsDelta = computed(() =>
         <!-- CENTER COLUMN -->
         <div class="flex min-w-0 flex-col gap-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-base font-bold text-navy">{{ $t('cvOptimize.comparison_title') }}</h2>
+            <h2 class="text-base font-bold text-ink">{{ $t('cvOptimize.comparison_title') }}</h2>
             <div
-              class="flex rounded-lg border border-gray-200 bg-white p-0.5 text-[12.5px] font-semibold"
+              class="flex rounded-[22px] border-[2.5px] border-ink bg-white p-0.5 text-[12.5px] font-semibold"
             >
               <button
                 type="button"
-                class="rounded-md px-3 py-1.5 transition-colors"
+                class="rounded-xl px-3 py-1.5 transition-colors"
                 :class="
-                  viewMode === 'side_by_side'
-                    ? 'bg-brand text-white'
-                    : 'text-gray-500 hover:text-navy'
+                  viewMode === 'side_by_side' ? 'bg-brand text-white' : 'text-ink/60 hover:text-ink'
                 "
                 @click="viewMode = 'side_by_side'"
               >
@@ -323,11 +321,9 @@ const atsDelta = computed(() =>
               </button>
               <button
                 type="button"
-                class="rounded-md px-3 py-1.5 transition-colors"
+                class="rounded-xl px-3 py-1.5 transition-colors"
                 :class="
-                  viewMode === 'changes_only'
-                    ? 'bg-brand text-white'
-                    : 'text-gray-500 hover:text-navy'
+                  viewMode === 'changes_only' ? 'bg-brand text-white' : 'text-ink/60 hover:text-ink'
                 "
                 @click="viewMode = 'changes_only'"
               >
@@ -336,7 +332,7 @@ const atsDelta = computed(() =>
             </div>
           </div>
 
-          <div class="flex flex-wrap gap-4 text-[11.5px] text-gray-500">
+          <div class="flex flex-wrap gap-4 text-[11.5px] text-ink/60">
             <span class="flex items-center gap-1.5">
               <span class="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
               {{ $t('cvOptimize.legend_added') }}
@@ -356,18 +352,18 @@ const atsDelta = computed(() =>
               :class="viewMode === 'side_by_side' ? 'sm:grid-cols-2' : ''"
             >
               <div v-if="viewMode === 'side_by_side'">
-                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                   {{ $t('cvOptimize.current_cv_label') }}
                 </p>
-                <p class="text-[13px] text-gray-500">{{ profile?.headline || '—' }}</p>
+                <p class="text-[13px] text-ink/60">{{ profile?.headline || '—' }}</p>
               </div>
               <div>
-                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                   {{ $t('cvOptimize.optimized_cv_label') }}
                 </p>
                 <p
                   class="rounded px-2 py-1 text-[13px] font-semibold"
-                  :class="headlineChanged ? 'bg-success-light text-success-text' : 'text-navy'"
+                  :class="headlineChanged ? 'bg-success-light text-success-text' : 'text-ink'"
                 >
                   {{ optimization.headline || profile?.headline || '—' }}
                 </p>
@@ -384,15 +380,15 @@ const atsDelta = computed(() =>
               :class="viewMode === 'side_by_side' ? 'sm:grid-cols-2' : ''"
             >
               <div v-if="viewMode === 'side_by_side'">
-                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                   {{ $t('cvOptimize.current_cv_label') }}
                 </p>
-                <p class="text-[12.5px] leading-relaxed text-gray-500">
+                <p class="text-[12.5px] leading-relaxed text-ink/60">
                   {{ profile?.professional_summary || '—' }}
                 </p>
               </div>
               <div>
-                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                   {{ $t('cvOptimize.optimized_cv_label') }}
                 </p>
                 <div
@@ -401,7 +397,7 @@ const atsDelta = computed(() =>
                 >
                   <p
                     class="flex-1 text-[12.5px] leading-relaxed"
-                    :class="summaryChanged ? 'text-success-text' : 'text-navy'"
+                    :class="summaryChanged ? 'text-success-text' : 'text-ink'"
                   >
                     {{ optimization.summary || profile?.professional_summary || '—' }}
                   </p>
@@ -418,7 +414,7 @@ const atsDelta = computed(() =>
             v-if="viewMode === 'side_by_side' || experiencesHaveChanges"
             :title="$t('cvOptimize.experiences_title')"
           >
-            <div class="flex flex-col divide-y divide-gray-100">
+            <div class="flex flex-col divide-y divide-ink/10">
               <div
                 v-for="(pair, index) in experiencePairs"
                 v-show="viewMode === 'side_by_side' || pair.changedBullets.length"
@@ -430,29 +426,29 @@ const atsDelta = computed(() =>
                   :class="viewMode === 'side_by_side' ? 'sm:grid-cols-2' : ''"
                 >
                   <div v-if="viewMode === 'side_by_side'">
-                    <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                       {{ $t('cvOptimize.current_cv_label') }}
                     </p>
-                    <h4 class="text-[13px] font-bold text-navy">{{ pair.original?.title }}</h4>
-                    <p class="text-[11.5px] text-gray-500">
+                    <h4 class="text-[13px] font-bold text-ink">{{ pair.original?.title }}</h4>
+                    <p class="text-[11.5px] text-ink/60">
                       {{ pair.original?.company }} · {{ pair.original?.period }}
                     </p>
                     <ul class="mt-2 space-y-1.5">
                       <li
                         v-for="(bullet, bulletIndex) in pair.originalBullets"
                         :key="bulletIndex"
-                        class="text-[12.5px] leading-relaxed text-gray-600"
+                        class="text-[12.5px] leading-relaxed text-ink/70"
                       >
                         • {{ bullet }}
                       </li>
                     </ul>
                   </div>
                   <div>
-                    <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                    <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                       {{ $t('cvOptimize.optimized_cv_label') }}
                     </p>
-                    <h4 class="text-[13px] font-bold text-navy">{{ pair.optimized.title }}</h4>
-                    <p class="text-[11.5px] text-gray-500">
+                    <h4 class="text-[13px] font-bold text-ink">{{ pair.optimized.title }}</h4>
+                    <p class="text-[11.5px] text-ink/60">
                       {{ pair.optimized.company }} · {{ pair.optimized.period }}
                     </p>
                     <ul class="mt-2 space-y-1.5">
@@ -483,32 +479,30 @@ const atsDelta = computed(() =>
               :class="viewMode === 'side_by_side' ? 'sm:grid-cols-2' : ''"
             >
               <div v-if="viewMode === 'side_by_side'">
-                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                   {{ $t('cvOptimize.current_cv_label') }}
                 </p>
                 <div class="flex flex-wrap gap-2">
                   <span
                     v-for="skill in profile?.skills || []"
                     :key="skill"
-                    class="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700"
+                    class="rounded-2xl bg-lav px-2.5 py-1 text-xs font-semibold text-ink/80"
                   >
                     {{ skill }}
                   </span>
                 </div>
               </div>
               <div>
-                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-gray-400">
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                   {{ $t('cvOptimize.optimized_cv_label') }}
                 </p>
                 <div class="flex flex-wrap gap-2">
                   <span
                     v-for="item in viewMode === 'side_by_side' ? skillPairs : addedSkills"
                     :key="item.skill"
-                    class="rounded-lg px-2.5 py-1 text-xs font-semibold"
+                    class="rounded-2xl px-2.5 py-1 text-xs font-semibold"
                     :class="
-                      item.added
-                        ? 'bg-success-light text-success-text'
-                        : 'bg-gray-100 text-gray-700'
+                      item.added ? 'bg-success-light text-success-text' : 'bg-lav text-ink/80'
                     "
                   >
                     {{ item.skill }}
@@ -520,10 +514,10 @@ const atsDelta = computed(() =>
 
           <UiCard v-if="viewMode === 'changes_only' && !hasAnyChanges">
             <div class="py-6 text-center">
-              <p class="text-base font-bold text-navy">
+              <p class="text-base font-bold text-ink">
                 {{ $t('cvOptimize.empty_changes_title') }}
               </p>
-              <p class="mt-1 text-sm text-gray-500">{{ $t('cvOptimize.empty_changes_text') }}</p>
+              <p class="mt-1 text-sm text-ink/60">{{ $t('cvOptimize.empty_changes_text') }}</p>
             </div>
           </UiCard>
         </div>
@@ -533,16 +527,16 @@ const atsDelta = computed(() =>
           <UiCard :title="$t('cvOptimize.impact_title')">
             <div class="flex items-center justify-center gap-4">
               <div class="text-center">
-                <div class="text-[11px] font-semibold text-gray-500">
+                <div class="text-[11px] font-semibold text-ink/60">
                   {{ $t('cvOptimize.impact_before') }}
                 </div>
-                <div class="text-2xl font-extrabold text-gray-400">
+                <div class="text-2xl font-black text-ink/50">
                   {{ optimization.ats_score_before }}
                 </div>
               </div>
               <div class="text-xl text-brand" aria-hidden="true">→</div>
               <div class="text-center">
-                <div class="text-[11px] font-semibold text-gray-500">
+                <div class="text-[11px] font-semibold text-ink/60">
                   {{ $t('cvOptimize.impact_after') }}
                 </div>
                 <div class="text-2xl font-extrabold text-brand">
@@ -552,7 +546,7 @@ const atsDelta = computed(() =>
             </div>
             <p
               class="mt-3 text-center text-[12.5px] font-semibold"
-              :class="atsDelta > 0 ? 'text-success-text' : 'text-gray-500'"
+              :class="atsDelta > 0 ? 'text-success-text' : 'text-ink/60'"
             >
               {{
                 atsDelta > 0
@@ -566,24 +560,22 @@ const atsDelta = computed(() =>
             <div class="flex flex-col gap-2 text-[13px]">
               <div class="flex items-center gap-2">
                 <span class="h-2.5 w-2.5 rounded-full bg-success" aria-hidden="true" />
-                <span class="flex-1 text-gray-700">{{ $t('cvOptimize.changes_additions') }}</span>
-                <span class="font-bold text-navy">{{ modificationCounts.additions }}</span>
+                <span class="flex-1 text-ink/80">{{ $t('cvOptimize.changes_additions') }}</span>
+                <span class="font-bold text-ink">{{ modificationCounts.additions }}</span>
               </div>
               <div class="flex items-center gap-2">
                 <span class="h-2.5 w-2.5 rounded-full bg-warning" aria-hidden="true" />
-                <span class="flex-1 text-gray-700">{{
-                  $t('cvOptimize.changes_modifications')
-                }}</span>
-                <span class="font-bold text-navy">{{ modificationCounts.modifications }}</span>
+                <span class="flex-1 text-ink/80">{{ $t('cvOptimize.changes_modifications') }}</span>
+                <span class="font-bold text-ink">{{ modificationCounts.modifications }}</span>
               </div>
             </div>
           </UiCard>
 
-          <UiCard v-if="optimization.advice" class="bg-brand-light">
-            <h3 class="mb-1.5 text-sm font-bold text-navy">
+          <UiCard v-if="optimization.advice" tone="lav">
+            <h3 class="mb-1.5 text-sm font-bold text-ink">
               💡 {{ $t('cvOptimize.advice_title') }}
             </h3>
-            <p class="text-[12.5px] leading-relaxed text-gray-700">{{ optimization.advice }}</p>
+            <p class="text-[12.5px] leading-relaxed text-ink/80">{{ optimization.advice }}</p>
           </UiCard>
 
           <!-- Desktop only below `lg` -- on mobile this card and the next
@@ -598,21 +590,14 @@ const atsDelta = computed(() =>
                 v-for="tpl in CV_TEMPLATES"
                 :key="tpl"
                 type="button"
-                class="flex-1 rounded-lg border p-2.5 text-left transition-colors"
-                :class="
-                  selectedTemplate === tpl
-                    ? 'border-brand bg-brand-light'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
-                "
+                class="flex-1 rounded-2xl border-2 border-ink p-2.5 text-left transition-colors"
+                :class="selectedTemplate === tpl ? 'bg-sun' : 'bg-white hover:bg-lav'"
                 @click="selectedTemplate = tpl"
               >
-                <p
-                  class="text-[13px] font-bold"
-                  :class="selectedTemplate === tpl ? 'text-brand' : 'text-navy'"
-                >
+                <p class="text-[13px] font-bold" :class="'text-ink'">
                   {{ $t(`cvOptimize.template_${tpl}`) }}
                 </p>
-                <p class="mt-0.5 text-[11.5px] text-gray-500">
+                <p class="mt-0.5 text-[11.5px] text-ink/60">
                   {{ $t(`cvOptimize.template_${tpl}_desc`) }}
                 </p>
               </button>
@@ -643,7 +628,7 @@ const atsDelta = computed(() =>
               >
                 {{ $t('cvOptimize.confirm_button') }}
               </UiButton>
-              <p class="mt-2 text-[11px] leading-relaxed text-gray-400">
+              <p class="mt-2 text-[11px] leading-relaxed text-ink/50">
                 {{ $t('cvOptimize.confirm_note') }}
               </p>
             </template>
@@ -665,23 +650,18 @@ const atsDelta = computed(() =>
       element -- `h-28` spacer below keeps it from covering the last card. -->
       <div
         v-if="optimization"
-        class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white p-3 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] lg:hidden"
+        class="fixed inset-x-0 bottom-0 z-30 rounded-t-[22px] border-x-[2.5px] border-t-[2.5px] border-ink bg-white p-3 lg:hidden"
       >
         <div class="mb-2 flex gap-2">
           <button
             v-for="tpl in CV_TEMPLATES"
             :key="tpl"
             type="button"
-            class="flex-1 rounded-lg border px-2.5 py-2 text-left transition-colors"
-            :class="
-              selectedTemplate === tpl ? 'border-brand bg-brand-light' : 'border-gray-200 bg-white'
-            "
+            class="flex-1 rounded-2xl border-2 border-ink px-2.5 py-2 text-left transition-colors"
+            :class="selectedTemplate === tpl ? 'bg-sun' : 'bg-white'"
             @click="selectedTemplate = tpl"
           >
-            <p
-              class="text-[12.5px] font-bold"
-              :class="selectedTemplate === tpl ? 'text-brand' : 'text-navy'"
-            >
+            <p class="text-[12.5px] font-bold" :class="'text-ink'">
               {{ $t(`cvOptimize.template_${tpl}`) }}
             </p>
           </button>

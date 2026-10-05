@@ -62,10 +62,10 @@ async function onContinue() {
 <template>
   <NuxtLayout name="onboarding">
     <div>
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
+      <h1 class="mb-1.5 text-2xl font-black text-ink">
         {{ $t('onboarding.preferences.title') }}
       </h1>
-      <p class="mb-7 text-gray-500">{{ $t('onboarding.preferences.subtitle') }}</p>
+      <p class="mb-7 text-ink/60">{{ $t('onboarding.preferences.subtitle') }}</p>
 
       <div
         v-if="showUpdatedBanner"
@@ -77,14 +77,11 @@ async function onContinue() {
 
       <!-- Always mounted (not gated behind v-if) so the template ref exists
            as soon as onMounted runs and can be populated via applyProfile(). -->
-      <div
-        v-show="ready"
-        class="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-soft"
-      >
+      <div v-show="ready" class="overflow-hidden rounded-[22px] border-[2.5px] border-ink bg-white">
         <OnboardingPreferencesForm ref="formRef" :location="location" padded />
       </div>
 
-      <div v-if="ready" class="mt-4 rounded-xl bg-gray-100/70 px-4 py-3 text-sm text-gray-500">
+      <div v-if="ready" class="mt-4 rounded-xl bg-lav/70 px-4 py-3 text-sm text-ink/60">
         {{ $t('onboarding.preferences.note') }}
       </div>
     </div>

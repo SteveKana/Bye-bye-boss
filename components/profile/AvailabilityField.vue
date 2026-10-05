@@ -84,7 +84,7 @@ function onNoticeChange(value) {
           role="radio"
           :aria-checked="localStatus === opt.value"
           class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"
-          :class="localStatus === opt.value ? 'border-brand' : 'border-gray-300'"
+          :class="localStatus === opt.value ? 'border-brand' : 'border-ink/40'"
           @click="select(opt.value)"
         >
           <span v-if="localStatus === opt.value" class="h-2.5 w-2.5 rounded-full bg-brand" />
@@ -105,7 +105,7 @@ function onNoticeChange(value) {
         <input
           v-if="opt.value === 'date'"
           type="date"
-          class="rounded-md border-[1.5px] border-gray-200 px-2.5 py-1.5 text-[13px] text-gray-900 outline-none focus:border-brand"
+          class="rounded-xl border-2 border-ink px-2.5 py-1.5 text-[13px] text-ink outline-none focus:border-brand"
           :value="date || ''"
           @focus="localStatus = 'date'"
           @change="onDateChange($event.target.value)"
@@ -113,7 +113,7 @@ function onNoticeChange(value) {
 
         <select
           v-if="opt.value === 'notice'"
-          class="rounded-md border-[1.5px] border-gray-200 px-2.5 py-1.5 text-[13px] text-gray-900 outline-none focus:border-brand"
+          class="rounded-xl border-2 border-ink px-2.5 py-1.5 text-[13px] text-ink outline-none focus:border-brand"
           :value="noticeMonths || ''"
           @focus="localStatus = 'notice'"
           @change="onNoticeChange($event.target.value)"
@@ -126,7 +126,7 @@ function onNoticeChange(value) {
       </div>
     </div>
 
-    <div class="mt-3 flex items-start gap-2 rounded-lg bg-gray-50 p-3 text-[12.5px] text-gray-600">
+    <div class="mt-3 flex items-start gap-2 rounded-2xl bg-lav/40 p-3 text-[12.5px] text-ink/70">
       <span aria-hidden="true">ⓘ</span>
       <span>{{ $t(infoKey, { date: formattedDate, months: noticeMonths }) }}</span>
     </div>

@@ -112,11 +112,11 @@ defineExpose({ form, applyProfile })
         <div
           v-for="(exp, i) in form.experiences"
           :key="i"
-          class="relative rounded-lg border border-gray-100 bg-gray-50 p-4"
+          class="relative rounded-[18px] border-2 border-ink/30 bg-lav/40 p-4"
         >
           <button
             type="button"
-            class="absolute right-3 top-3 text-gray-400 hover:text-danger"
+            class="absolute right-3 top-3 text-ink/50 hover:text-danger"
             :aria-label="$t('onboarding.verification.remove')"
             @click="removeExperience(i)"
           >
@@ -138,7 +138,7 @@ defineExpose({ form, applyProfile })
             class="mb-3"
           />
           <div>
-            <p class="mb-1.5 text-sm font-semibold text-gray-900">
+            <p class="mb-1.5 text-sm font-semibold text-ink">
               {{ $t('onboarding.verification.tools') }}
             </p>
             <OnboardingTagInput
@@ -168,11 +168,11 @@ defineExpose({ form, applyProfile })
         <div
           v-for="(f, i) in form.formations"
           :key="i"
-          class="relative grid grid-cols-1 gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4 pr-10 sm:grid-cols-2"
+          class="relative grid grid-cols-1 gap-3 rounded-[18px] border-2 border-ink/30 bg-lav/40 p-4 pr-10 sm:grid-cols-2"
         >
           <button
             type="button"
-            class="absolute right-3 top-3 text-gray-400 hover:text-danger"
+            class="absolute right-3 top-3 text-ink/50 hover:text-danger"
             :aria-label="$t('onboarding.verification.remove')"
             @click="removeFormation(i)"
           >
@@ -197,11 +197,11 @@ defineExpose({ form, applyProfile })
           <div
             v-for="(lang, i) in form.languages"
             :key="i"
-            class="relative flex items-end gap-2 rounded-lg border border-gray-100 bg-gray-50 p-3 pr-9"
+            class="relative flex items-end gap-2 rounded-[18px] border-2 border-ink/30 bg-lav/40 p-3 pr-9"
           >
             <button
               type="button"
-              class="absolute right-2 top-2 text-gray-400 hover:text-danger"
+              class="absolute right-2 top-2 text-ink/50 hover:text-danger"
               :aria-label="$t('onboarding.verification.remove')"
               @click="removeLanguage(i)"
             >
@@ -226,11 +226,11 @@ defineExpose({ form, applyProfile })
           <div
             v-for="(cert, i) in form.certifications"
             :key="i"
-            class="relative rounded-lg border border-gray-100 bg-gray-50 p-3 pr-9"
+            class="relative rounded-[18px] border-2 border-ink/30 bg-lav/40 p-3 pr-9"
           >
             <button
               type="button"
-              class="absolute right-2 top-2 text-gray-400 hover:text-danger"
+              class="absolute right-2 top-2 text-ink/50 hover:text-danger"
               :aria-label="$t('onboarding.verification.remove')"
               @click="removeCertification(i)"
             >
@@ -262,13 +262,13 @@ defineExpose({ form, applyProfile })
     <!-- Localisation -->
     <UiCard>
       <div class="mb-4">
-        <label class="mb-1.5 block text-sm font-semibold text-gray-900">
+        <label class="mb-1.5 block text-sm font-semibold text-ink">
           {{ $t('onboarding.verification.location') }}
         </label>
         <ProfileCityAutocomplete v-model="form.location" />
       </div>
       <div>
-        <label class="mb-1.5 block text-sm font-semibold text-gray-900">
+        <label class="mb-1.5 block text-sm font-semibold text-ink">
           {{ $t('onboarding.verification.availability') }}
         </label>
         <ProfileAvailabilityField

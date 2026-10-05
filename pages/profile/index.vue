@@ -176,15 +176,15 @@ async function downloadCv() {
 <template>
   <div v-if="!loading && profile">
     <div class="mb-6">
-      <h1 class="text-2xl font-extrabold text-navy">{{ $t('profileCv.title') }}</h1>
-      <p class="mt-1 text-sm text-gray-500">{{ $t('profileCv.subtitle') }}</p>
+      <h1 class="text-2xl font-black text-ink">{{ $t('profileCv.title') }}</h1>
+      <p class="mt-1 text-sm text-ink/60">{{ $t('profileCv.subtitle') }}</p>
     </div>
 
     <!-- CV summary -- kept first so the CV itself (and the reimport action)
          is the first thing found on this page, ahead of the editable fields
          below it. -->
     <UiCard class="mb-4">
-      <h2 class="mb-3 text-base font-bold text-navy">{{ $t('profileCv.your_cv') }}</h2>
+      <h2 class="mb-3 text-base font-bold text-ink">{{ $t('profileCv.your_cv') }}</h2>
 
       <!-- Row 1: download, alone, filename in the label -->
       <UiButton
@@ -202,13 +202,13 @@ async function downloadCv() {
 
       <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
         <div>
-          <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.last_update') }}</div>
-          <div class="text-lg font-extrabold text-navy">{{ updatedAgo }}</div>
+          <div class="text-[11.5px] text-ink/60">{{ $t('profileCv.last_update') }}</div>
+          <div class="text-lg font-black text-ink">{{ updatedAgo }}</div>
         </div>
         <div>
-          <div class="text-[11.5px] text-gray-500">{{ $t('profileCv.total_experience') }}</div>
+          <div class="text-[11.5px] text-ink/60">{{ $t('profileCv.total_experience') }}</div>
           <div
-            class="inline-block rounded text-lg font-extrabold text-navy"
+            class="inline-block rounded text-lg font-black text-ink"
             :class="isUpdated('total_experience') && 'bg-success-light px-1'"
           >
             {{ profile.total_experience || '—' }}
@@ -223,10 +223,10 @@ async function downloadCv() {
         <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
           ⬆ {{ $t('profileCv.reupload') }}
         </UiButton>
-        <span class="text-sm text-gray-400">{{ $t('common.or') }}</span>
+        <span class="text-sm text-ink/50">{{ $t('common.or') }}</span>
         <NuxtLink
           to="/profile/edit"
-          class="inline-flex items-center gap-1.5 rounded-md bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
+          class="inline-flex items-center gap-1.5 rounded-xl bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
         >
           {{ $t('profileCv.edit_fields') }} →
         </NuxtLink>
@@ -251,7 +251,7 @@ async function downloadCv() {
         <div>
           <ProfileEditableField
             :model-value="`${profile.first_name || ''} ${profile.last_name || ''}`.trim()"
-            :text-class="highlightClass('name', 'text-[17px] font-extrabold text-navy')"
+            :text-class="highlightClass('name', 'text-[17px] font-black text-ink')"
             @commit="
               (v) => {
                 const [first, ...rest] = v.split(' ')
@@ -262,7 +262,7 @@ async function downloadCv() {
           />
           <ProfileEditableField
             :model-value="profile.headline || ''"
-            :text-class="highlightClass('headline', 'text-[13px] text-gray-500')"
+            :text-class="highlightClass('headline', 'text-[13px] text-ink/60')"
             class="mt-0.5"
             @commit="(v) => saveField('headline', v)"
           />
@@ -273,25 +273,25 @@ async function downloadCv() {
         <ProfileEditableField
           :label="$t('profileCv.email')"
           :model-value="profile.email || ''"
-          :text-class="highlightClass('email', 'text-[13.5px] font-semibold text-gray-900')"
+          :text-class="highlightClass('email', 'text-[13.5px] font-semibold text-ink')"
           @commit="(v) => saveField('email', v)"
         />
         <div>
-          <div class="mb-1 text-[11px] text-gray-400">{{ $t('profileCv.location') }}</div>
+          <div class="mb-1 text-[11px] text-ink/50">{{ $t('profileCv.location') }}</div>
           <!-- Class passed straight to the component (not a wrapping div) so
                the highlight lands on its own root element, which is capped
                at max-w-xs -- a wrapper wound up wider than that and left a
                big blank green rectangle past the actual input. -->
           <ProfileCityAutocomplete
             :model-value="profile.location || ''"
-            :class="isUpdated('location') && 'rounded-md bg-success-light ring-2 ring-success/40'"
+            :class="isUpdated('location') && 'rounded-xl bg-success-light ring-2 ring-success/40'"
             @commit="(v) => saveField('location', v)"
           />
         </div>
       </div>
 
       <div class="mt-4">
-        <div class="mb-1 flex items-center gap-2 text-[11px] text-gray-400">
+        <div class="mb-1 flex items-center gap-2 text-[11px] text-ink/50">
           {{ $t('profileCv.availability') }}
           <Transition name="fade">
             <span
@@ -311,14 +311,14 @@ async function downloadCv() {
         />
         <span
           v-else
-          class="inline-flex cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-[13.5px] font-semibold text-gray-900"
+          class="inline-flex cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-[13.5px] font-semibold text-ink"
           :class="isUpdated('availability') && 'bg-success-light'"
           @click="editingAvailability = true"
         >
           {{ availabilityLabel }}
           <button
             type="button"
-            class="flex h-5 w-5 items-center justify-center rounded text-gray-300 hover:bg-brand-light hover:text-brand"
+            class="flex h-5 w-5 items-center justify-center rounded text-ink/50 hover:bg-brand-light hover:text-brand"
             :aria-label="$t('profileCv.edit')"
           >
             ✎
@@ -330,10 +330,10 @@ async function downloadCv() {
     <!-- Professional synthesis, generated from the CV -- read-only, absent
          until the candidate (re)imports a CV processed with this feature. -->
     <UiCard v-if="hasProfessionalSynthesis" class="mb-4">
-      <h2 class="text-base font-bold text-navy">
+      <h2 class="text-base font-bold text-ink">
         {{ $t('profileCv.professional_section_title') }}
       </h2>
-      <p class="mb-3 mt-1 text-xs text-gray-400">
+      <p class="mb-3 mt-1 text-xs text-ink/50">
         {{ $t('profileCv.professional_section_subtitle') }}
       </p>
 
@@ -343,7 +343,7 @@ async function downloadCv() {
            (which doesn't appear anywhere else) stays in this section. -->
       <p
         v-if="profile.professional_summary"
-        class="mt-1 rounded text-[13.5px] text-gray-600"
+        class="mt-1 rounded text-[13.5px] text-ink/70"
         :class="isUpdated('professional_summary') && 'bg-success-light px-1.5 py-1'"
       >
         {{ profile.professional_summary }}
@@ -351,7 +351,7 @@ async function downloadCv() {
 
       <div v-if="profile.identified_roles?.length" class="mt-4">
         <h4
-          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500"
+          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60"
         >
           {{ $t('profileCv.identified_roles_title') }}
           <span
@@ -365,7 +365,7 @@ async function downloadCv() {
           <span
             v-for="role in profile.identified_roles"
             :key="role"
-            class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+            class="rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
           >
             {{ role }}
           </span>
@@ -374,7 +374,7 @@ async function downloadCv() {
 
       <div v-if="profile.domains?.length" class="mt-4">
         <h4
-          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500"
+          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60"
         >
           {{ $t('profileCv.domains_title') }}
           <span
@@ -388,7 +388,7 @@ async function downloadCv() {
           <span
             v-for="domain in profile.domains"
             :key="domain"
-            class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
+            class="rounded-full bg-lav px-3 py-1 text-xs font-semibold text-ink/80"
           >
             {{ domain }}
           </span>
@@ -399,7 +399,7 @@ async function downloadCv() {
     <!-- Skills, grouped by category when the CV synthesis provided one;
          falls back to the flat list for profiles not yet reprocessed. -->
     <UiCard v-if="profile.skill_categories?.length || profile.skills?.length" class="mb-4">
-      <h2 class="mb-3 flex items-center gap-2 text-base font-bold text-navy">
+      <h2 class="mb-3 flex items-center gap-2 text-base font-bold text-ink">
         {{ $t('profileCv.skills_detected_title') }}
         <span
           v-if="isUpdated('skills')"
@@ -411,14 +411,14 @@ async function downloadCv() {
 
       <div v-if="profile.skill_categories?.length">
         <div v-for="cat in profile.skill_categories" :key="cat.category" class="mb-4 last:mb-0">
-          <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+          <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60">
             {{ cat.category }}
           </h4>
           <div class="flex flex-wrap gap-2">
             <span
               v-for="skill in cat.skills"
               :key="skill"
-              class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+              class="rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
             >
               {{ skill }}
             </span>
@@ -430,12 +430,12 @@ async function downloadCv() {
           <span
             v-for="s in profile.skills"
             :key="s"
-            class="rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+            class="rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
           >
             {{ s }}
           </span>
         </div>
-        <p class="mt-2 text-xs text-gray-400">{{ $t('profileCv.key_skills_hint') }}</p>
+        <p class="mt-2 text-xs text-ink/50">{{ $t('profileCv.key_skills_hint') }}</p>
       </div>
     </UiCard>
   </div>

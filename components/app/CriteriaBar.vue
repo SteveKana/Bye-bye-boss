@@ -11,15 +11,15 @@ defineProps({
 
 <template>
   <div v-if="criteria.length" class="mb-6 flex flex-wrap items-center gap-2 text-sm">
-    <span class="font-semibold text-gray-500">{{ $t('dashboard.your_search') }}</span>
+    <span class="font-extrabold text-ink">{{ $t('dashboard.your_search') }}</span>
     <span
       v-for="c in criteria"
       :key="c"
-      class="rounded-full bg-brand px-3 py-1 text-[13px] font-medium text-white shadow-soft"
+      class="rounded-full border-2 border-ink bg-white px-3 py-1 text-[13px] font-bold text-ink"
     >
       {{ c }}
     </span>
-    <NuxtLink to="/preferences" class="font-semibold text-brand hover:underline">
+    <NuxtLink to="/preferences" class="font-extrabold text-brand hover:underline">
       {{ $t('dashboard.edit_preferences') }} →
     </NuxtLink>
   </div>

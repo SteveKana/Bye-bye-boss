@@ -30,7 +30,7 @@ function removeTag(index) {
     <span
       v-for="(tag, i) in modelValue"
       :key="`${tag}-${i}`"
-      class="inline-flex items-center gap-1.5 rounded-full bg-brand-light px-3 py-1 text-sm font-medium text-brand-text"
+      class="inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-lav px-3 py-1 text-sm font-bold text-ink"
     >
       {{ tag }}
       <button
@@ -47,7 +47,7 @@ function removeTag(index) {
       <input
         v-model="draft"
         type="text"
-        class="w-28 rounded-full border border-dashed border-gray-300 bg-white px-3 py-1 text-sm outline-none focus:border-brand"
+        class="w-28 rounded-full border border-dashed border-ink/40 bg-white px-3 py-1 text-sm outline-none focus:border-brand"
         @keydown.enter.prevent="addTag"
       />
       <button

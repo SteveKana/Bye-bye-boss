@@ -21,12 +21,12 @@ export function useApplicationStatus() {
   // Full class names so Tailwind keeps them (same convention as
   // dashboard.vue's scoreColors comment).
   const STYLES = {
-    not_applied: 'bg-gray-100 text-gray-500',
-    applied: 'bg-brand-light text-brand-text',
-    interview: 'bg-warning-light text-warning',
-    offer: 'bg-success-light text-success-text',
-    rejected: 'bg-danger-light text-danger',
-    withdrawn: 'bg-gray-100 text-gray-400',
+    not_applied: 'border-2 border-ink bg-white text-ink',
+    applied: 'border-2 border-ink bg-lav text-ink',
+    interview: 'border-2 border-ink bg-sun text-ink',
+    offer: 'border-2 border-ink bg-success-light text-ink',
+    rejected: 'border-2 border-ink bg-blush text-ink',
+    withdrawn: 'border-2 border-ink/30 bg-white text-ink/50',
   }
 
   function label(status) {

@@ -56,8 +56,8 @@ async function onSave() {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-extrabold text-navy">{{ $t('preferencesPage.title') }}</h1>
-      <p class="mt-1 text-sm text-gray-500">{{ $t('preferencesPage.subtitle') }}</p>
+      <h1 class="text-2xl font-black text-ink">{{ $t('preferencesPage.title') }}</h1>
+      <p class="mt-1 text-sm text-ink/60">{{ $t('preferencesPage.subtitle') }}</p>
     </div>
 
     <!-- Always mounted (not gated behind v-if) so the template ref exists as

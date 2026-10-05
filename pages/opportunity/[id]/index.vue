@@ -81,15 +81,15 @@ const scoreBlocks = computed(() => [
     key: 'ats',
     label: t('opportunity.score_ats'),
     value: match.value?.ats_score,
-    colorClass: 'text-green-600',
-    barClass: 'bg-green-600',
+    colorClass: 'text-ink',
+    barClass: 'bg-ink',
   },
   {
     key: 'career',
     label: t('opportunity.score_career'),
     value: match.value?.career_score,
-    colorClass: 'text-blue-600',
-    barClass: 'bg-blue-600',
+    colorClass: 'text-ink',
+    barClass: 'bg-blush',
   },
   {
     key: 'potential',
@@ -167,7 +167,7 @@ async function openExternalOffer() {
 <template>
   <div>
     <div class="mb-4">
-      <NuxtLink to="/dashboard" class="text-[13.5px] font-medium text-gray-500 hover:text-navy">
+      <NuxtLink to="/dashboard" class="text-[13.5px] font-medium text-ink/60 hover:text-ink">
         {{ $t('opportunity.back') }}
       </NuxtLink>
     </div>
@@ -186,13 +186,13 @@ async function openExternalOffer() {
           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
         />
       </svg>
-      <p class="text-sm font-semibold text-navy">{{ $t('opportunity.loading') }}</p>
+      <p class="text-sm font-semibold text-ink">{{ $t('opportunity.loading') }}</p>
     </div>
 
     <UiCard v-else-if="notFound">
       <div class="py-6 text-center">
-        <p class="text-base font-bold text-navy">{{ $t('opportunity.not_found_title') }}</p>
-        <p class="mt-1 text-sm text-gray-500">{{ $t('opportunity.not_found_text') }}</p>
+        <p class="text-base font-bold text-ink">{{ $t('opportunity.not_found_title') }}</p>
+        <p class="mt-1 text-sm text-ink/60">{{ $t('opportunity.not_found_text') }}</p>
         <NuxtLink
           to="/dashboard"
           class="mt-4 inline-block text-sm font-semibold text-brand hover:underline"
@@ -229,16 +229,14 @@ async function openExternalOffer() {
 
             <div class="min-w-0 flex-1">
               <div class="flex flex-wrap items-center gap-2">
-                <h1 class="text-xl font-extrabold text-navy">{{ offer.title }}</h1>
+                <h1 class="text-xl font-black text-ink">{{ offer.title }}</h1>
                 <AppFitBadge :fit="fit" />
               </div>
-              <p class="mt-0.5 text-[14.5px] font-semibold text-gray-700">
+              <p class="mt-0.5 text-[14.5px] font-semibold text-ink/80">
                 {{ match.company_name || offer.company_name }}
               </p>
 
-              <div
-                class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-gray-500"
-              >
+              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-ink/60">
                 <span v-if="offer.location">📍 {{ offer.location }}</span>
                 <span v-if="offer.is_full_remote" class="font-semibold text-brand"
                   >🏠 {{ $t('opportunity.full_remote') }}</span
@@ -266,13 +264,13 @@ async function openExternalOffer() {
                 <span
                   v-for="skill in headerSkillTags.shown"
                   :key="skill"
-                  class="break-words rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-700"
+                  class="break-words rounded-2xl bg-lav px-2.5 py-1 text-xs font-semibold text-ink/80"
                 >
                   {{ skill }}
                 </span>
                 <span
                   v-if="headerSkillTags.extra"
-                  class="rounded-lg bg-brand-light px-2.5 py-1 text-xs font-semibold text-brand-text"
+                  class="rounded-2xl bg-brand-light px-2.5 py-1 text-xs font-semibold text-brand-text"
                 >
                   +{{ headerSkillTags.extra }}
                 </span>
@@ -313,11 +311,11 @@ async function openExternalOffer() {
              (Steve, screenshot from a WhatsApp-alert click on mobile).
              Duplicated rather than reflowed with `order` because the two
              columns are separate DOM subtrees, not siblings in one grid. -->
-        <UiCard v-if="!isPending" class="bg-brand-light lg:hidden">
-          <h3 class="mb-2 text-[15px] font-bold text-navy">
+        <UiCard v-if="!isPending" tone="sun" class="lg:hidden">
+          <h3 class="mb-2 text-[15px] font-bold text-ink">
             📝 {{ $t('opportunity.ready_title') }}
           </h3>
-          <p class="mb-3.5 text-[12.5px] leading-relaxed text-gray-700">
+          <p class="mb-3.5 text-[12.5px] leading-relaxed text-ink/80">
             {{
               gapsCount
                 ? $t('opportunity.ready_text', { count: gapsCount })
@@ -337,25 +335,25 @@ async function openExternalOffer() {
              mockup's separate structured offer page isn't built (no backend
              data broken out into company/mission/profile sections). -->
         <UiCard v-if="offer.description" :title="$t('opportunity.description_title')">
-          <p class="whitespace-pre-line text-[13.5px] leading-relaxed text-gray-700">
+          <p class="whitespace-pre-line text-[13.5px] leading-relaxed text-ink/80">
             {{ offer.description }}
           </p>
         </UiCard>
 
         <!-- Scores -->
         <UiCard v-if="isPending">
-          <p class="text-sm font-semibold text-gray-500">
+          <p class="text-sm font-semibold text-ink/60">
             ⏳ {{ $t('opportunity.analysis_pending') }}
           </p>
         </UiCard>
         <UiCard v-else>
           <div class="grid grid-cols-2 gap-5 sm:grid-cols-3">
             <div v-for="block in scoreBlocks" :key="block.key">
-              <div class="text-[12.5px] font-semibold text-gray-500">{{ block.label }}</div>
+              <div class="text-[12.5px] font-semibold text-ink/60">{{ block.label }}</div>
               <div class="mb-1.5 text-2xl font-extrabold" :class="block.colorClass">
-                {{ block.value }}<span class="text-xs font-medium text-gray-400">/100</span>
+                {{ block.value }}<span class="text-xs font-medium text-ink/50">/100</span>
               </div>
-              <div class="h-1.5 overflow-hidden rounded-full bg-gray-100">
+              <div class="h-1.5 overflow-hidden rounded-full bg-lav">
                 <div
                   class="h-full rounded-full"
                   :class="block.barClass"
@@ -408,18 +406,18 @@ async function openExternalOffer() {
         <UiCard v-if="requirementGroups.length" :title="$t('opportunity.requirements_title')">
           <div class="flex flex-col gap-4">
             <div v-for="group in requirementGroups" :key="group.label">
-              <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-gray-500">
+              <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60">
                 {{ group.label }}
               </h4>
               <div class="flex flex-wrap gap-2">
                 <span
                   v-for="(item, index) in group.items"
                   :key="`${item.skill}-${index}`"
-                  class="max-w-full break-words rounded-full border px-3 py-1 text-xs font-semibold"
+                  class="max-w-full break-words rounded-full border-2 px-3 py-1 text-xs font-bold"
                   :class="
                     item.importance === 'preferred' || item.importance === 'nice_to_have'
-                      ? 'border-gray-200 bg-gray-50 text-gray-500'
-                      : 'border-brand-light bg-brand-light text-brand-dark'
+                      ? 'border-ink/30 bg-white text-ink/70'
+                      : 'border-ink bg-lav text-ink'
                   "
                 >
                   {{ item.label || item.skill }}
@@ -431,11 +429,11 @@ async function openExternalOffer() {
 
         <!-- Matches -->
         <UiCard v-if="matchGroups.length" :title="$t('opportunity.matches_title')">
-          <p class="mb-4 text-xs italic leading-relaxed text-gray-500">
+          <p class="mb-4 text-xs italic leading-relaxed text-ink/60">
             {{ $t('opportunity.matches_note') }}
           </p>
           <div v-for="group in matchGroups" :key="group.key" class="mb-4 last:mb-0">
-            <h4 class="mb-2 text-[12.5px] font-bold text-navy">
+            <h4 class="mb-2 text-[12.5px] font-bold text-ink">
               {{ group.label }} ({{ group.items.length }})
             </h4>
             <div class="flex flex-col gap-2">
@@ -453,18 +451,18 @@ async function openExternalOffer() {
                   }}
                 </span>
                 <span
-                  class="w-0 flex-1 truncate text-[12.5px] font-medium text-navy sm:w-60 sm:flex-none"
+                  class="w-0 flex-1 truncate text-[12.5px] font-medium text-ink sm:w-60 sm:flex-none"
                 >
                   {{ item.label || item.skill }}
                 </span>
-                <div class="hidden h-1.5 flex-1 overflow-hidden rounded-full bg-gray-100 sm:block">
+                <div class="hidden h-1.5 flex-1 overflow-hidden rounded-full bg-lav sm:block">
                   <div
                     class="h-full rounded-full"
                     :class="group.style.bar"
                     :style="{ width: `${item.confidence}%` }"
                   />
                 </div>
-                <span class="w-9 shrink-0 text-right text-[11.5px] font-bold text-gray-500">
+                <span class="w-9 shrink-0 text-right text-[11.5px] font-bold text-ink/60">
                   {{ item.confidence }}%
                 </span>
               </div>
@@ -479,28 +477,28 @@ async function openExternalOffer() {
         >
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div v-if="analysis.career_explanation?.length">
-              <h4 class="mb-2.5 text-[13px] font-bold text-navy">
+              <h4 class="mb-2.5 text-[13px] font-bold text-ink">
                 {{ $t('opportunity.explain_career_title', { score: match.career_score }) }}
               </h4>
               <ul class="flex flex-col gap-2.5">
                 <li
                   v-for="(line, index) in analysis.career_explanation"
                   :key="index"
-                  class="relative pl-3.5 text-[12.5px] leading-relaxed text-gray-700"
+                  class="relative pl-3.5 text-[12.5px] leading-relaxed text-ink/80"
                 >
                   <span class="absolute left-0 font-bold text-brand">•</span>{{ line }}
                 </li>
               </ul>
             </div>
             <div v-if="analysis.ats_explanation?.length">
-              <h4 class="mb-2.5 text-[13px] font-bold text-navy">
+              <h4 class="mb-2.5 text-[13px] font-bold text-ink">
                 {{ $t('opportunity.explain_ats_title', { score: match.ats_score }) }}
               </h4>
               <ul class="flex flex-col gap-2.5">
                 <li
                   v-for="(line, index) in analysis.ats_explanation"
                   :key="index"
-                  class="relative pl-3.5 text-[12.5px] leading-relaxed text-gray-700"
+                  class="relative pl-3.5 text-[12.5px] leading-relaxed text-ink/80"
                 >
                   <span class="absolute left-0 font-bold text-brand">•</span>{{ line }}
                 </li>
@@ -511,24 +509,24 @@ async function openExternalOffer() {
 
         <!-- ATS gaps -->
         <UiCard v-if="analysis.ats_gaps?.length" :title="$t('opportunity.gaps_title')">
-          <p class="mb-4 text-[12.5px] leading-relaxed text-gray-500">
+          <p class="mb-4 text-[12.5px] leading-relaxed text-ink/60">
             {{ $t('opportunity.gaps_intro', { count: gapsCount }) }}
           </p>
           <div class="flex flex-col gap-3">
             <div
               v-for="(gap, index) in analysis.ats_gaps"
               :key="index"
-              class="rounded-lg bg-gray-50 p-3.5"
+              class="rounded-2xl bg-lav/40 p-3.5"
             >
-              <div class="mb-1.5 text-[13.5px] font-bold text-navy">
+              <div class="mb-1.5 text-[13.5px] font-bold text-ink">
                 {{ gap.label || gap.skill }}
               </div>
-              <p v-if="gap.why_it_matters" class="mb-1 text-[12.5px] leading-relaxed text-gray-700">
-                <strong class="font-bold text-navy">{{ $t('opportunity.gap_why_label') }}</strong>
+              <p v-if="gap.why_it_matters" class="mb-1 text-[12.5px] leading-relaxed text-ink/80">
+                <strong class="font-bold text-ink">{{ $t('opportunity.gap_why_label') }}</strong>
                 {{ gap.why_it_matters }}
               </p>
-              <p v-if="gap.cv_fix_example" class="text-[12.5px] leading-relaxed text-gray-700">
-                <strong class="font-bold text-navy">{{ $t('opportunity.gap_fix_label') }}</strong>
+              <p v-if="gap.cv_fix_example" class="text-[12.5px] leading-relaxed text-ink/80">
+                <strong class="font-bold text-ink">{{ $t('opportunity.gap_fix_label') }}</strong>
                 {{ gap.cv_fix_example }}
               </p>
             </div>
@@ -549,11 +547,8 @@ async function openExternalOffer() {
                 {{ index + 1 }}
               </span>
               <div>
-                <div class="text-[13px] font-bold text-navy">{{ action.action }}</div>
-                <div
-                  v-if="action.details"
-                  class="mt-0.5 text-[12.5px] leading-relaxed text-gray-500"
-                >
+                <div class="text-[13px] font-bold text-ink">{{ action.action }}</div>
+                <div v-if="action.details" class="mt-0.5 text-[12.5px] leading-relaxed text-ink/60">
                   {{ action.details }}
                 </div>
               </div>
@@ -565,20 +560,20 @@ async function openExternalOffer() {
       <!-- RIGHT COLUMN -->
       <div class="flex flex-col gap-4">
         <UiCard :title="$t('opportunity.details_title')" flush>
-          <div class="divide-y divide-gray-100 px-5">
+          <div class="divide-y divide-ink/10 px-5">
             <div
               v-if="contractTag(offer.contract_type)"
               class="flex items-center gap-2 py-2.5 text-[13px]"
             >
-              <span class="flex-1 text-gray-500">{{ $t('opportunity.detail_contract') }}</span>
-              <span class="font-bold text-navy">{{ contractTag(offer.contract_type) }}</span>
+              <span class="flex-1 text-ink/60">{{ $t('opportunity.detail_contract') }}</span>
+              <span class="font-bold text-ink">{{ contractTag(offer.contract_type) }}</span>
             </div>
             <div
               v-if="offer.is_full_remote || offer.location"
               class="flex items-center gap-2 py-2.5 text-[13px]"
             >
-              <span class="flex-1 text-gray-500">{{ $t('opportunity.detail_remote') }}</span>
-              <span class="font-bold text-navy">
+              <span class="flex-1 text-ink/60">{{ $t('opportunity.detail_remote') }}</span>
+              <span class="font-bold text-ink">
                 {{ offer.is_full_remote ? $t('opportunity.full_remote') : offer.location }}
               </span>
             </div>
@@ -586,8 +581,8 @@ async function openExternalOffer() {
               v-if="publishedLabel(offer.published_at)"
               class="flex items-center gap-2 py-2.5 text-[13px]"
             >
-              <span class="flex-1 text-gray-500">{{ $t('opportunity.detail_published') }}</span>
-              <span class="flex items-center gap-0.5 font-bold text-navy">
+              <span class="flex-1 text-ink/60">{{ $t('opportunity.detail_published') }}</span>
+              <span class="flex items-center gap-0.5 font-bold text-ink">
                 {{ publishedLabel(offer.published_at) }}
                 <UiWarningHint
                   v-if="offer.source === 'adzuna'"
@@ -600,11 +595,11 @@ async function openExternalOffer() {
 
         <!-- Desktop original -- see the lg:hidden mobile copy above the
              description for why this is now hidden below lg. -->
-        <UiCard v-if="!isPending" class="hidden bg-brand-light lg:block">
-          <h3 class="mb-2 text-[15px] font-bold text-navy">
+        <UiCard v-if="!isPending" tone="sun" class="hidden lg:block">
+          <h3 class="mb-2 text-[15px] font-bold text-ink">
             📝 {{ $t('opportunity.ready_title') }}
           </h3>
-          <p class="mb-3.5 text-[12.5px] leading-relaxed text-gray-700">
+          <p class="mb-3.5 text-[12.5px] leading-relaxed text-ink/80">
             {{
               gapsCount
                 ? $t('opportunity.ready_text', { count: gapsCount })

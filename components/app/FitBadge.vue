@@ -12,10 +12,8 @@ defineProps({
 <template>
   <span
     v-if="fit"
-    class="inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold"
-    :class="
-      fit === 'very_strong' ? 'bg-success-light text-success-text' : 'bg-amber-100 text-amber-700'
-    "
+    class="inline-block rounded-full border-2 border-ink px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
+    :class="fit === 'very_strong' ? 'bg-sun' : 'bg-blush'"
   >
     {{ fit === 'very_strong' ? $t('dashboard.fit_very_strong') : $t('dashboard.fit_strong') }}
   </span>

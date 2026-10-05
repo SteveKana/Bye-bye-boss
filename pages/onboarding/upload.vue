@@ -71,28 +71,28 @@ async function onContinue() {
 <template>
   <NuxtLayout name="onboarding">
     <div>
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
+      <h1 class="mb-1.5 text-2xl font-black text-ink">
         {{ $t('onboarding.upload.title') }}
       </h1>
-      <p class="mb-7 text-gray-500">{{ $t('onboarding.upload.subtitle') }}</p>
+      <p class="mb-7 text-ink/60">{{ $t('onboarding.upload.subtitle') }}</p>
 
       <div
         class="rounded-xl border-2 border-dashed px-6 py-14 text-center transition-colors"
-        :class="isDragging ? 'border-brand bg-brand-light' : 'border-gray-200 bg-gray-50'"
+        :class="isDragging ? 'border-brand bg-brand-light' : 'border-ink/20 bg-lav/40'"
         @dragover.prevent="isDragging = true"
         @dragleave.prevent="isDragging = false"
         @drop.prevent="onDrop"
       >
         <template v-if="!selectedFile">
           <div class="mb-4 text-3xl" aria-hidden="true">📄</div>
-          <p class="mb-4 font-semibold text-gray-900">
+          <p class="mb-4 font-semibold text-ink">
             {{ $t('onboarding.upload.dropzone_title') }}
           </p>
-          <p class="mb-4 text-sm text-gray-400">{{ $t('common.or') }}</p>
+          <p class="mb-4 text-sm text-ink/50">{{ $t('common.or') }}</p>
           <UiButton variant="secondary" type="button" @click="fileInput.click()">
             {{ $t('onboarding.upload.browse') }}
           </UiButton>
-          <p class="mt-4 text-xs text-gray-400">{{ $t('onboarding.upload.hint') }}</p>
+          <p class="mt-4 text-xs text-ink/50">{{ $t('onboarding.upload.hint') }}</p>
           <input
             ref="fileInput"
             type="file"
@@ -102,20 +102,20 @@ async function onContinue() {
           />
         </template>
 
-        <div v-else class="flex items-center gap-4 rounded-lg bg-white p-4 text-left shadow-soft">
+        <div v-else class="flex items-center gap-4 rounded-2xl bg-white p-4 text-left">
           <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-light text-lg"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-brand-light text-lg"
             aria-hidden="true"
           >
             📄
           </div>
           <div class="min-w-0 flex-1">
-            <p class="truncate font-semibold text-gray-900">{{ selectedFile.name }}</p>
-            <p class="text-sm text-gray-400">{{ formatSize(selectedFile.size) }}</p>
+            <p class="truncate font-semibold text-ink">{{ selectedFile.name }}</p>
+            <p class="text-sm text-ink/50">{{ formatSize(selectedFile.size) }}</p>
           </div>
           <button
             type="button"
-            class="shrink-0 text-gray-400 hover:text-gray-600"
+            class="shrink-0 text-ink/50 hover:text-ink/70"
             :aria-label="$t('onboarding.upload.remove')"
             @click="removeFile"
           >

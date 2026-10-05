@@ -19,14 +19,14 @@ const STEPS = [
       <div class="flex items-center gap-2">
         <div
           class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
-          :class="item.step <= current ? 'bg-brand text-white' : 'bg-gray-100 text-gray-400'"
+          :class="item.step <= current ? 'bg-brand text-white' : 'bg-lav text-ink/50'"
         >
           <span v-if="item.step < current" aria-hidden="true">✓</span>
           <span v-else>{{ item.step }}</span>
         </div>
         <span
           class="hidden text-sm font-medium sm:inline"
-          :class="item.step <= current ? 'text-gray-900' : 'text-gray-400'"
+          :class="item.step <= current ? 'text-ink' : 'text-ink/50'"
         >
           {{ $t(item.labelKey) }}
         </span>
@@ -34,7 +34,7 @@ const STEPS = [
       <div
         v-if="i < STEPS.length - 1"
         class="h-px w-6 shrink-0 sm:w-12"
-        :class="item.step < current ? 'bg-brand' : 'bg-gray-200'"
+        :class="item.step < current ? 'bg-brand' : 'bg-lav'"
         aria-hidden="true"
       />
     </template>

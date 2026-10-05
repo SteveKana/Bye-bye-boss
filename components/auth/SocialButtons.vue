@@ -113,10 +113,10 @@ function soon(provider) {
 
 <template>
   <div>
-    <div class="my-4 flex items-center gap-3 text-sm text-gray-400">
-      <span class="h-px flex-1 bg-gray-200" />
+    <div class="my-4 flex items-center gap-3 text-sm text-ink/50">
+      <span class="h-px flex-1 bg-lav" />
       {{ $t('common.or') }}
-      <span class="h-px flex-1 bg-gray-200" />
+      <span class="h-px flex-1 bg-lav" />
     </div>
 
     <!-- Wraps the visible button and Google's real one so the latter can be
@@ -124,7 +124,7 @@ function soon(provider) {
     <div class="relative">
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-2.5 rounded-md border-[1.5px] border-gray-200 bg-white py-3 text-sm font-semibold text-gray-900 transition hover:border-gray-300 hover:bg-gray-50"
+        class="flex w-full items-center justify-center gap-2.5 rounded-xl border-[1.5px] border-ink/20 bg-white py-3 text-sm font-semibold text-ink transition hover:border-ink/40 hover:bg-lav/40"
         :class="{ 'pointer-events-none': googleReady }"
         @click="!googleReady && soon('Google')"
       >
