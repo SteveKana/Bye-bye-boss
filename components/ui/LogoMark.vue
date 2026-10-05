@@ -1,7 +1,7 @@
 <script setup>
 // The Bye Bye Boss mark, used everywhere the old "BB" square badge was
 // (header, sidebar, footer, auth screens) plus the site favicon
-// (public/logo.png, wired in nuxt.config.js). One transparent PNG so it
+// (public/logo.svg + PNG fallbacks, wired in nuxt.config.js). Transparent PNG so it
 // reads correctly on both light and dark surfaces.
 defineProps({
   size: { type: Number, default: 32 },
