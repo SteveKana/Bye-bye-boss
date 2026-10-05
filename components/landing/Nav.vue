@@ -3,17 +3,18 @@
 // the mockup's own nav has placeholder links (Tarifs, Ressources) with no
 // real destination, which we don't want to ship as dead links.
 const links = [
-  { href: '#pourquoi', key: 'landing.nav.why' },
-  { href: '#comparatif', key: 'landing.nav.comparison' },
+  { href: '/#pourquoi', key: 'landing.nav.why' },
+  { href: '/#comparatif', key: 'landing.nav.comparison' },
 ]
 
-// This nav only ever renders on the homepage itself (see pages/index.vue),
-// so the logo's `to="/"` never actually navigates -- Vue Router doesn't
-// re-run a click to the route you're already on. Scrolled past the hero,
-// that made clicking the logo look like it did nothing. Scroll back to
-// the top instead, same end result a real "go home" click implies.
+// On the homepage itself the logo's `to="/"` never navigates -- Vue Router
+// doesn't re-run a click to the route you're already on. Scrolled past the
+// hero, that made clicking the logo look like it did nothing. Scroll back to
+// the top instead, same end result a real "go home" click implies. On the
+// legal/contact pages the link navigates home normally.
+const route = useRoute()
 function goHome() {
-  if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'smooth' })
+  if (route.path === '/' && window.scrollY > 0) window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 // A logged-in visitor landing back on the marketing homepage (e.g. from a
@@ -67,9 +68,9 @@ async function onReupload(event) {
 
     <ul class="hidden items-center gap-7 lg:flex">
       <li v-for="l in links" :key="l.href">
-        <a :href="l.href" class="text-sm font-bold text-ink transition hover:text-brand">
+        <NuxtLink :to="l.href" class="text-sm font-bold text-ink transition hover:text-brand">
           {{ $t(l.key) }}
-        </a>
+        </NuxtLink>
       </li>
     </ul>
 

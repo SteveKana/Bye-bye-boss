@@ -7,6 +7,9 @@ const toast = useToast()
 const auth = useAuthStore()
 const route = useRoute()
 const config = useRuntimeConfig()
+// The Google script sets third-party cookies: it only loads once the visitor
+// has accepted cookies (see composables/useCookieConsent.js).
+const { thirdPartyAllowed, reopen } = useCookieConsent()
 
 // Google Identity Services' own rendered button is what reliably opens the
 // account picker on click -- calling google.accounts.id.prompt() from a
@@ -75,11 +78,15 @@ function renderGoogleButton() {
   })
 }
 
-onMounted(async () => {
+let googleInitStarted = false
+
+async function initGoogle() {
+  if (googleInitStarted) return
   // No client id configured (e.g. a fresh environment before Steve sets
   // NUXT_PUBLIC_GOOGLE_CLIENT_ID) -- fall back to the old "coming soon"
   // behavior rather than rendering a button that can never work.
   if (!config.public.googleClientId) return
+  googleInitStarted = true
   try {
     await loadGoogleScript()
     window.google.accounts.id.initialize({
@@ -101,8 +108,20 @@ onMounted(async () => {
     // Script blocked or failed to load (network issue, ad blocker...) --
     // same graceful "coming soon" fallback as an unconfigured client id.
     googleReady.value = false
+    googleInitStarted = false
   }
+}
+
+onMounted(() => {
+  watch(thirdPartyAllowed, (allowed) => allowed && initGoogle(), { immediate: true })
 })
+
+// Button not usable yet: without consent, bring the cookie banner back so
+// the visitor can accept; otherwise keep the old "coming soon" behavior.
+function onGoogleFallbackClick() {
+  if (config.public.googleClientId && !thirdPartyAllowed.value) reopen()
+  else soon('Google')
+}
 
 onBeforeUnmount(() => googleResizeObserver?.disconnect())
 
@@ -126,7 +145,7 @@ function soon(provider) {
         type="button"
         class="flex w-full items-center justify-center gap-2.5 rounded-full border-2 border-ink bg-white py-3 text-sm font-extrabold text-ink transition hover:bg-lav"
         :class="{ 'pointer-events-none': googleReady }"
-        @click="!googleReady && soon('Google')"
+        @click="!googleReady && onGoogleFallbackClick()"
       >
         <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
           <path

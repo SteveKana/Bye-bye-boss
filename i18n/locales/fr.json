@@ -478,7 +478,8 @@
       "copy": "© 2026 Bye Bye Boss – Tous droits réservés.",
       "legal": "Mentions légales",
       "privacy": "Confidentialité",
-      "contact": "Contact"
+      "contact": "Contact",
+      "cookies": "Cookies"
     },
     "social": {
       "stat1_num": "2 384",
@@ -776,5 +777,42 @@
   },
   "location": {
     "all_districts": "tous arrondissements"
+  },
+  "cookies": {
+    "banner_title": "Votre vie privée, vos choix",
+    "banner_text": "Nous utilisons des cookies essentiels au fonctionnement du site (connexion, langue). Avec votre accord, nous chargeons aussi le service de connexion Google.",
+    "learn_more": "En savoir plus",
+    "accept": "Accepter",
+    "refuse": "Refuser",
+    "manage": "Gérer mes cookies"
+  },
+  "legal": {
+    "updated": "Dernière mise à jour :"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "intro": "Une question, un problème, une demande liée à vos données ? Écrivez-nous, nous vous répondons dès que possible.",
+    "name": "Nom",
+    "name_placeholder": "Votre nom",
+    "email": "Email",
+    "topic": "Sujet",
+    "topics": {
+      "question": "Une question",
+      "personal_data": "Données personnelles (RGPD)",
+      "problem": "Un problème technique",
+      "partnership": "Partenariat",
+      "other": "Autre"
+    },
+    "message": "Message",
+    "message_placeholder": "Écrivez votre message ici…",
+    "submit": "Envoyer le message",
+    "success_title": "Message envoyé ✅",
+    "success": "Merci, votre message a bien été envoyé. Nous vous répondons dès que possible.",
+    "send_another": "Envoyer un autre message",
+    "error": "Impossible d'envoyer votre message pour le moment. Réessayez dans quelques instants.",
+    "too_many": "Trop de messages envoyés. Réessayez dans quelques minutes.",
+    "name_required": "Nom requis",
+    "message_required": "Message requis",
+    "message_short": "10 caractères minimum"
   }
 }
