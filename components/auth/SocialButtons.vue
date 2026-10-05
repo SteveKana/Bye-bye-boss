@@ -124,7 +124,7 @@ function soon(provider) {
     <div class="relative">
       <button
         type="button"
-        class="flex w-full items-center justify-center gap-2.5 rounded-xl border-[1.5px] border-ink/20 bg-white py-3 text-sm font-semibold text-ink transition hover:border-ink/40 hover:bg-lav/40"
+        class="flex w-full items-center justify-center gap-2.5 rounded-full border-2 border-ink bg-white py-3 text-sm font-extrabold text-ink transition hover:bg-lav"
         :class="{ 'pointer-events-none': googleReady }"
         @click="!googleReady && soon('Google')"
       >

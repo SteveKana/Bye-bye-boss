@@ -8,11 +8,17 @@ const stats = [
 </script>
 
 <template>
-  <section class="bg-brand-light/40 px-6 py-14 lg:px-12">
+  <section class="px-6 py-14 lg:px-12">
     <div class="mx-auto grid max-w-6xl gap-8 text-center sm:grid-cols-2 lg:grid-cols-4">
-      <div v-for="s in stats" :key="s.numKey">
-        <div class="text-3xl font-extrabold text-brand">{{ $t(s.numKey) }}</div>
-        <div class="mt-1.5 text-[13px] leading-snug text-gray-600">{{ $t(s.labelKey) }}</div>
+      <div
+        v-for="s in stats"
+        :key="s.numKey"
+        class="rounded-[24px] border-[3px] border-ink bg-white px-4 py-5"
+      >
+        <div class="text-3xl font-black text-brand">{{ $t(s.numKey) }}</div>
+        <div class="mt-1.5 text-[13px] font-medium leading-snug text-ink/80">
+          {{ $t(s.labelKey) }}
+        </div>
       </div>
     </div>
   </section>

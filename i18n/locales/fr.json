@@ -111,10 +111,7 @@
           "title": "Vos données sécurisées",
           "text": "Confidentialité garantie, jamais partagées."
         }
-      },
-      "preview_label": "Votre aperçu",
-      "spark_label": "Évolution de vos opportunités",
-      "spark_sub": "ces 30 derniers jours"
+      }
     },
     "signup": {
       "headline": "Créez votre compte et boostez votre",

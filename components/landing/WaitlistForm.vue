@@ -54,9 +54,9 @@ const onSubmit = handleSubmit(async (values) => {
       <div
         data-highlight
         class="flex flex-1 items-center gap-2 rounded-md border-[1.5px] bg-white px-3.5 transition-colors"
-        :class="errors.email ? 'border-danger' : 'border-gray-200 focus-within:border-brand'"
+        :class="errors.email ? 'border-danger' : 'border-ink/20 focus-within:border-brand'"
       >
-        <span class="text-sm text-gray-400" aria-hidden="true">✉</span>
+        <span class="text-sm text-ink/50" aria-hidden="true">✉</span>
         <input
           :id="inputId || undefined"
           v-model="email"
@@ -64,7 +64,7 @@ const onSubmit = handleSubmit(async (values) => {
           autocomplete="email"
           :aria-invalid="Boolean(errors.email)"
           :placeholder="$t('landing.waitlist.placeholder')"
-          class="w-full bg-transparent py-3 text-base text-gray-900 outline-none placeholder:text-gray-400"
+          class="w-full bg-transparent py-3 text-base text-ink outline-none placeholder:text-ink/50"
         />
       </div>
 
@@ -85,7 +85,7 @@ const onSubmit = handleSubmit(async (values) => {
     >
       {{ message }}
     </p>
-    <p class="mt-2 text-[12.5px] text-gray-400">
+    <p class="mt-2 text-[12.5px] text-ink/50">
       <span aria-hidden="true">🔒</span> {{ $t(noteKey) }}
     </p>
   </div>

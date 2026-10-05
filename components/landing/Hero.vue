@@ -57,14 +57,14 @@ const gauges = [
   {
     key: 'career',
     value: 89,
-    color: '#00C48C',
+    color: '#FF7AA2',
     labelKey: 'landing.hero.career_label',
     subKey: 'landing.hero.career_sub',
   },
   {
     key: 'potential',
     value: 92,
-    color: '#00C48C',
+    color: '#FFB800',
     labelKey: 'landing.hero.potential_label',
     subKey: 'landing.hero.potential_sub',
   },
@@ -86,20 +86,20 @@ function offsetFor(value) {
       <!-- Left -->
       <div>
         <div
-          class="mb-6 inline-flex items-center gap-[7px] rounded-full bg-brand-light px-3.5 py-1.5 text-[12.5px] font-semibold text-brand"
+          class="mb-6 inline-flex items-center gap-[7px] rounded-full border-2 border-ink bg-sun px-3.5 py-1.5 text-[12.5px] font-extrabold text-ink"
         >
           <span class="text-[11px]" aria-hidden="true">✦</span>
           {{ $t('landing.hero.badge') }}
         </div>
 
         <h1
-          class="mb-[22px] text-[34px] font-extrabold leading-[1.14] tracking-[-0.8px] text-navy sm:text-[46px]"
+          class="mb-[22px] text-[36px] font-black leading-[1.1] tracking-[-0.8px] text-ink sm:text-[50px]"
         >
           {{ $t('landing.hero.title') }}
           <span class="text-brand">{{ $t('landing.hero.title_accent') }}</span>
         </h1>
 
-        <p class="mb-[30px] max-w-[440px] text-base leading-[1.7] text-gray-600">
+        <p class="mb-[30px] max-w-[460px] text-base font-medium leading-[1.7] text-ink/80">
           {{ $t('landing.hero.sub') }}
         </p>
 
@@ -122,7 +122,7 @@ function offsetFor(value) {
           />
         </div>
 
-        <div class="flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-gray-500">
+        <div class="flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] font-semibold text-ink/70">
           <span>{{ $t('landing.hero.trust_1') }}</span>
           <span>{{ $t('landing.hero.trust_2') }}</span>
           <span>{{ $t('landing.hero.trust_3') }}</span>
@@ -130,28 +130,31 @@ function offsetFor(value) {
       </div>
 
       <!-- Right: analysis card -->
-      <div id="apercu" class="rounded-2xl border border-gray-200 bg-white p-6 shadow-card">
-        <div class="mb-4 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+      <div
+        id="apercu"
+        class="rounded-[26px] border-[3px] border-ink bg-white p-6 shadow-[8px_8px_0_#16122E]"
+      >
+        <div class="mb-4 text-[11px] font-black uppercase tracking-wider text-ink/60">
           {{ $t('landing.hero.preview_label') }}
         </div>
 
         <div class="mb-5 flex items-center justify-between gap-3">
           <div class="flex items-center gap-3">
             <span
-              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-light text-lg"
+              class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border-2 border-ink bg-sun text-xl"
               aria-hidden="true"
             >
               🏢
             </span>
             <div>
-              <div class="text-sm font-bold text-navy">
+              <div class="text-sm font-bold text-ink">
                 {{ $t('landing.hero.preview_offer_title') }}
               </div>
-              <div class="text-xs text-gray-500">{{ $t('landing.hero.preview_offer_meta') }}</div>
+              <div class="text-xs text-ink/60">{{ $t('landing.hero.preview_offer_meta') }}</div>
             </div>
           </div>
           <span
-            class="shrink-0 rounded-full bg-success-light px-2.5 py-1 text-[11px] font-bold text-success-text"
+            class="shrink-0 rounded-full border-2 border-ink bg-sun-light px-2.5 py-1 text-[11px] font-extrabold text-ink"
           >
             {{ $t('landing.hero.preview_badge') }}
           </span>
@@ -160,12 +163,12 @@ function offsetFor(value) {
         <!-- Score gauges -->
         <div class="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-3">
           <div v-for="g in gauges" :key="g.key" class="text-center">
-            <div class="mb-1.5 text-[10.5px] font-semibold text-gray-500">
+            <div class="mb-1.5 text-[10.5px] font-semibold text-ink/60">
               {{ $t(g.labelKey) }}
             </div>
             <div class="relative mx-auto h-16 w-16">
               <svg viewBox="0 0 64 64" class="h-16 w-16 -rotate-90">
-                <circle cx="32" cy="32" r="26" fill="none" stroke="#E5E7EB" stroke-width="6" />
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#E4E0FF" stroke-width="6" />
                 <circle
                   cx="32"
                   cy="32"
@@ -179,12 +182,12 @@ function offsetFor(value) {
                 />
               </svg>
               <div
-                class="absolute inset-0 flex items-center justify-center text-sm font-extrabold text-navy"
+                class="absolute inset-0 flex items-center justify-center text-sm font-black text-ink"
               >
-                {{ g.value }}<span class="text-[9px] font-medium text-gray-400">/100</span>
+                {{ g.value }}<span class="text-[9px] font-medium text-ink/50">/100</span>
               </div>
             </div>
-            <div class="mt-1.5 text-[10px] leading-tight text-gray-500">{{ $t(g.subKey) }}</div>
+            <div class="mt-1.5 text-[10px] leading-tight text-ink/60">{{ $t(g.subKey) }}</div>
           </div>
         </div>
 
@@ -192,7 +195,7 @@ function offsetFor(value) {
              2026-10-03 (Steve: masquer toute mention à l'indice de regret
              côté front). -->
 
-        <div class="mt-3 cursor-pointer text-center text-xs font-semibold text-brand">
+        <div class="mt-3 cursor-pointer text-center text-xs font-extrabold text-brand">
           {{ $t('landing.hero.see_more') }}
         </div>
       </div>
