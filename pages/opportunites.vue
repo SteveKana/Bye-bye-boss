@@ -91,7 +91,7 @@ const scoreDates = computed(() => matchedOffers.value.map((o) => o.computedAt))
 // on themselves (Steve, 2026-10-05) -- nothing is pre-selected from a saved
 // profile anymore, so the page first shows every recent offer matching the
 // CV. An empty choice means "don't restrict".
-const CONTRACT_CHOICES = ['Freelance', 'CDI', 'CDD', 'Intérim']
+const CONTRACT_CHOICES = ['Freelance', 'CDI', 'CDD', 'Intérim', 'Stage', 'Alternance']
 const selectedContracts = ref([])
 // An offer only ever carries a single is_full_remote boolean (see
 // geo_filter.py's docstring on why no "Hybride" distinction exists
