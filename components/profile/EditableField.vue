@@ -5,7 +5,7 @@
 const props = defineProps({
   modelValue: { type: String, default: '' },
   label: { type: String, default: '' },
-  textClass: { type: String, default: 'text-[13.5px] font-semibold text-gray-900' },
+  textClass: { type: String, default: 'text-[13.5px] font-semibold text-ink' },
 })
 const emit = defineEmits(['update:modelValue', 'commit'])
 
@@ -38,7 +38,7 @@ function cancel() {
 
 <template>
   <div>
-    <div v-if="label" class="mb-1 text-[11px] text-gray-400">{{ label }}</div>
+    <div v-if="label" class="mb-1 text-[11px] text-ink/50">{{ label }}</div>
     <span class="inline-flex max-w-full items-center gap-1.5">
       <span
         v-if="!editing"
@@ -55,7 +55,7 @@ function cancel() {
         ref="input"
         v-model="draft"
         type="text"
-        class="min-w-[60px] max-w-full rounded-md border-[1.5px] border-brand bg-brand-light px-1.5 py-0.5 font-semibold text-gray-900 outline-none"
+        class="min-w-[60px] max-w-full rounded-xl border-[1.5px] border-brand bg-brand-light px-1.5 py-0.5 font-semibold text-ink outline-none"
         :class="textClass"
         @keydown.enter="commit"
         @keydown.escape="cancel"
@@ -64,7 +64,7 @@ function cancel() {
       <button
         v-if="!editing"
         type="button"
-        class="flex h-5 w-5 shrink-0 items-center justify-center rounded text-gray-300 hover:bg-brand-light hover:text-brand"
+        class="flex h-5 w-5 shrink-0 items-center justify-center rounded text-ink/50 hover:bg-brand-light hover:text-brand"
         :class="justSaved && 'text-success'"
         aria-label="Modifier"
         @click="startEdit"

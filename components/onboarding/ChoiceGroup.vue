@@ -32,17 +32,13 @@ function toggle(value) {
       v-for="opt in options"
       :key="opt.value"
       type="button"
-      class="flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-colors"
-      :class="
-        isSelected(opt.value)
-          ? 'border-brand bg-brand-light text-brand-text'
-          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-      "
+      class="flex items-center justify-center gap-2 rounded-full border-2 border-ink px-4 py-3 text-sm font-extrabold transition-colors"
+      :class="isSelected(opt.value) ? 'bg-sun text-ink' : 'bg-white text-ink hover:bg-lav'"
       @click="toggle(opt.value)"
     >
       <span
         v-if="isSelected(opt.value)"
-        class="flex h-5 w-5 items-center justify-center rounded-full bg-brand text-white"
+        class="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-white"
         aria-hidden="true"
       >
         ✓

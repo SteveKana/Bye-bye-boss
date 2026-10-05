@@ -355,21 +355,21 @@ const SCORE_EXPLANATIONS = computed(() => [
     short: 'CAR',
     title: t('opportunites.score_career_title'),
     text: t('opportunites.score_career_text'),
-    badgeClass: 'bg-blue-100 text-blue-700',
+    badgeClass: 'border-2 border-ink bg-white text-ink',
   },
   {
     key: 'ats',
     short: 'ATS',
     title: t('opportunites.score_ats_title'),
     text: t('opportunites.score_ats_text'),
-    badgeClass: 'bg-green-100 text-green-700',
+    badgeClass: 'border-2 border-ink bg-sun text-ink',
   },
   {
     key: 'potential',
     short: 'POT',
     title: t('opportunites.score_potential_title'),
     text: t('opportunites.score_potential_text'),
-    badgeClass: 'bg-brand-light text-brand-text',
+    badgeClass: 'border-2 border-ink bg-lav text-ink',
   },
 ])
 
@@ -402,10 +402,10 @@ function selectSort(value) {
     <div class="mb-5 flex flex-wrap items-start justify-between gap-3">
       <div>
         <div class="flex flex-wrap items-center gap-3">
-          <h1 class="text-2xl font-extrabold text-navy">{{ $t('app.nav.opportunities') }}</h1>
+          <h1 class="text-2xl font-black text-ink">{{ $t('app.nav.opportunities') }}</h1>
           <span
             v-if="!loading"
-            class="rounded-full bg-brand-light px-3 py-0.5 text-sm font-bold text-brand-text"
+            class="rounded-full border-2 border-ink bg-lav px-3 py-0.5 text-sm font-bold text-ink"
           >
             {{ $t('opportunites.results_found', { count: offers.length }) }}
           </span>
@@ -441,7 +441,7 @@ function selectSort(value) {
                ponctuel propre à cette page, d'où sa propre modale. -->
           <button
             type="button"
-            class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft hover:bg-gray-50"
+            class="flex items-center gap-2 rounded-full border-2 border-ink bg-white px-4 py-2 text-sm font-bold text-ink hover:bg-lav"
             @click="salaryModalOpen = true"
           >
             {{ $t('opportunites.salary_button') }}
@@ -468,7 +468,7 @@ function selectSort(value) {
           <div ref="sortRef" class="relative">
             <button
               type="button"
-              class="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft hover:bg-gray-50"
+              class="flex items-center gap-2 rounded-full border-2 border-ink bg-white px-4 py-2 text-sm font-bold text-ink hover:bg-lav"
               @click="sortOpen = !sortOpen"
             >
               {{ $t('opportunites.sort_by', { label: sortLabel }) }}
@@ -487,14 +487,14 @@ function selectSort(value) {
             </button>
             <div
               v-if="sortOpen"
-              class="absolute left-0 top-[calc(100%+6px)] z-20 w-64 rounded-xl border border-gray-200 bg-white p-2 shadow-card"
+              class="absolute left-0 top-[calc(100%+6px)] z-20 w-64 rounded-2xl border-2 border-ink bg-white p-2"
             >
               <button
                 v-for="opt in SORT_OPTIONS"
                 :key="opt.value"
                 type="button"
-                class="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-[13px] font-medium transition hover:bg-gray-50"
-                :class="opt.value === sortBy ? 'font-bold text-brand' : 'text-navy'"
+                class="flex w-full items-center justify-between rounded-2xl px-2.5 py-2 text-left text-[13px] font-medium transition hover:bg-lav/40"
+                :class="opt.value === sortBy ? 'font-bold text-brand' : 'text-ink'"
                 @click="selectSort(opt.value)"
               >
                 <span>{{ opt.label }}</span>
@@ -517,7 +517,7 @@ function selectSort(value) {
 
           <label
             v-if="hasScoredOffers"
-            class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-navy shadow-soft"
+            class="flex items-center gap-3 rounded-2xl border-2 border-ink bg-white px-4 py-2 text-sm font-medium text-ink"
           >
             <span>{{ $t('opportunites.ats_filter_label') }}</span>
             <input
@@ -529,17 +529,17 @@ function selectSort(value) {
               class="w-28 accent-brand"
               :aria-label="$t('opportunites.ats_filter_label')"
             />
-            <span class="w-7 text-right font-extrabold text-green-600">{{ minAts }}</span>
+            <span class="w-7 text-right font-extrabold text-ink">{{ minAts }}</span>
           </label>
         </div>
 
         <!-- Active filter chips -->
         <div v-if="activeFilterChips.length" class="mb-4 flex flex-wrap items-center gap-2">
-          <span class="text-xs font-semibold text-gray-500">{{ $t('opportunites.active') }}</span>
+          <span class="text-xs font-semibold text-ink/60">{{ $t('opportunites.active') }}</span>
           <span
             v-for="chip in activeFilterChips"
             :key="chip.key"
-            class="inline-flex items-center gap-1.5 rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand-text"
+            class="inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
           >
             {{ chip.label }}
             <button
@@ -565,14 +565,14 @@ function selectSort(value) {
           <div
             v-for="n in 3"
             :key="n"
-            class="animate-pulse rounded-2xl border border-gray-100 bg-white p-5"
+            class="animate-pulse rounded-[22px] border-[2.5px] border-ink/20 bg-white p-5"
           >
             <div class="flex gap-4">
-              <div class="h-14 w-14 shrink-0 rounded-xl bg-gray-100"></div>
+              <div class="h-14 w-14 shrink-0 rounded-xl bg-lav"></div>
               <div class="flex-1 space-y-2 py-1">
-                <div class="h-3.5 w-2/5 rounded bg-gray-100"></div>
-                <div class="h-3 w-1/3 rounded bg-gray-100"></div>
-                <div class="h-3 w-3/5 rounded bg-gray-100"></div>
+                <div class="h-3.5 w-2/5 rounded bg-lav"></div>
+                <div class="h-3 w-1/3 rounded bg-lav"></div>
+                <div class="h-3 w-3/5 rounded bg-lav"></div>
               </div>
             </div>
           </div>
@@ -580,9 +580,9 @@ function selectSort(value) {
 
         <div
           v-else-if="!offers.length"
-          class="rounded-2xl border border-gray-100 bg-white py-10 text-center"
+          class="rounded-[22px] border-[2.5px] border-dashed border-ink/40 bg-white/70 py-10 text-center"
         >
-          <p class="text-sm text-gray-400">
+          <p class="text-sm text-ink/50">
             {{ matchedOffers.length ? $t('dashboard.empty_filtered') : $t('dashboard.empty') }}
           </p>
           <button
@@ -598,7 +598,7 @@ function selectSort(value) {
           <div
             v-for="offer in pagedOffers"
             :key="offer.id"
-            class="group relative cursor-pointer rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition hover:border-brand-light"
+            class="group relative cursor-pointer rounded-[22px] border-[2.5px] border-ink bg-white p-5 transition hover:-translate-y-0.5 hover:bg-lav/40"
             role="button"
             tabindex="0"
             @click="openOffer(offer)"
@@ -610,7 +610,7 @@ function selectSort(value) {
             this control on mobile permanently -- the reject action would
             have silently stopped existing on the device most people use. -->
             <button
-              class="absolute right-3 top-3 rounded-md p-1 text-gray-300 transition hover:bg-danger-light hover:text-danger sm:opacity-0 sm:group-hover:opacity-100"
+              class="absolute right-3 top-3 rounded-xl p-1 text-ink/50 transition hover:bg-danger-light hover:text-danger sm:opacity-0 sm:group-hover:opacity-100"
               :aria-label="$t('dashboard.reject')"
               @click.stop="reject(offer)"
             >
@@ -649,7 +649,7 @@ function selectSort(value) {
               <div class="flex min-w-0 flex-1 flex-wrap gap-x-4 gap-y-3 sm:gap-y-2">
                 <div class="flex shrink-0 items-center gap-3">
                   <span
-                    class="flex h-[37px] w-[37px] shrink-0 items-center justify-center rounded-lg text-sm font-extrabold text-white"
+                    class="flex h-[37px] w-[37px] shrink-0 items-center justify-center rounded-xl border-2 border-ink text-sm font-extrabold text-white"
                     :style="{ background: offer.bg }"
                   >
                     {{ offer.logo }}
@@ -663,7 +663,7 @@ function selectSort(value) {
                     <AppFitBadge :fit="offer.fit" />
                     <span
                       v-if="offer.contractTag"
-                      class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
+                      class="inline-block rounded-full border-2 border-ink bg-lav px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
                     >
                       {{ offer.contractTag }}
                     </span>
@@ -679,15 +679,15 @@ function selectSort(value) {
                     places -- was easy to miss buried among location/salary. -->
                     <span
                       v-if="offer.contractTag"
-                      class="inline-block rounded-full bg-brand-light px-2.5 py-0.5 text-[10px] font-bold text-brand-text"
+                      class="inline-block rounded-full border-2 border-ink bg-lav px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
                     >
                       {{ offer.contractTag }}
                     </span>
                   </div>
-                  <p class="text-base font-bold text-navy">{{ offer.title }}</p>
-                  <p class="text-sm font-semibold text-gray-600">{{ offer.company }}</p>
+                  <p class="text-base font-bold text-ink">{{ offer.title }}</p>
+                  <p class="text-sm font-semibold text-ink/70">{{ offer.company }}</p>
                   <div
-                    class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-gray-400"
+                    class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-ink/50"
                   >
                     <span v-if="offer.loc">📍 {{ offer.loc }}</span>
                     <span v-if="offer.dailyRateLabel || offer.salaryLabel">{{
@@ -715,13 +715,13 @@ function selectSort(value) {
                     <span
                       v-for="(tag, index) in tagsFor(offer).shown"
                       :key="index"
-                      class="max-w-full break-words rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
+                      class="max-w-full break-words rounded-full border-2 border-ink/30 bg-white px-2.5 py-0.5 text-[11px] font-bold text-ink/70"
                     >
                       {{ tag }}
                     </span>
                     <span
                       v-if="tagsFor(offer).extra"
-                      class="rounded-full bg-gray-100 px-2.5 py-0.5 text-[11px] font-medium text-gray-600"
+                      class="rounded-full border-2 border-ink/30 bg-white px-2.5 py-0.5 text-[11px] font-bold text-ink/70"
                     >
                       +{{ tagsFor(offer).extra }}
                     </span>
@@ -730,10 +730,10 @@ function selectSort(value) {
               </div>
 
               <div v-if="reasonsFor(offer).length" class="sm:min-w-[200px] sm:flex-1">
-                <p class="mb-2 text-xs font-semibold text-gray-500">
+                <p class="mb-2 text-xs font-semibold text-ink/60">
                   {{ $t('opportunites.reasons_title') }}
                 </p>
-                <ul class="space-y-1 text-xs text-gray-600">
+                <ul class="space-y-1 text-xs text-ink/70">
                   <li
                     v-for="(reason, index) in reasonsFor(offer)"
                     :key="index"
@@ -757,22 +757,22 @@ function selectSort(value) {
               >
                 <p
                   v-if="offer.isPending"
-                  class="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500"
+                  class="rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-extrabold text-ink"
                 >
                   {{ $t('dashboard.analysis_pending') }}
                 </p>
                 <div v-else class="flex items-end gap-3.5">
                   <div class="text-center">
-                    <p class="text-[10px] font-medium text-gray-400">Career</p>
-                    <p class="text-lg font-extrabold text-blue-600">{{ offer.scores.career }}</p>
+                    <p class="text-[10px] font-medium text-ink/50">Career</p>
+                    <p class="text-lg font-black text-ink">{{ offer.scores.career }}</p>
                   </div>
                   <div class="text-center">
-                    <p class="text-[10px] font-medium text-gray-400">ATS</p>
-                    <p class="text-lg font-extrabold text-green-600">{{ offer.scores.ats }}</p>
+                    <p class="text-[10px] font-medium text-ink/50">ATS</p>
+                    <p class="text-lg font-black text-ink">{{ offer.scores.ats }}</p>
                   </div>
                   <div class="text-center">
-                    <p class="text-[10px] font-medium text-gray-400">ATS Potential</p>
-                    <p class="text-lg font-extrabold text-brand">{{ offer.scores.potential }}</p>
+                    <p class="text-[10px] font-medium text-ink/50">ATS Potential</p>
+                    <p class="text-lg font-black text-brand">{{ offer.scores.potential }}</p>
                   </div>
                   <!-- Regret Index block removed 2026-10-03 (Steve: masquer
                        toute mention à l'indice de regret côté front). -->
@@ -788,7 +788,7 @@ function selectSort(value) {
         <!-- Pagination -->
         <div
           v-if="!loading && totalPages > 1"
-          class="mt-5 flex items-center justify-between text-sm text-gray-500"
+          class="mt-5 flex items-center justify-between text-sm text-ink/60"
         >
           <span>{{
             $t('opportunites.pagination_range', {
@@ -799,7 +799,7 @@ function selectSort(value) {
           }}</span>
           <div class="flex items-center gap-1">
             <button
-              class="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+              class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink bg-white hover:bg-lav disabled:cursor-not-allowed disabled:opacity-40"
               :disabled="page === 1"
               :aria-label="$t('opportunites.previous_page')"
               @click="page = Math.max(1, page - 1)"
@@ -809,18 +809,14 @@ function selectSort(value) {
             <button
               v-for="n in totalPages"
               :key="n"
-              class="flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-semibold"
-              :class="
-                n === page
-                  ? 'border-brand bg-brand text-white'
-                  : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
-              "
+              class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink text-sm font-extrabold"
+              :class="n === page ? 'bg-sun text-ink' : 'bg-white text-ink hover:bg-lav'"
               @click="page = n"
             >
               {{ n }}
             </button>
             <button
-              class="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+              class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-ink bg-white hover:bg-lav disabled:cursor-not-allowed disabled:opacity-40"
               :disabled="page === totalPages"
               :aria-label="$t('opportunites.next_page')"
               @click="page = Math.min(totalPages, page + 1)"
@@ -835,17 +831,17 @@ function selectSort(value) {
       <aside class="hidden flex-col gap-5 xl:flex">
         <button
           type="button"
-          class="flex items-center gap-2 rounded-xl border border-brand-light bg-brand-light px-4 py-2.5 text-sm font-semibold text-brand-text hover:bg-brand-light/70"
+          class="flex items-center gap-2 rounded-full border-2 border-ink bg-lav px-4 py-2.5 text-sm font-extrabold text-ink hover:bg-brand-light/70"
           @click="scoresModalOpen = true"
         >
           ℹ️ {{ $t('opportunites.understand_scores') }}
         </button>
 
         <UiCard>
-          <h3 class="mb-3 flex items-center gap-2 text-sm font-bold text-navy">
+          <h3 class="mb-3 flex items-center gap-2 text-sm font-bold text-ink">
             🏷️ {{ $t('opportunites.fit_tags_title') }}
           </h3>
-          <ul class="space-y-3 text-xs text-gray-500">
+          <ul class="space-y-3 text-xs text-ink/60">
             <li>
               <AppFitBadge fit="very_strong" />
               <p class="mt-1">{{ $t('opportunites.fit_very_strong_text') }}</p>
@@ -857,12 +853,12 @@ function selectSort(value) {
           </ul>
         </UiCard>
 
-        <div class="rounded-xl bg-amber-50 p-4">
+        <div class="rounded-[22px] border-[2.5px] border-ink bg-sun-light p-4">
           <div class="mb-2 flex items-center gap-2 text-amber-600">
             <span aria-hidden="true">🔔</span>
-            <p class="text-xs font-bold text-navy">{{ $t('opportunites.alerts_title') }}</p>
+            <p class="text-xs font-bold text-ink">{{ $t('opportunites.alerts_title') }}</p>
           </div>
-          <p class="text-xs leading-relaxed text-gray-500">{{ $t('opportunites.alerts_text') }}</p>
+          <p class="text-xs leading-relaxed text-ink/60">{{ $t('opportunites.alerts_text') }}</p>
           <UiButton
             size="sm"
             variant="secondary"
@@ -875,7 +871,7 @@ function selectSort(value) {
         </div>
 
         <div>
-          <p class="text-xs font-semibold text-navy">{{ $t('opportunites.adjust_title') }}</p>
+          <p class="text-xs font-semibold text-ink">{{ $t('opportunites.adjust_title') }}</p>
           <NuxtLink
             to="/preferences"
             class="mt-1 flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
@@ -891,17 +887,17 @@ function selectSort(value) {
         <div
           v-for="score in SCORE_EXPLANATIONS"
           :key="score.key"
-          class="flex gap-3 rounded-xl bg-gray-50 p-3.5"
+          class="flex gap-3 rounded-xl bg-lav/40 p-3.5"
         >
           <span
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-extrabold"
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold"
             :class="score.badgeClass"
           >
             {{ score.short }}
           </span>
           <div>
-            <p class="text-sm font-bold text-navy">{{ score.title }}</p>
-            <p class="mt-0.5 text-xs leading-relaxed text-gray-500">{{ score.text }}</p>
+            <p class="text-sm font-bold text-ink">{{ score.title }}</p>
+            <p class="mt-0.5 text-xs leading-relaxed text-ink/60">{{ score.text }}</p>
           </div>
         </div>
       </div>
@@ -909,22 +905,22 @@ function selectSort(value) {
 
     <UiModal v-model="salaryModalOpen" :title="$t('opportunites.salary_modal_title')" size="sm">
       <div v-if="showsSalarySlider" class="mb-6">
-        <p class="mb-1 text-sm font-bold text-navy">{{ $t('opportunites.salary_min') }}</p>
-        <p class="mb-3 text-xs text-gray-500">{{ $t('opportunites.salary_estimate_caption') }}</p>
+        <p class="mb-1 text-sm font-bold text-ink">{{ $t('opportunites.salary_min') }}</p>
+        <p class="mb-3 text-xs text-ink/60">{{ $t('opportunites.salary_estimate_caption') }}</p>
         <div class="mb-4 grid grid-cols-3 text-center">
           <div>
-            <p class="text-[11px] uppercase text-gray-400">{{ $t('opportunites.annual') }}</p>
-            <p class="text-base font-extrabold text-navy">{{ formatEuros(salaryMin) }} €</p>
+            <p class="text-[11px] uppercase text-ink/50">{{ $t('opportunites.annual') }}</p>
+            <p class="text-base font-black text-ink">{{ formatEuros(salaryMin) }} €</p>
           </div>
           <div>
-            <p class="text-[11px] uppercase text-gray-400">{{ $t('opportunites.monthly') }}</p>
-            <p class="text-base font-extrabold text-navy">
+            <p class="text-[11px] uppercase text-ink/50">{{ $t('opportunites.monthly') }}</p>
+            <p class="text-base font-black text-ink">
               {{ formatEuros(monthlyFromAnnual(salaryMin)) }} €
             </p>
           </div>
           <div>
-            <p class="text-[11px] uppercase text-gray-400">{{ $t('opportunites.hourly') }}</p>
-            <p class="text-base font-extrabold text-navy">
+            <p class="text-[11px] uppercase text-ink/50">{{ $t('opportunites.hourly') }}</p>
+            <p class="text-base font-black text-ink">
               {{ formatEuros(hourlyFromAnnual(salaryMin), { decimals: 2 }) }} €
             </p>
           </div>
@@ -941,8 +937,8 @@ function selectSort(value) {
       </div>
 
       <div v-if="showsFreelanceSlider" class="mb-6">
-        <p class="mb-3 text-sm font-bold text-navy">{{ $t('opportunites.tjm_min') }}</p>
-        <p class="mb-3 text-center text-base font-extrabold text-navy">
+        <p class="mb-3 text-sm font-bold text-ink">{{ $t('opportunites.tjm_min') }}</p>
+        <p class="mb-3 text-center text-base font-black text-ink">
           {{ $t('opportunites.tjm_min_label', { amount: formatEuros(tjmMin) }) }}
         </p>
         <input
@@ -957,7 +953,7 @@ function selectSort(value) {
       </div>
 
       <label class="flex items-center justify-between gap-3">
-        <span class="text-sm text-navy">{{ $t('opportunites.only_salary_known') }}</span>
+        <span class="text-sm text-ink">{{ $t('opportunites.only_salary_known') }}</span>
         <UiToggle v-model="onlySalaryKnown" />
       </label>
 
@@ -965,14 +961,14 @@ function selectSort(value) {
         <div class="flex items-center justify-between">
           <button
             type="button"
-            class="text-xs font-semibold text-gray-500 hover:text-gray-700"
+            class="text-xs font-semibold text-ink/60 hover:text-ink/80"
             @click="resetFilters"
           >
             {{ $t('dashboard.filter_reset') }}
           </button>
           <button
             type="button"
-            class="rounded-lg bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
+            class="rounded-2xl bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark"
             @click="salaryModalOpen = false"
           >
             {{ $t('opportunites.show_n_offers', { count: filteredOffers.length }) }}

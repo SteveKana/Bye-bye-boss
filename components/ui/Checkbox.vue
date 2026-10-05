@@ -21,7 +21,7 @@ const inputId = computed(() => props.id || uid)
   <div>
     <label
       :for="inputId"
-      class="flex cursor-pointer items-start gap-2.5 text-sm text-gray-700"
+      class="flex cursor-pointer items-start gap-2.5 text-sm text-ink"
       :class="disabled && 'cursor-not-allowed opacity-60'"
     >
       <input
@@ -36,7 +36,7 @@ const inputId = computed(() => props.id || uid)
         @change="$emit('update:modelValue', $event.target.checked)"
       />
       <span
-        class="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded border-[1.5px] border-gray-300 bg-white text-white transition peer-checked:border-brand peer-checked:bg-brand peer-focus-visible:shadow-focus-ring"
+        class="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-md border-2 border-ink bg-white text-white transition peer-checked:border-brand peer-checked:bg-brand peer-focus-visible:shadow-focus-ring"
         aria-hidden="true"
       >
         <svg

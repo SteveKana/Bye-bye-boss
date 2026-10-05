@@ -14,8 +14,8 @@ const options = computed(() =>
 
 <template>
   <div
-    class="inline-flex items-center gap-0.5 rounded-full p-0.5"
-    :class="dark ? 'bg-white/10' : 'bg-gray-100'"
+    class="inline-flex items-center gap-0.5 rounded-full border-2 border-ink p-0.5"
+    :class="dark ? 'bg-white/10 border-white/40' : 'bg-white'"
     role="group"
     :aria-label="$t('lang.label')"
   >
@@ -23,15 +23,13 @@ const options = computed(() =>
       v-for="o in options"
       :key="o.code"
       type="button"
-      class="rounded-full px-2.5 py-1 text-xs font-bold uppercase leading-none transition"
+      class="rounded-full px-2.5 py-1 text-xs font-extrabold uppercase leading-none transition"
       :class="
         o.code === locale
-          ? dark
-            ? 'bg-white text-navy shadow-soft'
-            : 'bg-white text-brand shadow-soft'
+          ? 'bg-sun text-ink'
           : dark
             ? 'text-white/55 hover:text-white'
-            : 'text-gray-500 hover:text-gray-800'
+            : 'text-ink/60 hover:text-ink'
       "
       :title="o.name"
       :aria-label="o.name"

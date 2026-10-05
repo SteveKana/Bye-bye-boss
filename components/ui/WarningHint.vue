@@ -24,7 +24,7 @@ function toggle() {
   <span class="relative inline-flex" @mouseenter="show" @mouseleave="hide">
     <button
       type="button"
-      class="flex h-4 w-4 items-center justify-center text-gray-400 transition hover:text-gray-600"
+      class="flex h-4 w-4 items-center justify-center text-ink/60 transition hover:text-gray-600"
       :aria-label="message"
       @click.stop="toggle"
       @blur="hide"

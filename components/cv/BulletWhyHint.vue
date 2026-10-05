@@ -40,7 +40,7 @@ function toggle() {
     <div
       v-if="open"
       role="tooltip"
-      class="absolute bottom-full left-0 z-20 mb-1.5 w-56 rounded-md bg-gray-800 px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug text-white shadow-lg"
+      class="absolute bottom-full left-0 z-20 mb-1.5 w-56 rounded-xl bg-gray-800 px-2.5 py-1.5 text-left text-[11px] font-medium leading-snug text-white"
     >
       {{ message }}
       <span

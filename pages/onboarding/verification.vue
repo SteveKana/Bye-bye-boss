@@ -42,10 +42,10 @@ async function onContinue() {
 <template>
   <NuxtLayout name="onboarding">
     <div>
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
+      <h1 class="mb-1.5 text-2xl font-black text-ink">
         {{ $t('onboarding.verification.title') }}
       </h1>
-      <p class="mb-7 text-gray-500">{{ $t('onboarding.verification.subtitle') }}</p>
+      <p class="mb-7 text-ink/60">{{ $t('onboarding.verification.subtitle') }}</p>
 
       <!-- The form is always mounted (not gated behind v-if) so its template
            ref exists as soon as onMounted runs and can be populated via

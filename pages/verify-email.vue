@@ -28,18 +28,18 @@ onMounted(async () => {
   <div class="text-center">
     <template v-if="state === 'verifying'">
       <div
-        class="mx-auto mb-5 h-9 w-9 animate-spin rounded-full border-[3px] border-gray-200 border-t-brand"
+        class="mx-auto mb-5 h-9 w-9 animate-spin rounded-full border-[3px] border-ink/20 border-t-brand"
         aria-hidden="true"
       />
-      <p class="text-gray-500">{{ $t('verify.verifying') }}</p>
+      <p class="text-ink/60">{{ $t('verify.verifying') }}</p>
     </template>
 
     <template v-else-if="state === 'success'">
       <div class="mb-4 text-4xl" aria-hidden="true">✅</div>
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
+      <h1 class="mb-1.5 text-2xl font-black text-ink">
         {{ $t('verify.success_title') }}
       </h1>
-      <p class="mb-6 text-gray-500">{{ $t('verify.success_sub') }}</p>
+      <p class="mb-6 text-ink/60">{{ $t('verify.success_sub') }}</p>
       <UiButton variant="primary" block @click="navigateTo('/login')">
         {{ $t('nav.sign_in') }}
       </UiButton>
@@ -47,10 +47,10 @@ onMounted(async () => {
 
     <template v-else>
       <div class="mb-4 text-4xl" aria-hidden="true">⚠️</div>
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">
+      <h1 class="mb-1.5 text-2xl font-black text-ink">
         {{ $t('verify.error_title') }}
       </h1>
-      <p class="mb-6 text-gray-500">{{ $t('verify.error_sub') }}</p>
+      <p class="mb-6 text-ink/60">{{ $t('verify.error_sub') }}</p>
       <UiButton variant="primary" block @click="navigateTo('/login')">
         {{ $t('nav.sign_in') }}
       </UiButton>

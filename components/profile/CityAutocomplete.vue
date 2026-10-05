@@ -165,7 +165,7 @@ function onBlur() {
       type="text"
       :value="query"
       :placeholder="placeholder"
-      class="w-full rounded-md border-[1.5px] border-gray-200 py-2 pl-3 pr-8 text-[13.5px] text-gray-900 outline-none focus:border-brand focus:shadow-focus-ring"
+      class="w-full rounded-xl border-2 border-ink py-2 pl-3 pr-8 text-[13.5px] text-ink outline-none focus:border-brand focus:shadow-focus-ring"
       @input="onInput"
       @focus="open = true"
       @blur="onBlur"
@@ -179,7 +179,7 @@ function onBlur() {
     </span>
     <ul
       v-if="open && suggestions.length"
-      class="absolute z-10 mt-1 max-h-64 w-full overflow-y-auto rounded-md border border-gray-200 bg-white shadow-card"
+      class="absolute z-10 mt-1 max-h-64 w-full overflow-y-auto rounded-2xl border-2 border-ink bg-white"
     >
       <li
         v-for="s in suggestions"
@@ -187,7 +187,7 @@ function onBlur() {
         class="cursor-pointer px-3 py-2 text-[13.5px] hover:bg-brand-light"
         @mousedown.prevent="select(s)"
       >
-        {{ s.label }} <span class="text-gray-400">{{ s.postal }}</span>
+        {{ s.label }} <span class="text-ink/50">{{ s.postal }}</span>
       </li>
     </ul>
   </div>

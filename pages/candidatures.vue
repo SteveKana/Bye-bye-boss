@@ -75,11 +75,11 @@ async function changeStatus(item, newStatus) {
 <template>
   <div>
     <div class="mb-4">
-      <h1 class="text-2xl font-extrabold text-navy">{{ $t('candidatures.title') }}</h1>
+      <h1 class="text-2xl font-black text-ink">{{ $t('candidatures.title') }}</h1>
     </div>
 
     <div
-      class="mb-6 flex items-start gap-2.5 rounded-xl border border-gray-200 bg-gray-50 p-3.5 text-[12.5px] leading-relaxed text-gray-500"
+      class="mb-6 flex items-start gap-2.5 rounded-[22px] border-[2.5px] border-ink bg-lav p-3.5 text-[12.5px] leading-relaxed text-ink/60"
     >
       <svg
         viewBox="0 0 24 24"
@@ -88,7 +88,7 @@ async function changeStatus(item, newStatus) {
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="mt-0.5 h-4 w-4 shrink-0 text-gray-400"
+        class="mt-0.5 h-4 w-4 shrink-0 text-ink/50"
         aria-hidden="true"
       >
         <circle cx="12" cy="12" r="10" />
@@ -96,12 +96,12 @@ async function changeStatus(item, newStatus) {
         <line x1="12" y1="8" x2="12.01" y2="8" />
       </svg>
       <p>
-        <span class="font-semibold text-navy">{{ $t('candidatures.disclaimer_lead') }}</span>
+        <span class="font-semibold text-ink">{{ $t('candidatures.disclaimer_lead') }}</span>
         {{ ' ' }}{{ $t('candidatures.disclaimer_note') }}
       </p>
     </div>
 
-    <UiCard>
+    <div>
       <div
         v-if="loading"
         role="status"
@@ -128,21 +128,21 @@ async function changeStatus(item, newStatus) {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
           />
         </svg>
-        <p class="text-sm font-semibold text-navy">{{ $t('candidatures.loading') }}</p>
+        <p class="text-sm font-semibold text-ink">{{ $t('candidatures.loading') }}</p>
       </div>
 
-      <p v-else-if="!applications.length" class="py-10 text-center text-sm text-gray-400">
+      <p v-else-if="!applications.length" class="py-10 text-center text-sm text-ink/50">
         {{ $t('candidatures.empty') }}
       </p>
 
-      <ul v-else class="divide-y divide-gray-100">
+      <ul v-else class="space-y-3">
         <li
           v-for="item in applications"
           :key="item.id"
-          class="flex flex-wrap items-start gap-4 py-3.5 sm:flex-nowrap"
+          class="flex flex-wrap items-start gap-4 rounded-[22px] border-[2.5px] border-ink bg-white p-4 sm:flex-nowrap"
         >
           <span
-            class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[10px] text-[11px] font-extrabold text-white"
+            class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-[12px] border-2 border-ink text-[11px] font-extrabold text-white"
             :style="{
               background: avatarColor(
                 item.company_name || item.offer.company_name || item.offer.title
@@ -164,14 +164,14 @@ async function changeStatus(item, newStatus) {
             single-line `truncate` cut off ordinary-length titles and hid
             the location entirely on narrow screens where there was no
             shortage of vertical room to show them on an extra line. -->
-            <div class="line-clamp-2 text-sm font-bold text-navy hover:text-brand">
+            <div class="line-clamp-2 text-sm font-extrabold text-ink hover:text-brand">
               {{ item.offer.title }}
             </div>
-            <div class="text-[12.5px] text-gray-500">
+            <div class="text-[12.5px] text-ink/60">
               {{ item.company_name || item.offer.company_name }}
               <template v-if="item.offer.location"> · {{ item.offer.location }}</template>
             </div>
-            <div v-if="item.application_status_updated_at" class="mt-1 text-[11px] text-gray-400">
+            <div v-if="item.application_status_updated_at" class="mt-1 text-[11px] text-ink/50">
               {{
                 applicationStatusMessage(
                   item.application_status,
@@ -197,6 +197,6 @@ async function changeStatus(item, newStatus) {
           </div>
         </li>
       </ul>
-    </UiCard>
+    </div>
   </div>
 </template>

@@ -10,6 +10,11 @@ const auth = useAuthStore()
 const toast = useToast()
 const v = useValidators()
 
+async function logout() {
+  auth.logout()
+  await navigateTo('/login')
+}
+
 const soon = () => toast.info(t('app.soon_full'))
 
 // --- Delete account ----------------------------------------------------
@@ -244,22 +249,24 @@ const changePassword = handleSubmit(async (values) => {
 <template>
   <div>
     <div class="mb-6">
-      <h1 class="text-2xl font-extrabold text-navy">{{ $t('app.nav.settings') }}</h1>
-      <p class="mt-1 text-sm text-gray-500">{{ $t('settings.subtitle') }}</p>
+      <h1 class="text-2xl font-black text-ink">{{ $t('app.nav.settings') }}</h1>
+      <p class="mt-1 text-sm text-ink/60">{{ $t('settings.subtitle') }}</p>
     </div>
 
     <!-- Subscription -->
     <UiCard class="mb-4" :title="$t('settings.subscription')">
-      <p class="mb-4 text-[13px] text-gray-500">{{ $t('settings.subscription_sub') }}</p>
-      <div class="flex flex-wrap items-center justify-between gap-4 rounded-lg bg-gray-50 p-4">
+      <p class="mb-4 text-[13px] text-ink/60">{{ $t('settings.subscription_sub') }}</p>
+      <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-lav/40 p-4">
         <div>
-          <span class="inline-flex items-center gap-2 font-bold text-navy">
+          <span class="inline-flex items-center gap-2 font-bold text-ink">
             {{ auth.user?.subscription || $t('settings.plan_free') }}
-            <span class="rounded-full bg-brand-light px-2 py-0.5 text-[10px] font-bold text-brand">
+            <span
+              class="rounded-full border-2 border-ink bg-lav px-2 py-0.5 text-[10px] font-bold text-ink"
+            >
               {{ $t('settings.current_plan') }}
             </span>
           </span>
-          <div class="mt-1 text-[12.5px] text-gray-500">{{ $t('settings.plan_detail') }}</div>
+          <div class="mt-1 text-[12.5px] text-ink/60">{{ $t('settings.plan_detail') }}</div>
         </div>
         <UiButton variant="primary" size="sm" @click="soon">
           ✨ {{ $t('settings.upgrade') }}
@@ -269,20 +276,20 @@ const changePassword = handleSubmit(async (values) => {
 
     <!-- Notifications -->
     <UiCard id="notifications" class="mb-4 scroll-mt-20" :title="$t('settings.notifications')">
-      <p class="mb-4 text-[13px] text-gray-500">{{ $t('settings.notifications_sub') }}</p>
+      <p class="mb-4 text-[13px] text-ink/60">{{ $t('settings.notifications_sub') }}</p>
 
-      <div v-if="prefsLoading" class="py-6 text-center text-sm text-gray-500">
+      <div v-if="prefsLoading" class="py-6 text-center text-sm text-ink/60">
         {{ $t('settings.loading') }}
       </div>
 
       <template v-else>
         <!-- Email -->
-        <div class="flex items-center justify-between gap-4 border-b border-gray-100 py-3.5">
+        <div class="flex items-center justify-between gap-4 border-b border-ink/15 py-3.5">
           <div>
-            <div class="text-sm font-semibold text-gray-900">
+            <div class="text-sm font-semibold text-ink">
               {{ $t('settings.channel_email') }}
             </div>
-            <div class="text-[12.5px] text-gray-500">{{ $t('settings.email_sub') }}</div>
+            <div class="text-[12.5px] text-ink/60">{{ $t('settings.email_sub') }}</div>
           </div>
           <UiToggle
             :model-value="emailEnabled"
@@ -293,19 +300,17 @@ const changePassword = handleSubmit(async (values) => {
         </div>
 
         <!-- Discord -->
-        <div class="border-b border-gray-100 py-3.5">
+        <div class="border-b border-ink/15 py-3.5">
           <div class="mb-2 flex items-center justify-between gap-4">
-            <div class="text-sm font-semibold text-gray-900">Discord</div>
+            <div class="text-sm font-semibold text-ink">Discord</div>
             <span
               class="rounded-full px-2 py-0.5 text-[11px] font-bold"
-              :class="
-                discordEnabled ? 'bg-success-light text-success-text' : 'bg-gray-100 text-gray-500'
-              "
+              :class="discordEnabled ? 'bg-success-light text-success-text' : 'bg-lav text-ink/60'"
             >
               {{ discordEnabled ? $t('settings.channel_active') : $t('settings.channel_inactive') }}
             </span>
           </div>
-          <p class="mb-2 text-[12.5px] text-gray-500">{{ $t('settings.discord_sub') }}</p>
+          <p class="mb-2 text-[12.5px] text-ink/60">{{ $t('settings.discord_sub') }}</p>
           <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
             <UiInput
               v-model="discordWebhookUrl"
@@ -332,21 +337,19 @@ const changePassword = handleSubmit(async (values) => {
         </div>
 
         <!-- WhatsApp -->
-        <div class="border-b border-gray-100 py-3.5">
+        <div class="border-b border-ink/15 py-3.5">
           <div class="mb-2 flex items-center justify-between gap-4">
-            <div class="text-sm font-semibold text-gray-900">WhatsApp</div>
+            <div class="text-sm font-semibold text-ink">WhatsApp</div>
             <span
               class="rounded-full px-2 py-0.5 text-[11px] font-bold"
-              :class="
-                whatsappEnabled ? 'bg-success-light text-success-text' : 'bg-gray-100 text-gray-500'
-              "
+              :class="whatsappEnabled ? 'bg-success-light text-success-text' : 'bg-lav text-ink/60'"
             >
               {{
                 whatsappEnabled ? $t('settings.channel_active') : $t('settings.channel_inactive')
               }}
             </span>
           </div>
-          <p class="mb-2 text-[12.5px] text-gray-500">{{ $t('settings.whatsapp_sub') }}</p>
+          <p class="mb-2 text-[12.5px] text-ink/60">{{ $t('settings.whatsapp_sub') }}</p>
           <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
             <UiInput
               v-model="whatsappPhoneNumber"
@@ -378,12 +381,12 @@ const changePassword = handleSubmit(async (values) => {
         </div>
 
         <!-- Test send -->
-        <div class="flex items-center justify-between gap-4 border-b border-gray-100 py-3.5">
+        <div class="flex items-center justify-between gap-4 border-b border-ink/15 py-3.5">
           <div>
-            <div class="text-sm font-semibold text-gray-900">
+            <div class="text-sm font-semibold text-ink">
               {{ $t('settings.test_send_label') }}
             </div>
-            <div class="text-[12.5px] text-gray-500">{{ $t('settings.test_send_sub') }}</div>
+            <div class="text-[12.5px] text-ink/60">{{ $t('settings.test_send_sub') }}</div>
           </div>
           <UiButton variant="secondary" size="sm" :loading="testSending" @click="sendTest">
             {{ $t('settings.test_send_button') }}
@@ -393,10 +396,10 @@ const changePassword = handleSubmit(async (values) => {
         <!-- Frequency (fixed to one daily send for now) -->
         <div class="flex items-center justify-between gap-4 pt-3.5">
           <div>
-            <div class="text-sm font-semibold text-gray-900">
+            <div class="text-sm font-semibold text-ink">
               {{ $t('settings.frequency_label') }}
             </div>
-            <div class="text-[12.5px] text-gray-500">{{ $t('settings.frequency_fixed_hint') }}</div>
+            <div class="text-[12.5px] text-ink/60">{{ $t('settings.frequency_fixed_hint') }}</div>
           </div>
           <UiSelect
             class="w-44"
@@ -412,11 +415,11 @@ const changePassword = handleSubmit(async (values) => {
     <UiCard class="mb-4" :title="$t('settings.account')">
       <div class="mb-4 grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="mb-1.5 block text-sm font-semibold text-gray-900">
+          <label class="mb-1.5 block text-sm font-semibold text-ink">
             {{ $t('common.email') }}
           </label>
           <div
-            class="flex items-center rounded-md border-[1.5px] border-gray-200 bg-gray-50 px-3.5 py-3 text-base text-gray-500"
+            class="flex items-center rounded-xl border-2 border-ink bg-lav/40 px-3.5 py-3 text-base text-ink/60"
           >
             {{ auth.user?.email }}
           </div>
@@ -455,7 +458,7 @@ const changePassword = handleSubmit(async (values) => {
         </div>
       </form>
 
-      <div class="mt-6 border-t border-gray-100 pt-5">
+      <div class="mt-6 border-t border-ink/15 pt-5">
         <UiButton
           variant="secondary"
           class="border-danger/30 text-danger"
@@ -474,8 +477,8 @@ const changePassword = handleSubmit(async (values) => {
       size="sm"
       :persistent="deleting"
     >
-      <p class="mb-3 text-sm text-gray-700">{{ $t('settings.delete_warning') }}</p>
-      <ul class="mb-4 list-disc space-y-1 pl-5 text-[13px] text-gray-600">
+      <p class="mb-3 text-sm text-ink/80">{{ $t('settings.delete_warning') }}</p>
+      <ul class="mb-4 list-disc space-y-1 pl-5 text-[13px] text-ink/70">
         <li v-for="item in $tm('settings.delete_items')" :key="item">{{ item }}</li>
       </ul>
       <UiInput
@@ -507,11 +510,17 @@ const changePassword = handleSubmit(async (values) => {
     <UiCard :title="$t('profile.preferences')">
       <div class="flex items-center justify-between gap-4">
         <div>
-          <div class="text-sm font-semibold text-gray-900">{{ $t('lang.label') }}</div>
-          <div class="text-[13px] text-gray-500">{{ $t('profile.language_hint') }}</div>
+          <div class="text-sm font-semibold text-ink">{{ $t('lang.label') }}</div>
+          <div class="text-[13px] text-ink/60">{{ $t('profile.language_hint') }}</div>
         </div>
         <UiLangSwitcher />
       </div>
     </UiCard>
+
+    <!-- Logout: on mobile the side menu (and its logout button) doesn't
+         exist, so it lives here. -->
+    <UiButton class="lg:hidden" variant="secondary" block @click="logout">
+      {{ $t('app.logout') }}
+    </UiButton>
   </div>
 </template>
