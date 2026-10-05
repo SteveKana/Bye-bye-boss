@@ -93,17 +93,17 @@ const scoreDates = computed(() => matchedOffers.value.map((o) => o.computedAt))
 // CV. An empty choice means "don't restrict".
 const CONTRACT_CHOICES = ['Freelance', 'CDI', 'CDD', 'Intérim', 'Stage', 'Alternance']
 const selectedContracts = ref([])
-// An offer only ever carries a single is_full_remote boolean (see
-// geo_filter.py's docstring on why no "Hybride" distinction exists
-// server-side) -- so only "Full remote" and "Sur site" can really filter.
-const REMOTE_CHOICES = ['Full remote', 'Sur site']
+// Each offer is exactly one of: Full remote (flagged by the backend), Hybride
+// (the description spells out a split of days -- "2 jours de télétravail",
+// "3 jours sur site"... -- or says "hybride"), or Sur site (everything else,
+// including offers that say nothing about remote work).
+const REMOTE_CHOICES = ['Full remote', 'Hybride', 'Sur site']
 const selectedRemote = ref([])
-const remoteFilterMode = computed(() => {
-  if (selectedRemote.value.length === 1) {
-    return selectedRemote.value[0] === 'Full remote' ? 'remote' : 'onsite'
-  }
-  return ''
-})
+function remoteModeOf(offer) {
+  if (offer.isFullRemote) return 'Full remote'
+  if (offer.isHybrid) return 'Hybride'
+  return 'Sur site'
+}
 const REGION_CHOICES = [
   'Auvergne-Rhône-Alpes',
   'Bourgogne-Franche-Comté',
@@ -263,8 +263,9 @@ const filteredOffers = computed(() =>
     if (selectedContracts.value.length && !selectedContracts.value.includes(offer.contractTag)) {
       return false
     }
-    if (remoteFilterMode.value === 'remote' && !offer.isFullRemote) return false
-    if (remoteFilterMode.value === 'onsite' && offer.isFullRemote) return false
+    if (selectedRemote.value.length && !selectedRemote.value.includes(remoteModeOf(offer))) {
+      return false
+    }
     if (regionQuery.value && offer.region !== regionQuery.value) return false
     if (cityQuery.value && !normalizeText(offer.loc).includes(normalizeText(cityQuery.value))) {
       return false
