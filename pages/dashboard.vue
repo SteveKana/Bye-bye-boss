@@ -13,7 +13,6 @@ useHead({ title: computed(() => `${t('app.nav.dashboard')} · Bye Bye Boss`) })
 
 const { firstName } = useUserDisplay()
 const matching = useMatchingStore()
-const { criteria, load: loadCriteria } = useSearchCriteria()
 
 const loadingOpportunities = ref(true)
 
@@ -91,7 +90,6 @@ const scoreDates = computed(() =>
 )
 
 onMounted(async () => {
-  await loadCriteria()
   try {
     await matching.fetchDashboard()
   } catch {
@@ -148,8 +146,6 @@ function openOffer(offer) {
     </div>
 
     <AppScoresStatus :dates="scoreDates" class="mb-6" />
-
-    <AppCriteriaBar :criteria="criteria" />
 
     <!-- Top opportunities -->
     <section>

@@ -20,7 +20,6 @@ const tabs = [
   { key: 'app.nav.dashboard', to: '/dashboard', icon: 'home' },
   { key: 'app.nav.opportunities', to: '/opportunites', icon: 'grid' },
   { key: 'app.nav.applications', to: '/candidatures', icon: 'file' },
-  { key: 'app.nav.preferences', to: '/preferences', icon: 'sliders' },
   { key: 'app.nav.settings', to: '/settings', icon: 'gear' },
 ]
 const isActive = (to) => route.path === to || route.path.startsWith(`${to}/`)

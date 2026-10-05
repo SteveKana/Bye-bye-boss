@@ -62,9 +62,7 @@ const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.opportunities')} · Bye Bye Boss`) })
 
 const matching = useMatchingStore()
-const onboarding = useOnboardingStore()
 const route = useRoute()
-const { criteria, load: loadCriteria } = useSearchCriteria()
 
 // TEMPORARY debug hook -- no UI control, deliberately: visiting
 // /opportunites?source=adzuna (or ?source=france_travail) hides every offer
@@ -89,43 +87,70 @@ const hasScoredOffers = computed(() => matchedOffers.value.some((o) => !o.isPend
 // banner itself picks the freshest one.
 const scoreDates = computed(() => matchedOffers.value.map((o) => o.computedAt))
 
-// Contract-type and remote-work filtering now reads directly from the
-// candidate's saved /preferences (profile.contract_types/remote_preferences)
-// instead of duplicate manual toggles on this page. Those toggles used to
-// update their own local state that `filteredOffers` never actually
-// consulted -- a real bug Steve flagged (2026-10-01): picking "CDI" in the
-// old "Filtres" panel visibly selected the chip but never hid a single CDD
-// offer. There is no control here to change these two anymore; that only
-// happens on /preferences, same source of truth the "Votre recherche" bar
-// above already reads via useSearchCriteria.
-const profileContractTypes = computed(() => onboarding.profile?.contract_types || [])
-const profileRemotePreferences = computed(() => onboarding.profile?.remote_preferences || [])
+// Contrat / télétravail / localisation are real filters the candidate turns
+// on themselves (Steve, 2026-10-05) -- nothing is pre-selected from a saved
+// profile anymore, so the page first shows every recent offer matching the
+// CV. An empty choice means "don't restrict".
+const CONTRACT_CHOICES = ['Freelance', 'CDI', 'CDD', 'Intérim']
+const selectedContracts = ref([])
 // An offer only ever carries a single is_full_remote boolean (see
 // geo_filter.py's docstring on why no "Hybride" distinction exists
-// server-side) -- so only an unambiguous single choice ("Full remote" alone,
-// or "Sur site" alone) can actually filter anything. No choice, or several
-// boxes checked (Hybride included), means "don't restrict".
+// server-side) -- so only "Full remote" and "Sur site" can really filter.
+const REMOTE_CHOICES = ['Full remote', 'Sur site']
+const selectedRemote = ref([])
 const remoteFilterMode = computed(() => {
-  const prefs = profileRemotePreferences.value
-  if (prefs.length === 1 && prefs[0] === 'Full remote') return 'remote'
-  if (prefs.length === 1 && prefs[0] === 'Sur site') return 'onsite'
+  if (selectedRemote.value.length === 1) {
+    return selectedRemote.value[0] === 'Full remote' ? 'remote' : 'onsite'
+  }
   return ''
 })
+const REGION_CHOICES = [
+  'Auvergne-Rhône-Alpes',
+  'Bourgogne-Franche-Comté',
+  'Bretagne',
+  'Centre-Val de Loire',
+  'Corse',
+  'Grand Est',
+  'Hauts-de-France',
+  'Île-de-France',
+  'Normandie',
+  'Nouvelle-Aquitaine',
+  'Occitanie',
+  'Pays de la Loire',
+  "Provence-Alpes-Côte d'Azur",
+  'Guadeloupe',
+  'Martinique',
+  'Guyane',
+  'La Réunion',
+  'Mayotte',
+]
+const cityQuery = ref('')
+const regionQuery = ref('')
+function normalizeText(value) {
+  return (value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+}
+function toggleChoice(kind, value) {
+  const list = kind === 'contract' ? selectedContracts : selectedRemote
+  list.value = list.value.includes(value)
+    ? list.value.filter((v) => v !== value)
+    : [...list.value, value]
+}
 
-// The "Salaire" modal shows a TJM slider, an annual-salary slider, or both,
-// depending on what the candidate's contract-type preference can actually
-// produce in the results: Freelance-only shows just TJM, any salaried type
-// (CDI/CDD/Intérim) without Freelance shows just salary, a mix of both (or
-// no contract preference at all, meaning either kind can appear) shows both
-// -- each filtering only the offers of its own matching contract type (see
-// filteredOffers below), never misapplying one scale to the other.
+// Both salary sliders are always available now that no contract type is
+// pre-selected; each only ever filters offers of its own contract kind (see
+// filteredOffers below). With a contract filter on, only the relevant
+// slider(s) are shown.
 const showsFreelanceSlider = computed(
-  () => !profileContractTypes.value.length || profileContractTypes.value.includes('Freelance')
+  () => !selectedContracts.value.length || selectedContracts.value.includes('Freelance')
 )
 const showsSalarySlider = computed(
   () =>
-    !profileContractTypes.value.length ||
-    profileContractTypes.value.some((type) => type !== 'Freelance')
+    !selectedContracts.value.length ||
+    selectedContracts.value.some((type) => type !== 'Freelance')
 )
 
 const SALARY_SLIDER_MAX = 100000 // € brut/an
@@ -159,6 +184,10 @@ function formatEuros(amount, { decimals = 0 } = {}) {
 }
 
 function resetFilters() {
+  selectedContracts.value = []
+  selectedRemote.value = []
+  cityQuery.value = ''
+  regionQuery.value = ''
   minAts.value = DEFAULT_MIN_ATS
   salaryMin.value = 0
   tjmMin.value = 0
@@ -166,15 +195,31 @@ function resetFilters() {
 }
 
 // The ATS bar is not counted here: it is always on (75 by default) and has
-// its own control next to the sort dropdown, unlike the salary modal.
-const hasActiveFilters = computed(
-  () => salaryMin.value > 0 || tjmMin.value > 0 || onlySalaryKnown.value
+// its own control next to the sort dropdown.
+const salaryFilterCount = computed(
+  () => Number(salaryMin.value > 0) + Number(tjmMin.value > 0) + Number(onlySalaryKnown.value)
 )
 
 // Individually removable chips shown under the filter/sort row -- each
 // knows how to clear just itself, same "Filtres actifs" pattern as before.
 const activeFilterChips = computed(() => {
   const chips = []
+  for (const c of selectedContracts.value) {
+    chips.push({ key: `contract-${c}`, label: c, clear: () => toggleChoice('contract', c) })
+  }
+  for (const r of selectedRemote.value) {
+    chips.push({ key: `remote-${r}`, label: r, clear: () => toggleChoice('remote', r) })
+  }
+  if (regionQuery.value) {
+    chips.push({
+      key: 'region',
+      label: regionQuery.value,
+      clear: () => (regionQuery.value = ''),
+    })
+  }
+  if (cityQuery.value) {
+    chips.push({ key: 'city', label: cityQuery.value, clear: () => (cityQuery.value = '') })
+  }
   if (salaryMin.value > 0) {
     chips.push({
       key: 'salary',
@@ -209,14 +254,15 @@ const sortLabel = computed(
 
 const filteredOffers = computed(() =>
   matchedOffers.value.filter((offer) => {
-    if (
-      profileContractTypes.value.length &&
-      !profileContractTypes.value.includes(offer.contractTag)
-    ) {
+    if (selectedContracts.value.length && !selectedContracts.value.includes(offer.contractTag)) {
       return false
     }
     if (remoteFilterMode.value === 'remote' && !offer.isFullRemote) return false
     if (remoteFilterMode.value === 'onsite' && offer.isFullRemote) return false
+    if (regionQuery.value && offer.region !== regionQuery.value) return false
+    if (cityQuery.value && !normalizeText(offer.loc).includes(normalizeText(cityQuery.value))) {
+      return false
+    }
     if (debugSourceFilter.value && offer.source !== debugSourceFilter.value) return false
     if (!offer.isPending && offer.scores.ats < minAts.value) return false
 
@@ -270,9 +316,13 @@ const pagedOffers = computed(() =>
   offers.value.slice((page.value - 1) * PAGE_SIZE, page.value * PAGE_SIZE)
 )
 
-watch([minAts, salaryMin, tjmMin, onlySalaryKnown, sortBy], () => {
-  page.value = 1
-})
+watch(
+  [minAts, salaryMin, tjmMin, onlySalaryKnown, sortBy, selectedContracts, selectedRemote, cityQuery, regionQuery],
+  () => {
+    page.value = 1
+  },
+  { deep: true }
+)
 watch(totalPages, (total) => {
   if (page.value > total) page.value = total
 })
@@ -313,7 +363,6 @@ function tagsFor(offer) {
 // cluster below, also removed.
 
 onMounted(async () => {
-  await loadCriteria()
   try {
     await matching.fetchTop()
   } catch {
@@ -402,18 +451,65 @@ function selectSort(value) {
       <AppScoresStatus :dates="scoreDates" />
     </div>
 
-    <AppCriteriaBar :criteria="criteria" />
-
-    <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[1fr_260px]">
+        <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[1fr_260px]">
       <!-- MAIN COLUMN -->
       <div class="min-w-0">
         <!-- Filters / sort row -->
         <div class="mb-3 flex flex-wrap items-center gap-3">
-          <!-- Type de contrat / télétravail sont désormais de vrais filtres,
-               appliqués automatiquement depuis /preferences -- plus de
-               cases à cocher ici (voir profileContractTypes/
-               remoteFilterMode). Seul le salaire/TJM reste un réglage
-               ponctuel propre à cette page, d'où sa propre modale. -->
+          <AppFilterMenu :label="$t('opportunites.contract_filter')" :count="selectedContracts.length">
+            <div class="flex flex-col gap-2.5">
+              <UiCheckbox
+                v-for="c in CONTRACT_CHOICES"
+                :key="c"
+                :model-value="selectedContracts.includes(c)"
+                :label="c"
+                @update:model-value="toggleChoice('contract', c)"
+              />
+            </div>
+          </AppFilterMenu>
+
+          <AppFilterMenu :label="$t('opportunites.remote_filter')" :count="selectedRemote.length">
+            <div class="flex flex-col gap-2.5">
+              <UiCheckbox
+                v-for="r in REMOTE_CHOICES"
+                :key="r"
+                :model-value="selectedRemote.includes(r)"
+                :label="r"
+                @update:model-value="toggleChoice('remote', r)"
+              />
+            </div>
+          </AppFilterMenu>
+
+          <AppFilterMenu
+            :label="$t('opportunites.location_filter')"
+            :count="Number(!!cityQuery) + Number(!!regionQuery)"
+          >
+            <div class="flex flex-col gap-3">
+              <label class="flex flex-col gap-1 text-xs font-bold text-ink">
+                {{ $t('opportunites.location_city') }}
+                <input
+                  v-model="cityQuery"
+                  type="text"
+                  :placeholder="$t('opportunites.location_city_placeholder')"
+                  class="rounded-xl border-2 border-ink bg-white px-3 py-2 text-sm font-medium text-ink placeholder:text-ink/40"
+                />
+              </label>
+              <label class="flex flex-col gap-1 text-xs font-bold text-ink">
+                {{ $t('opportunites.location_region') }}
+                <select
+                  v-model="regionQuery"
+                  class="rounded-xl border-2 border-ink bg-white px-3 py-2 text-sm font-medium text-ink"
+                >
+                  <option value="">{{ $t('opportunites.location_region_any') }}</option>
+                  <option v-for="r in REGION_CHOICES" :key="r" :value="r">{{ r }}</option>
+                </select>
+              </label>
+              <p class="text-[11px] leading-snug text-ink/50">
+                {{ $t('opportunites.location_region_hint') }}
+              </p>
+            </div>
+          </AppFilterMenu>
+
           <button
             type="button"
             class="flex items-center gap-2 rounded-full border-2 border-ink bg-white px-4 py-2 text-sm font-bold text-ink hover:bg-lav"
@@ -421,10 +517,10 @@ function selectSort(value) {
           >
             {{ $t('opportunites.salary_button') }}
             <span
-              v-if="hasActiveFilters"
+              v-if="salaryFilterCount"
               class="flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"
             >
-              {{ activeFilterChips.length }}
+              {{ salaryFilterCount }}
             </span>
             <svg
               viewBox="0 0 24 24"
@@ -845,15 +941,6 @@ function selectSort(value) {
           </UiButton>
         </div>
 
-        <div>
-          <p class="text-xs font-semibold text-ink">{{ $t('opportunites.adjust_title') }}</p>
-          <NuxtLink
-            to="/preferences"
-            class="mt-1 flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
-          >
-            {{ $t('opportunites.adjust_link') }} →
-          </NuxtLink>
-        </div>
       </aside>
     </div>
 
