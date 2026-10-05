@@ -665,7 +665,7 @@
     "test_send_success": "Envoyé avec succès sur : {channels}",
     "test_send_error": "L'envoi du test a échoué.",
     "frequency_label": "Fréquence",
-    "frequency_fixed_hint": "Fixée à un envoi quotidien, vers 18h30.",
+    "frequency_fixed_hint": "Fixée à un envoi quotidien, vers 8h30.",
     "frequency_daily": "Résumé quotidien",
     "account": "Compte",
     "delete_account": "Supprimer mon compte",
