@@ -36,6 +36,7 @@ export function useMatchedOffers(rawMatches) {
         blockingMessage: match.blocking_message || '',
         contractTag: contractTag(match.offer.contract_type),
         isFullRemote: !!match.offer.is_full_remote,
+        isHybrid: !!match.offer.is_hybrid,
         salaryLabel: salaryLabel(match.offer),
         // Purely for sorting -- salary_max falls back to salary_min so a
         // "50k only" offer still sorts sensibly against a "40k-60k" one.
