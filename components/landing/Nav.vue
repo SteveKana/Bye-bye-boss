@@ -55,15 +55,19 @@ async function onReupload(event) {
 </script>
 
 <template>
-  <nav class="flex items-center justify-between gap-6 px-6 py-4 lg:px-12">
-    <NuxtLink to="/" class="flex items-center gap-2.5 font-bold text-navy" @click="goHome">
+  <nav class="flex items-center justify-between gap-3 px-4 py-4 sm:gap-6 sm:px-6 lg:px-12">
+    <NuxtLink
+      to="/"
+      class="flex items-center gap-2.5 whitespace-nowrap text-base font-black text-ink sm:text-lg"
+      @click="goHome"
+    >
       <UiLogoMark :size="32" />
       Bye Bye Boss
     </NuxtLink>
 
     <ul class="hidden items-center gap-7 lg:flex">
       <li v-for="l in links" :key="l.href">
-        <a :href="l.href" class="text-sm text-gray-600 transition hover:text-brand">
+        <a :href="l.href" class="text-sm font-bold text-ink transition hover:text-brand">
           {{ $t(l.key) }}
         </a>
       </li>
@@ -96,7 +100,10 @@ async function onReupload(event) {
         </NuxtLink>
       </template>
       <template v-else>
-        <NuxtLink to="/login" class="text-sm font-semibold text-gray-600 hover:text-brand">
+        <NuxtLink
+          to="/login"
+          class="whitespace-nowrap text-sm font-extrabold text-ink hover:text-brand"
+        >
           {{ $t('landing.nav.login') }}
         </NuxtLink>
         <!-- Only one CTA fits comfortably below `sm` -- "Se connecter" wins

@@ -44,21 +44,31 @@ async function onReupload(event) {
 <template>
   <section id="faq" class="px-6 py-16 lg:px-12">
     <div
-      class="mx-auto max-w-3xl rounded-2xl bg-gradient-to-br from-navy-light to-navy px-8 py-14 text-center text-white"
+      class="relative mx-auto max-w-3xl overflow-hidden rounded-[32px] border-[3px] border-ink bg-brand px-8 py-14 text-center text-white shadow-[8px_8px_0_#16122E]"
     >
-      <h2 class="mb-4 text-2xl font-extrabold leading-snug sm:text-3xl">
+      <span
+        class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-sun"
+        aria-hidden="true"
+      />
+      <span
+        class="pointer-events-none absolute -bottom-12 -left-10 h-36 w-36 rounded-full bg-blush"
+        aria-hidden="true"
+      />
+      <h2 class="relative mb-4 text-2xl font-black leading-snug sm:text-3xl">
         {{ $t('landing.cta.title') }}<br />
         {{ $t('landing.cta.title2') }}
       </h2>
-      <p class="mx-auto mb-7 max-w-xl text-[15px] leading-relaxed text-white/70">
+      <p
+        class="relative mx-auto mb-7 max-w-xl text-[15px] font-medium leading-relaxed text-white/90"
+      >
         {{ $t('landing.cta.sub') }}
       </p>
-      <UiButton variant="primary" size="lg" @click="onCtaClick">
+      <UiButton variant="sun" size="lg" class="relative" @click="onCtaClick">
         ⬆ {{ auth.isAuthenticated ? $t('profileCv.reupload') : $t('landing.cta.button') }}
       </UiButton>
       <input ref="fileInput" type="file" accept=".pdf,.docx" class="hidden" @change="onReupload" />
       <div
-        class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[12.5px] text-white/50"
+        class="relative mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[12.5px] font-semibold text-white/85"
       >
         <span>{{ $t('landing.cta.trust_1') }}</span>
         <span>{{ $t('landing.cta.trust_2') }}</span>

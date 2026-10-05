@@ -10,7 +10,7 @@ const steps = [
 <template>
   <section id="comment" class="px-6 py-16 lg:px-12">
     <div class="mx-auto max-w-6xl">
-      <h2 class="mb-12 text-center text-3xl font-extrabold text-navy">
+      <h2 class="mb-12 text-center text-3xl font-extrabold text-ink">
         {{ $t('landing.how.title') }}
       </h2>
 
@@ -22,13 +22,13 @@ const steps = [
             {{ i + 1 }}
           </div>
           <div
-            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white text-2xl shadow-card"
+            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-white text-2xl"
             aria-hidden="true"
           >
             {{ s.icon }}
           </div>
-          <h3 class="mb-2 font-bold text-navy">{{ $t(`landing.how.steps.${s.key}.title`) }}</h3>
-          <p class="text-sm leading-relaxed text-gray-600">
+          <h3 class="mb-2 font-bold text-ink">{{ $t(`landing.how.steps.${s.key}.title`) }}</h3>
+          <p class="text-sm leading-relaxed text-ink/70">
             {{ $t(`landing.how.steps.${s.key}.text`) }}
           </p>
         </div>
