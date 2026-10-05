@@ -323,43 +323,6 @@ const changePassword = handleSubmit(async (values) => {
           />
         </div>
 
-        <!-- Discord -->
-        <div class="border-b border-ink/15 py-3.5">
-          <div class="mb-2 flex items-center justify-between gap-4">
-            <div class="text-sm font-semibold text-ink">Discord</div>
-            <span
-              class="rounded-full px-2 py-0.5 text-[11px] font-bold"
-              :class="discordEnabled ? 'bg-success-light text-success-text' : 'bg-lav text-ink/60'"
-            >
-              {{ discordEnabled ? $t('settings.channel_active') : $t('settings.channel_inactive') }}
-            </span>
-          </div>
-          <p class="mb-2 text-[12.5px] text-ink/60">{{ $t('settings.discord_sub') }}</p>
-          <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
-            <UiInput
-              v-model="discordWebhookUrl"
-              class="flex-1"
-              placeholder="https://discord.com/api/webhooks/…"
-              :error="discordError"
-              :disabled="discordSaving"
-            />
-            <div class="flex shrink-0 gap-2">
-              <UiButton variant="secondary" size="sm" :loading="discordSaving" @click="saveDiscord">
-                {{ discordEnabled ? $t('settings.update') : $t('settings.activate') }}
-              </UiButton>
-              <UiButton
-                v-if="discordEnabled"
-                variant="ghost"
-                size="sm"
-                :disabled="discordSaving"
-                @click="disableDiscord"
-              >
-                {{ $t('settings.deactivate') }}
-              </UiButton>
-            </div>
-          </div>
-        </div>
-
         <!-- WhatsApp -->
         <div class="border-b border-ink/15 py-3.5">
           <div class="mb-2 flex items-center justify-between gap-4">
@@ -397,6 +360,43 @@ const changePassword = handleSubmit(async (values) => {
                 size="sm"
                 :disabled="whatsappSaving"
                 @click="disableWhatsapp"
+              >
+                {{ $t('settings.deactivate') }}
+              </UiButton>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discord -->
+        <div class="border-b border-ink/15 py-3.5">
+          <div class="mb-2 flex items-center justify-between gap-4">
+            <div class="text-sm font-semibold text-ink">Discord</div>
+            <span
+              class="rounded-full px-2 py-0.5 text-[11px] font-bold"
+              :class="discordEnabled ? 'bg-success-light text-success-text' : 'bg-lav text-ink/60'"
+            >
+              {{ discordEnabled ? $t('settings.channel_active') : $t('settings.channel_inactive') }}
+            </span>
+          </div>
+          <p class="mb-2 text-[12.5px] text-ink/60">{{ $t('settings.discord_sub') }}</p>
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-start">
+            <UiInput
+              v-model="discordWebhookUrl"
+              class="flex-1"
+              placeholder="https://discord.com/api/webhooks/…"
+              :error="discordError"
+              :disabled="discordSaving"
+            />
+            <div class="flex shrink-0 gap-2">
+              <UiButton variant="secondary" size="sm" :loading="discordSaving" @click="saveDiscord">
+                {{ discordEnabled ? $t('settings.update') : $t('settings.activate') }}
+              </UiButton>
+              <UiButton
+                v-if="discordEnabled"
+                variant="ghost"
+                size="sm"
+                :disabled="discordSaving"
+                @click="disableDiscord"
               >
                 {{ $t('settings.deactivate') }}
               </UiButton>

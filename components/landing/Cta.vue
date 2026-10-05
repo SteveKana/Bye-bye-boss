@@ -47,16 +47,15 @@ async function onReupload(event) {
       class="relative mx-auto max-w-3xl overflow-hidden rounded-[32px] border-[3px] border-ink bg-brand px-8 py-14 text-center text-white shadow-[8px_8px_0_#16122E]"
     >
       <span
-        class="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-sun"
+        class="pointer-events-none absolute -right-12 -top-12 h-24 w-24 rounded-full bg-sun"
         aria-hidden="true"
       />
       <span
-        class="pointer-events-none absolute -bottom-12 -left-10 h-36 w-36 rounded-full bg-blush"
+        class="pointer-events-none absolute -bottom-12 -left-12 h-24 w-24 rounded-full bg-blush"
         aria-hidden="true"
       />
       <h2 class="relative mb-4 text-2xl font-black leading-snug sm:text-3xl">
-        {{ $t('landing.cta.title') }}<br />
-        {{ $t('landing.cta.title2') }}
+        {{ $t('landing.cta.title') }}
       </h2>
       <p
         class="relative mx-auto mb-7 max-w-xl text-[15px] font-medium leading-relaxed text-white/90"
