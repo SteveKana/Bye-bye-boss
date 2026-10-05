@@ -357,9 +357,9 @@
     },
     "hero": {
       "badge": "L'IA au service de vos décisions de carrière",
-      "title": "Trouvez les offres qui vous correspondent vraiment.",
-      "title_accent": "Évitez celles que vous regretterez.",
-      "sub": "Nous analysons des centaines d'offres et des milliers d'avis de salariés pour vous montrer vos chances… et le risque de regretter ce poste après l'avoir accepté.",
+      "title": "Fini de chercher les offres.",
+      "title_accent": "Et si vous vous laissiez trouver ?",
+      "sub": "Chaque jour, nous analysons des centaines d'offres et pour votre profil, nous n'en gardons que les meilleures...",
       "cta_primary": "Importer mon CV",
       "cta_primary_note": "Gratuit & sécurisé",
       "cta_secondary": "Voir un exemple",
@@ -388,7 +388,7 @@
       "note_cta": "Gratuit. Sans engagement. Aucune offre envoyée avant l'ouverture."
     },
     "why": {
-      "eyebrow": "POURQUOI VOUS N'OBTENEZ PAS D'ENTRETIENS OU VOUS REGRETTEZ VOS CHOIX",
+      "eyebrow": "POURQUOI VOUS N'OBTENEZ PAS D'ENTRETIENS",
       "title": "Le problème n'est pas toujours votre profil.",
       "cards": {
         "profile": {
@@ -438,7 +438,7 @@
     },
     "comparison": {
       "eyebrow": "LES PLATEFORMES D'EMPLOI VOUS MONTRENT DES OFFRES.",
-      "title": "Nous vous montrons vos chances… et le risque de regret.",
+      "title": "Nous vous montrons vos chances…",
       "feature": "Fonctionnalité",
       "others": "Autres plateformes",
       "exclusive": "EXCLUSIF",
@@ -467,9 +467,8 @@
       "ats_btn": "Améliorations suggérées automatiquement"
     },
     "cta": {
-      "title": "Découvrez les offres qui valent votre temps.",
-      "title2": "Évitez celles que vous pourriez regretter.",
-      "sub": "Importez votre CV et laissez notre IA analyser des centaines d'offres et des milliers d'avis pour vous.",
+      "title": "Découvrez les offres qui valent votre temps",
+      "sub": "Importez votre CV et laissez notre IA analyser des centaines d'offres pour vous.",
       "button": "Importer mon CV gratuitement",
       "trust_1": "100% confidentiel",
       "trust_2": "Vos données ne sont jamais partagées",

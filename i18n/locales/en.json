@@ -357,9 +357,9 @@
     },
     "hero": {
       "badge": "AI-powered career decisions",
-      "title": "Find the jobs that truly fit you.",
-      "title_accent": "Skip the ones you'd regret.",
-      "sub": "We analyze hundreds of job postings and thousands of employee reviews to show you your odds… and the risk of regretting this role after accepting it.",
+      "title": "Stop searching for jobs.",
+      "title_accent": "What if you let them find you?",
+      "sub": "Every day, we analyze hundreds of job postings and, for your profile, we keep only the best ones...",
       "cta_primary": "Import my CV",
       "cta_primary_note": "Free & secure",
       "cta_secondary": "See an example",
@@ -388,7 +388,7 @@
       "note_cta": "Free. No commitment. Nothing sent before we open."
     },
     "why": {
-      "eyebrow": "WHY YOU DON'T GET INTERVIEWS, OR REGRET YOUR CHOICES",
+      "eyebrow": "WHY YOU DON'T GET INTERVIEWS",
       "title": "The problem isn't always your profile.",
       "cards": {
         "profile": {
@@ -438,7 +438,7 @@
     },
     "comparison": {
       "eyebrow": "JOB PLATFORMS SHOW YOU OFFERS.",
-      "title": "We show you your chances… and the regret risk.",
+      "title": "We show you your chances…",
       "feature": "Feature",
       "others": "Other platforms",
       "exclusive": "EXCLUSIVE",
@@ -467,9 +467,8 @@
       "ats_btn": "Improvements suggested automatically"
     },
     "cta": {
-      "title": "Discover the offers worth your time.",
-      "title2": "Skip the ones you might regret.",
-      "sub": "Import your CV and let our AI analyze hundreds of job postings and thousands of reviews for you.",
+      "title": "Discover the offers worth your time",
+      "sub": "Import your CV and let our AI analyze hundreds of job postings for you.",
       "button": "Import my CV for free",
       "trust_1": "100% confidential",
       "trust_2": "Your data is never shared",
