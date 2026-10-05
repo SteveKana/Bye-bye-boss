@@ -149,8 +149,7 @@ const showsFreelanceSlider = computed(
 )
 const showsSalarySlider = computed(
   () =>
-    !selectedContracts.value.length ||
-    selectedContracts.value.some((type) => type !== 'Freelance')
+    !selectedContracts.value.length || selectedContracts.value.some((type) => type !== 'Freelance')
 )
 
 const SALARY_SLIDER_MAX = 100000 // € brut/an
@@ -324,7 +323,17 @@ const pagedOffers = computed(() =>
 )
 
 watch(
-  [minAts, salaryMin, tjmMin, onlySalaryKnown, sortBy, selectedContracts, selectedRemote, cityQuery, regionQuery],
+  [
+    minAts,
+    salaryMin,
+    tjmMin,
+    onlySalaryKnown,
+    sortBy,
+    selectedContracts,
+    selectedRemote,
+    cityQuery,
+    regionQuery,
+  ],
   () => {
     page.value = 1
   },
@@ -458,12 +467,15 @@ function selectSort(value) {
       <AppScoresStatus :dates="scoreDates" />
     </div>
 
-        <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[1fr_260px]">
+    <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[1fr_260px]">
       <!-- MAIN COLUMN -->
       <div class="min-w-0">
         <!-- Filters / sort row -->
         <div class="mb-3 flex flex-wrap items-center gap-3">
-          <AppFilterMenu :label="$t('opportunites.contract_filter')" :count="selectedContracts.length">
+          <AppFilterMenu
+            :label="$t('opportunites.contract_filter')"
+            :count="selectedContracts.length"
+          >
             <div class="flex flex-col gap-2.5">
               <UiCheckbox
                 v-for="c in CONTRACT_CHOICES"
@@ -947,7 +959,6 @@ function selectSort(value) {
             {{ $t('dashboard.alerts') }}
           </UiButton>
         </div>
-
       </aside>
     </div>
 
