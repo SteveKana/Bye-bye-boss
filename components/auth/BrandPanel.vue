@@ -14,7 +14,7 @@ const featureKeys = {
 }
 // Each feature gets a bright emoji on its own coloured tile.
 const icons = {
-  scores: { emoji: '🌈', tone: 'bg-sun' },
+  scores: { emoji: '🏆', tone: 'bg-sun' },
   reco: { emoji: '🎯', tone: 'bg-blush' },
   tracking: { emoji: '🚀', tone: 'bg-lav' },
   secure: { emoji: '🔐', tone: 'bg-sun-light' },

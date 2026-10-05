@@ -2,7 +2,7 @@
 const funnel = [
   { num: 842, key: 'found', icon: '🔍', tone: 'bg-lav' },
   { num: 198, key: 'relevant', icon: '📋', tone: 'bg-sun-light' },
-  { num: 47, key: 'strong', icon: '🌈', tone: 'bg-blush' },
+  { num: 47, key: 'strong', icon: '💎', tone: 'bg-blush' },
   { num: 12, key: 'excellent', icon: '⭐', tone: 'bg-sun' },
 ]
 </script>
