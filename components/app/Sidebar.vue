@@ -6,7 +6,7 @@ const route = useRoute()
 const { fullName, initials, pictureUrl } = useUserDisplay()
 const displayName = computed(() => fullName.value || auth.user?.email || '')
 
-const items = [
+const baseItems = [
   { key: 'app.nav.dashboard', to: '/dashboard', icon: 'home' },
   { key: 'app.nav.opportunities', to: '/opportunites', icon: 'grid' },
   { key: 'app.nav.applications', to: '/candidatures', icon: 'file' },
@@ -14,6 +14,14 @@ const items = [
   { key: 'app.nav.profile', to: '/profile', icon: 'user' },
   { key: 'app.nav.settings', to: '/settings', icon: 'gear' },
 ]
+// Admins also get a link to the monitoring area (French only, admin-only).
+// Only after mount: the user is loaded client-side, so the server HTML never has it.
+const mounted = useMounted()
+const items = computed(() =>
+  mounted.value && auth.isAdmin
+    ? [...baseItems, { label: 'Administration', to: '/admin', icon: 'shield' }]
+    : baseItems
+)
 
 async function logout() {
   auth.logout()
@@ -44,7 +52,7 @@ async function logout() {
           "
         >
           <AppNavIcon :name="item.icon" />
-          {{ $t(item.key) }}
+          {{ item.label || $t(item.key) }}
         </NuxtLink>
       </template>
     </nav>

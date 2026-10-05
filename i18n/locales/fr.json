@@ -742,5 +742,23 @@
     "name_required": "Nom requis",
     "message_required": "Message requis",
     "message_short": "10 caractères minimum"
+  },
+  "unsubscribe": {
+    "title": "Annonces de Bye Bye Boss",
+    "meta_title": "Se désinscrire des annonces",
+    "intro": "Les annonces sont les rares e-mails d'information envoyés par l'équipe (nouveautés, changements importants). Vos alertes d'offres ne sont pas concernées.",
+    "loading": "Vérification du lien…",
+    "ready": "Ne plus recevoir les annonces à l'adresse",
+    "button": "Ne plus recevoir les annonces",
+    "working": "Désinscription en cours…",
+    "done_title": "C'est fait",
+    "done": "Vous ne recevrez plus nos annonces. Vos alertes d'offres et les e-mails liés à votre compte continuent normalement.",
+    "already_title": "Déjà désinscrit",
+    "already": "Cette adresse ne reçoit déjà plus les annonces. Rien d'autre à faire.",
+    "invalid_title": "Lien invalide",
+    "invalid": "Ce lien de désinscription est invalide ou a expiré. Utilisez le lien présent en bas du dernier e-mail reçu, ou écrivez-nous.",
+    "error": "Impossible de traiter votre demande pour le moment. Réessayez dans quelques instants.",
+    "contact": "Nous contacter",
+    "home": "Retour à l'accueil"
   }
 }
