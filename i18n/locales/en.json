@@ -238,6 +238,7 @@
     "next_page": "Next page",
     "scores_computed": "All scores are computed for your CV",
     "last_updated": "Last updated on {date}",
+    "next_update": "Next update on {date}",
     "understand_scores": "Understand our scores",
     "fit_tags_title": "Our compatibility levels",
     "fit_very_strong_text": "Your CV is very likely to pass the recruiter's filters for this offer (ATS Potential of 95 or more).",
