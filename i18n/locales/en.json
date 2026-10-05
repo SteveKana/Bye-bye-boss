@@ -205,6 +205,7 @@
     "see_all": "See all opportunities",
     "offer_hidden": "Offer hidden",
     "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
+    "empty_today": "No new offers for now",
     "empty_filtered": "No offers match these filters."
   },
   "opportunites": {
