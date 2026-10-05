@@ -74,6 +74,26 @@ function applyPreferences(prefs) {
   whatsappPhoneNumber.value = formatFrenchPhoneLocal(prefs.whatsapp_phone_number) || ''
 }
 
+// "Activer les alertes" (dashboard, opportunités) and the links in the
+// notification emails/messages land on /settings#notifications: scroll the
+// Notifications card to the top of the screen and flash it, so the visitor
+// isn't left at the top of the page. Runs once the preferences are loaded
+// because the card's height changes while they load.
+const route = useRoute()
+
+async function scrollToNotifications() {
+  if (route.hash !== '#notifications') return
+  await nextTick()
+  const card = document.getElementById('notifications')
+  if (!card) return
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+  card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
+  card.classList.remove('highlight-pulse')
+  void card.offsetWidth // restart the animation if it is already running
+  card.classList.add('highlight-pulse')
+  setTimeout(() => card.classList.remove('highlight-pulse'), 2400)
+}
+
 onMounted(async () => {
   try {
     applyPreferences(await notifications.fetchPreferences())
@@ -82,7 +102,11 @@ onMounted(async () => {
   } finally {
     prefsLoading.value = false
   }
+  await scrollToNotifications()
 })
+
+// Already on /settings and the hash changes (e.g. a second click).
+watch(() => route.hash, scrollToNotifications)
 
 async function toggleEmail(next) {
   emailSaving.value = true

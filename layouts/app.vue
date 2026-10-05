@@ -42,7 +42,7 @@ const isActive = (to) => route.path === to || route.path.startsWith(`${to}/`)
 
     <!-- Mobile top bar -->
     <header
-      class="fixed inset-x-0 top-0 z-20 flex items-center justify-between px-4 py-3 lg:hidden"
+      class="fixed inset-x-0 top-0 z-20 flex items-center justify-between bg-[#FBF9FF]/90 px-4 py-3 backdrop-blur lg:hidden"
     >
       <NuxtLink to="/" class="flex items-center gap-2 font-black text-ink">
         <UiLogoMark :size="30" />

@@ -839,7 +839,7 @@ function selectSort(value) {
             variant="secondary"
             block
             class="mt-3"
-            @click="navigateTo('/settings')"
+            @click="navigateTo('/settings#notifications')"
           >
             {{ $t('dashboard.alerts') }}
           </UiButton>
