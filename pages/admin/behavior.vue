@@ -66,6 +66,20 @@ const ACTION_LABELS = {
 const MODE_LABELS = { password: 'E-mail', google: 'Google' }
 
 // Nudge buttons: one request at a time per account, result shown inline.
+const cv = computed(() => data.value?.cv_optimization)
+
+// Asks "are you sure?" first: the e-mail goes to the person on that row.
+const pending = ref(null)
+const confirmOpen = ref(false)
+function askAction(account) {
+  pending.value = account
+  confirmOpen.value = true
+}
+async function confirmAction() {
+  const account = pending.value
+  confirmOpen.value = false
+  if (account) await runAction(account)
+}
 const busy = ref(null)
 const feedback = ref(null)
 let feedbackTimer = null
@@ -148,8 +162,8 @@ onBeforeUnmount(() => clearTimeout(feedbackTimer))
 
       <div class="grid gap-3 lg:grid-cols-2">
         <AdminCard
-          title="De l'inscription à la première candidature"
-          subtitle="Où les utilisateurs s'arrêtent"
+          title="Parcours des utilisateurs"
+          subtitle="De l'inscription à l'adaptation du CV : où ils s'arrêtent"
         >
           <AdminFunnel :items="data.funnel" aria-label="Entonnoir d'inscription" />
         </AdminCard>
@@ -219,6 +233,49 @@ onBeforeUnmount(() => clearTimeout(feedbackTimer))
         </AdminCard>
       </div>
 
+      <AdminCard
+        title="CV adaptés à une offre"
+        :subtitle="`Bouton « Adapter mon CV pour cette offre » · ${periodLong}`"
+      >
+        <div class="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+          <AdminTile label="Générés aujourd'hui" :value="fmtInt(cv.generated_today)" />
+          <AdminTile :label="`Générés (${periodShort})`" :value="fmtInt(cv.generated)" />
+          <AdminTile
+            :label="`Variantes gardées (${periodShort})`"
+            :value="fmtInt(cv.kept)"
+            sub="clic « Créer cette variante de CV »"
+          />
+          <AdminTile
+            label="Utilisateurs concernés"
+            :value="fmtInt(cv.users)"
+            :sub="
+              cv.per_user == null ? '' : `${String(cv.per_user).replace('.', ',')} par utilisateur`
+            "
+          />
+        </div>
+        <AdminEmpty v-if="!cv.top_offers.length" class="mt-3">
+          Aucun CV adapté sur la période.
+        </AdminEmpty>
+        <AdminTable v-else min-width="400px" class="mt-3">
+          <thead>
+            <tr>
+              <th>Poste</th>
+              <th>Entreprise</th>
+              <th>Générés</th>
+              <th>Gardés</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(o, i) in cv.top_offers" :key="i">
+              <td class="font-semibold">{{ o.title }}</td>
+              <td>{{ o.company }}</td>
+              <td>{{ fmtInt(o.generated) }}</td>
+              <td>{{ fmtInt(o.kept) }}</td>
+            </tr>
+          </tbody>
+        </AdminTable>
+      </AdminCard>
+
       <AdminCard title="Comptes à relancer" subtitle="Les actions partent depuis cette page">
         <AdminNotice v-if="feedback" :tone="feedback.tone" class="mb-3">
           {{ feedback.text }}
@@ -248,7 +305,7 @@ onBeforeUnmount(() => clearTimeout(feedbackTimer))
                   variant="secondary"
                   :loading="busy === a.user_id"
                   :disabled="busy !== null"
-                  @click="runAction(a)"
+                  @click="askAction(a)"
                 >
                   {{ ACTION_LABELS[a.action] || a.action }}
                 </UiButton>
@@ -263,5 +320,23 @@ onBeforeUnmount(() => clearTimeout(feedbackTimer))
         pour les comptes connectés.
       </p>
     </div>
+
+    <UiModal
+      v-model="confirmOpen"
+      :title="pending ? ACTION_LABELS[pending.action] || 'Confirmer' : 'Confirmer'"
+    >
+      <p v-if="pending" class="text-base font-medium text-ink">
+        Un e-mail va être envoyé à
+        <b class="font-black">{{ pending.email }}</b>
+        ({{ (pending.stage_label || '').toLowerCase() }}).
+      </p>
+      <p class="mt-3 text-sm font-medium text-ink/60">Cet envoi ne peut pas être annulé.</p>
+      <template #footer>
+        <div class="flex flex-wrap justify-end gap-2.5">
+          <UiButton variant="secondary" @click="confirmOpen = false">Annuler</UiButton>
+          <UiButton variant="primary" @click="confirmAction">Confirmer l'envoi</UiButton>
+        </div>
+      </template>
+    </UiModal>
   </div>
 </template>
