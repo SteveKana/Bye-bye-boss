@@ -7,6 +7,13 @@ const { t } = useI18n()
 useHead({ title: computed(() => `${t('app.nav.settings')} · Bye Bye Boss`) })
 
 const auth = useAuthStore()
+
+// "Tester l'envoi" is a tool for the project owner only -- other accounts never
+// need it, so it stays hidden for them.
+const PROJECT_OWNER_EMAIL = 'stevykana21@gmail.com'
+const isProjectOwner = computed(
+  () => auth.user?.email?.trim().toLowerCase() === PROJECT_OWNER_EMAIL
+)
 const toast = useToast()
 const v = useValidators()
 
@@ -405,7 +412,10 @@ const changePassword = handleSubmit(async (values) => {
         </div>
 
         <!-- Test send -->
-        <div class="flex items-center justify-between gap-4 border-b border-ink/15 py-3.5">
+        <div
+          v-if="isProjectOwner"
+          class="flex items-center justify-between gap-4 border-b border-ink/15 py-3.5"
+        >
           <div>
             <div class="text-sm font-semibold text-ink">
               {{ $t('settings.test_send_label') }}

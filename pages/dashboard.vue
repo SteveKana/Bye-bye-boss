@@ -197,12 +197,9 @@ function openOffer(offer) {
             </div>
             <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
               <AppFitBadge :fit="offer.fit" />
-              <span
-                v-if="offer.isPending"
-                class="inline-block rounded-full border-2 border-ink bg-white px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
-              >
+              <AppPendingTag v-if="offer.isPending">
                 {{ $t('dashboard.analysis_pending') }}
-              </span>
+              </AppPendingTag>
               <span
                 v-if="offer.contractTag"
                 class="inline-block rounded-full border-2 border-ink bg-lav px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
