@@ -101,16 +101,16 @@ async function onReupload(event) {
         </NuxtLink>
       </template>
       <template v-else>
+        <!-- Signed-out visitors get "S'inscrire" (Steve, 2026-10-06). Returning
+        users reach the login through the "Déjà un compte ?" link of the
+        signup page. Only one CTA fits comfortably below `sm`, so
+        "Importer mon CV" stays desktop-only. -->
         <NuxtLink
-          to="/login"
+          to="/register"
           class="whitespace-nowrap text-sm font-extrabold text-ink hover:text-brand"
         >
-          {{ $t('landing.nav.login') }}
+          {{ $t('landing.nav.signup') }}
         </NuxtLink>
-        <!-- Only one CTA fits comfortably below `sm` -- "Se connecter" wins
-        that slot since it covers both new and returning visitors, while
-        "Importer mon CV" (signup) stays available on desktop and reappears
-        for a mobile visitor once they tap through to /login anyway. -->
         <UiButton
           variant="primary"
           size="sm"
