@@ -8,7 +8,6 @@ const route = useRoute()
 const STEP_BY_PATH = {
   '/onboarding/upload': 1,
   '/onboarding/verification': 2,
-  '/onboarding/preferences': 3,
 }
 const currentStep = computed(() => STEP_BY_PATH[route.path] || 1)
 </script>
@@ -20,7 +19,7 @@ const currentStep = computed(() => STEP_BY_PATH[route.path] || 1)
     </aside>
 
     <main class="flex flex-1 flex-col bg-white">
-      <div class="flex justify-center border-b border-gray-100 px-6 py-5 sm:justify-start sm:px-10">
+      <div class="flex justify-center border-b border-ink/15 px-6 py-5 sm:justify-start sm:px-10">
         <OnboardingStepIndicator :current="currentStep" />
       </div>
 
@@ -30,7 +29,7 @@ const currentStep = computed(() => STEP_BY_PATH[route.path] || 1)
         </div>
       </div>
 
-      <div class="border-t border-gray-100 px-6 py-4 sm:px-10">
+      <div class="border-t border-ink/15 px-6 py-4 sm:px-10">
         <div class="mx-auto flex w-full max-w-2xl items-center justify-between gap-3">
           <slot name="actions" />
         </div>

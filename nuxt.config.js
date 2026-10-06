@@ -35,6 +35,9 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
       link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/logo-v2.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-v2-32.png' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon-v2.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
@@ -48,7 +51,19 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '/api/v1/',
+      // The OAuth "Web application" client id from Google Cloud Console --
+      // public by nature (it identifies the app to Google, not a secret).
+      // Override per environment with NUXT_PUBLIC_GOOGLE_CLIENT_ID. Left
+      // empty, AuthSocialButtons just skips rendering the Google button
+      // rather than rendering a broken one.
+      googleClientId: '',
     },
+  },
+
+  // The admin area is a client-side app behind a login: no server rendering.
+  routeRules: {
+    '/admin': { ssr: false },
+    '/admin/**': { ssr: false },
   },
 
   nitro: {

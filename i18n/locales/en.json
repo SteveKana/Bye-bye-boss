@@ -1,10 +1,17 @@
 {
   "common": {
+    "load_error": "We couldn't load your information right now. Please try again in a moment.",
     "or": "or",
     "email": "Email",
     "password": "Password",
     "email_placeholder": "your{'@'}email.com",
-    "back_to_login": "Back to sign in"
+    "back_to_login": "Back to sign in",
+    "undo": "Undo",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "previous": "Previous",
+    "save": "Save",
+    "stale_source_warning": "This information may no longer be up to date."
   },
   "nav": {
     "no_account": "No account yet?",
@@ -18,7 +25,8 @@
     "password_placeholder": "Your password",
     "forgot": "Forgot password?",
     "submit": "Sign in",
-    "error": "Sign in failed"
+    "error": "Sign in failed",
+    "not_verified": "Your email address isn't verified yet."
   },
   "register": {
     "title": "Create your account",
@@ -26,13 +34,28 @@
     "password_placeholder": "Create a password",
     "password_hint": "8 characters minimum.",
     "submit": "Create my account",
-    "error": "Sign up failed"
+    "error": "Sign up failed",
+    "email_taken": "This email address is already in use.",
+    "check_email_title": "Check your email",
+    "check_email_intro": "We sent a confirmation link to ",
+    "check_email_end": ". Click it to activate your account.",
+    "resend": "Resend the email",
+    "resent": "Confirmation email resent"
+  },
+  "verify": {
+    "title": "Email verification",
+    "verifying": "Verifying…",
+    "success_title": "Email verified",
+    "success_sub": "Your account is active. You can now sign in.",
+    "error_title": "Invalid or expired link",
+    "error_sub": "This confirmation link is no longer valid. Sign in to get a new one."
   },
   "reset": {
     "request_title": "Forgot password?",
     "request_subtitle": "Enter your email and we'll send you a reset link.",
     "request_submit": "Send the link",
-    "requested": "If an account matches this address, a reset link has just been sent.",
+    "requested_intro": "If an account exists for ",
+    "requested_end": ", a reset link will be sent to you.",
     "request_error": "Could not send",
     "confirm_title": "New password",
     "confirm_subtitle": "Choose a new password for your account.",
@@ -45,15 +68,22 @@
   "validation": {
     "email_required": "Email address required",
     "email_invalid": "Invalid email address",
+    "first_name_required": "First name required",
+    "last_name_required": "Last name required",
     "password_required": "Password required",
     "password_min": "8 characters minimum",
     "confirm_required": "Confirmation required",
-    "password_mismatch": "Passwords do not match"
+    "password_mismatch": "Passwords do not match",
+    "discord_webhook_required": "The Discord webhook URL is required.",
+    "discord_webhook_invalid": "The URL must start with https://discord.com/api/webhooks/",
+    "whatsapp_phone_required": "The phone number is required.",
+    "whatsapp_phone_invalid": "Enter a valid French phone number, e.g. 06 12 34 56 78."
   },
   "social": {
     "google": "Continue with Google",
     "linkedin": "Continue with LinkedIn",
-    "soon": "{provider} sign-in coming soon"
+    "soon": "{provider} sign-in coming soon",
+    "google_error": "Google sign-in failed. Please try again."
   },
   "security": {
     "login": "Your data is encrypted and secure",
@@ -67,7 +97,7 @@
       "features": {
         "scores": {
           "title": "Transparent scores",
-          "text": "ATS, Career, Potential and Regret Index™ for every offer."
+          "text": "ATS, Career and Potential for every offer."
         },
         "reco": {
           "title": "Personalised recommendations",
@@ -81,10 +111,7 @@
           "title": "Your data secured",
           "text": "Privacy guaranteed, never shared."
         }
-      },
-      "preview_label": "Your preview",
-      "spark_label": "Your opportunities trend",
-      "spark_sub": "last 30 days"
+      }
     },
     "signup": {
       "headline": "Create your account and boost your",
@@ -134,28 +161,218 @@
   "lang": {
     "label": "Language"
   },
+  "app": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "opportunities": "Opportunities",
+      "applications": "Applications",
+      "profile": "CV",
+      "settings": "Settings"
+    },
+    "soon": "soon",
+    "soon_full": "Coming soon.",
+    "logout": "Log out",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "dashboard": {
+    "greeting": "Hi {name}",
+    "alerts": "Enable alerts",
+    "edit": "Edit",
+    "top_title": "Top 5 opportunities for you on {date}",
+    "top_sub": "The new offers that fit you best, ranked by compatibility with your profile.",
+    "loading": "Analyzing your profile…",
+    "loading_sub": "Your first offers are on their way. We'll email you as soon as their scores are ready, even if you leave this page.",
+    "published_today": "Posted today",
+    "published_yesterday": "Posted yesterday",
+    "published_days": "Posted {days} days ago",
+    "published_on": "Posted on {date}",
+    "fit_very_strong": "Very strong fit",
+    "fit_strong": "Strong fit",
+    "analysis_pending": "Analysis in progress",
+    "filter_contract_all": "All",
+    "filter_reset": "Reset filters",
+    "sort_relevance": "Sort by relevance",
+    "sort_date_desc": "Newest",
+    "sort_date_asc": "Oldest",
+    "reject": "Reject this offer",
+    "see_all": "See all opportunities",
+    "offer_hidden": "Offer hidden",
+    "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
+    "empty_today": "No new offers for now",
+    "empty_filtered": "No offers match these filters."
+  },
+  "opportunites": {
+    "ats_filter_label": "Minimum ATS score",
+    "sort_salary_desc": "Salary (highest first)",
+    "sort_ats_desc": "ATS score",
+    "filters": "Filters",
+    "contract_type": "Contract type",
+    "remote_work": "Remote work",
+    "onsite": "On-site",
+    "salary_min": "Minimum salary",
+    "salary_any": "Any",
+    "salary_min_label": "{amount} € gross/year",
+    "salary_button": "Salary",
+    "salary_modal_title": "Minimum salary",
+    "salary_estimate_caption": "Gross salary estimate, 35h/week.",
+    "annual": "Annual",
+    "monthly": "Monthly",
+    "hourly": "Hourly",
+    "only_salary_known": "Only show offers with a listed salary",
+    "show_n_offers": "Show {count} offers",
+    "apply": "Apply",
+    "sort_by": "Sort by: {label}",
+    "active": "Active filters:",
+    "remove_filter": "Remove filter {label}",
+    "clear_all": "Clear all",
+    "results_found": "{count} offer(s) found",
+    "reasons_title": "Why this offer is right for you",
+    "gap_reason": "A gap was found on \"{skill}\" — see the offer detail for a fix example.",
+    "see_detail": "See detail",
+    "pagination_range": "{from}-{to} of {total} offers",
+    "previous_page": "Previous page",
+    "next_page": "Next page",
+    "scores_computed": "All scores are computed for your CV",
+    "last_updated": "Last updated on {date}",
+    "next_update": "Next update on {date}",
+    "understand_scores": "Understand our scores",
+    "fit_tags_title": "Our compatibility levels",
+    "fit_very_strong_text": "Your CV is very likely to pass the recruiter's filters for this offer (ATS Potential of 95 or more).",
+    "fit_strong_text": "A very good match, with a few possible adjustments to your CV (ATS Potential of 80 to 94).",
+    "alerts_title": "Never miss an opportunity",
+    "alerts_text": "Get alerted as soon as a new offer strongly matches your profile.",
+    "sort_potential_desc": "ATS potential",
+    "sort_career_desc": "Career score",
+    "tjm_min": "Minimum daily rate",
+    "tjm_min_label": "€{amount}/day",
+    "sort_tjm_desc": "Daily rate (highest first)",
+    "score_ats_title": "ATS",
+    "score_ats_text": "How well your CV matches the automated screening software (ATS) recruiters use to filter CVs before a human ever reads them.",
+    "score_career_title": "Career",
+    "score_career_text": "How well this offer fits your profile and career path, independent of the recruiter's automated filters.",
+    "score_potential_title": "ATS Potential",
+    "score_potential_text": "The highest ATS score you could reach for this offer by optimizing your CV (the \"Adapt my CV for this offer\" button) — not your current match.",
+    "contract_filter": "Contract",
+    "remote_filter": "Remote",
+    "location_filter": "Location",
+    "location_city": "City",
+    "location_city_placeholder": "E.g. Lyon, Paris…",
+    "location_region": "Region",
+    "location_region_any": "All regions",
+    "location_region_hint": "Offers whose source gives no region are hidden when a region is chosen."
+  },
+  "opportunity": {
+    "back": "← Back to dashboard",
+    "loading": "Loading the opportunity…",
+    "not_found_title": "Match not found",
+    "not_found_text": "This opportunity doesn't exist or is no longer available.",
+    "back_to_dashboard": "Back to dashboard",
+    "full_remote": "Full remote",
+    "view_offer": "View the listing →",
+    "score_ats": "ATS",
+    "score_career": "Career",
+    "score_potential": "ATS Potential",
+    "analysis_pending": "This offer is still being analyzed: its scores will appear here as soon as it is done (we'll email you).",
+    "trust_ok_title": "No dealbreaker identified",
+    "trust_warning_title": "Point(s) of attention identified",
+    "requirements_title": "What this offer is looking for",
+    "requirements_other_category": "Other skills",
+    "matches_title": "Match with your CV",
+    "matches_note": "This ranking reflects whether each keyword is explicitly present in your CV's text, not your actual skill level — a \"missing\" score can simply mean the skill isn't phrased the way it's expected.",
+    "match_group_matched": "Present in your CV",
+    "match_group_partial": "Indirect mention, worth phrasing more explicitly",
+    "match_group_missing": "Absent from your CV's text",
+    "explanations_title": "Why these scores?",
+    "explain_career_title": "Career Score — {score}/100",
+    "explain_ats_title": "ATS Score — {score}/100",
+    "gaps_title": "Gaps to fix in your CV",
+    "gaps_intro": "{count} gap(s) identified between your CV's text and the keywords automated screening tools expect.",
+    "gap_why_label": "Why it matters:",
+    "gap_fix_label": "Fix example:",
+    "actions_title": "Action plan for your CV",
+    "description_title": "Job description",
+    "details_title": "Opportunity details",
+    "detail_contract": "Contract type",
+    "detail_remote": "Remote work",
+    "detail_published": "Published",
+    "ready_title": "Ready to apply?",
+    "ready_text": "Fix the {count} identified gap(s) above to maximize your chances.",
+    "ready_text_no_gaps": "Your profile matches this offer well.",
+    "adapt_cv_button": "📄 Adapt my CV for this offer"
+  },
+  "applicationStatus": {
+    "not_applied": "Not applied",
+    "applied": "Applied",
+    "interview": "Interview",
+    "offer": "Offer received",
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn",
+    "messages": {
+      "applied": "You clicked \"View the listing\" on {date}",
+      "interview": "Interview scheduled on {date}",
+      "offer": "Offer received on {date}",
+      "rejected": "Application rejected on {date}",
+      "withdrawn": "Application withdrawn on {date}"
+    }
+  },
+  "candidatures": {
+    "title": "Applications",
+    "disclaimer_lead": "This tracking reflects a click on \"View the listing\", not a confirmation that the recruiter received your application.",
+    "disclaimer_note": "If you ultimately didn't apply on the company's site, this list has no way to tell the difference yet.",
+    "loading": "Loading your applications…",
+    "empty": "No applications yet. Click \"View the listing →\" on an opportunity for it to show up here.",
+    "updated": "Status updated.",
+    "removed": "Removed from your applications.",
+    "update_error": "Couldn't update the status. Please try again."
+  },
+  "profile": {
+    "subtitle": "Your personal information, used for matching.",
+    "save": "Save",
+    "saved": "Profile updated",
+    "save_error": "Could not save",
+    "no_name": "No name",
+    "readonly": "read-only",
+    "plan": "Plan",
+    "security": "Security",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "change_password": "Change password",
+    "password_changed": "Password changed",
+    "wrong_password": "Current password is incorrect",
+    "preferences": "Preferences",
+    "language_hint": "Interface language."
+  },
   "landing": {
     "nav": {
-      "how": "How it works",
-      "features": "Features",
-      "preview": "Preview",
-      "faq": "FAQ",
-      "cta": "Join the waitlist"
+      "cta": "Import my CV",
+      "why": "Why Bye Bye Boss",
+      "comparison": "Comparison",
+      "login": "Log in"
     },
     "hero": {
-      "badge": "Coming soon — sign up to be notified at launch",
-      "title": "Stop searching for job offers.",
-      "title_accent": "And offers come to you.",
-      "sub": "Bye Bye Boss is under development. At launch: upload your resume once, our AI analyses your profile, explores thousands of offers and sends you a 100% relevant selection every day. Leave your email to be notified when we open.",
-      "social_proof": "850+ people already on the waitlist",
-      "press_label": "Soon featured on",
-      "preview_badge": "Preview of the future product",
-      "annotation": "Every night, get the best opportunities for you.",
-      "dash_greeting": "Hi Thomas 👋",
-      "dash_meta": "Top opportunities ranked by fit with your profile",
-      "dash_link": "See all offers →",
-      "compat_high": "Very strong fit",
-      "compat_good": "Strong fit"
+      "badge": "AI-powered career decisions",
+      "title": "Stop searching for jobs.",
+      "title_accent": "What if you let them find you?",
+      "sub": "Every day, we analyze hundreds of job postings and, for your profile, we keep only the best ones...",
+      "cta_primary": "Import my CV",
+      "cta_primary_note": "Free & secure",
+      "cta_secondary": "See an example",
+      "trust_1": "Analysis in 2 minutes",
+      "trust_2": "100% confidential",
+      "trust_3": "No credit card",
+      "preview_label": "Example analysis",
+      "preview_offer_title": "Product Owner",
+      "preview_offer_meta": "SaaS · Paris",
+      "preview_view_link": "View offer ↗",
+      "preview_badge": "Good opportunity",
+      "ats_label": "ATS Score",
+      "ats_sub": "Good ATS compatibility",
+      "career_label": "Career Score",
+      "career_sub": "Strong growth potential",
+      "potential_label": "ATS Potential",
+      "potential_sub": "+18 points possible with a few tweaks",
+      "see_more": "See the full analysis and recommendations →"
     },
     "waitlist": {
       "placeholder": "Your email address",
@@ -166,7 +383,7 @@
       "note_cta": "Free. No commitment. Nothing sent before we open."
     },
     "why": {
-      "eyebrow": "WHY YOU DON'T GET INTERVIEWS, OR REGRET YOUR CHOICES",
+      "eyebrow": "WHY YOU DON'T GET INTERVIEWS",
       "title": "The problem isn't always your profile.",
       "cards": {
         "profile": {
@@ -180,10 +397,6 @@
         "targeting": {
           "title": "Poor targeting",
           "text": "You apply to offers too far from your goals."
-        },
-        "regret": {
-          "title": "Regret risk",
-          "text": "The company or role could disappoint you mid-term."
         }
       }
     },
@@ -220,8 +433,9 @@
     },
     "comparison": {
       "eyebrow": "JOB PLATFORMS SHOW YOU OFFERS.",
-      "title": "We show you your chances… and the regret risk.",
+      "title": "We show you your chances…",
       "feature": "Feature",
+      "others": "Other platforms",
       "exclusive": "EXCLUSIVE",
       "rows": {
         "search": "Job search",
@@ -229,7 +443,6 @@
         "career": "Career fit",
         "potential": "ATS Potential (improvement headroom)",
         "cv": "Resume auto-tailored to the offer",
-        "regret": "6-month regret index (employee & ex-employee reviews)",
         "advice": "Personalised optimisation tips"
       }
     },
@@ -246,32 +459,38 @@
       "ats_sub": "Sometimes a few adjustments change everything.",
       "ats_current": "Current ATS",
       "ats_potential": "Potential ATS",
-      "ats_btn": "Improvements suggested automatically",
-      "regret_title": "Don't miss out… or miss yourself.",
-      "regret_sub": "Our regret index will be based on real reviews from employees and ex-employees.",
-      "regret_level": "Regret risk:",
-      "regret_high": "HIGH",
-      "regret_desc": "Many negative reports about management, turnover and internal growth.",
-      "regret_source": "Data collected via Reddit and analysed by our AI"
+      "ats_btn": "Improvements suggested automatically"
     },
     "cta": {
-      "badge": "WAITLIST",
-      "title": "Everyone on the list gets",
-      "title_strong": "priority access at launch.",
-      "title_end": "Get in before everyone else."
+      "title": "Discover the offers worth your time",
+      "sub": "Import your CV and let our AI analyze hundreds of job postings for you.",
+      "button": "Import my CV for free",
+      "trust_1": "100% confidential",
+      "trust_2": "Your data is never shared",
+      "trust_3": "Delete your account anytime"
     },
     "footer": {
       "copy": "© 2026 Bye Bye Boss – All rights reserved.",
       "legal": "Legal notice",
       "privacy": "Privacy",
-      "contact": "Contact"
+      "contact": "Contact",
+      "cookies": "Cookies"
+    },
+    "social": {
+      "stat1_num": "2,384",
+      "stat1_label": "CVs analyzed",
+      "stat2_num": "96%",
+      "stat2_label": "of users discovered relevant opportunities",
+      "stat3_num": "+3.7×",
+      "stat3_label": "more interviews obtained on average",
+      "stat4_num": "↻",
+      "stat4_label": "Jobs and reviews updated daily"
     }
   },
   "onboarding": {
     "steps": {
       "upload": "Import CV",
-      "verification": "Verification",
-      "preferences": "Preferences"
+      "verification": "Verification"
     },
     "upload": {
       "title": "Import your CV",
@@ -280,7 +499,6 @@
       "browse": "Browse my files",
       "hint": "PDF or Word, 5 MB max",
       "remove": "Remove file",
-      "analyzing": "Analyzing your CV…",
       "cancel": "Cancel",
       "continue": "Continue",
       "error_required": "Please import a CV before continuing.",
@@ -321,46 +539,226 @@
       "location": "Location",
       "availability": "Availability",
       "previous": "Previous",
-      "continue": "Continue",
-      "error_generic": "Updating the profile failed. Please try again."
-    },
-    "preferences": {
-      "title": "Your preferences",
-      "subtitle": "These criteria refine your job matches. Editable at any time.",
-      "contract_type_title": "Contract type",
-      "contract_type_subtitle": "The contract type you're looking for",
-      "multi_choice": "Multiple choices possible",
-      "remote_title": "Desired remote work",
-      "remote_subtitle": "Your remote work preference",
-      "mobility_title": "Geographic mobility",
-      "mobility_subtitle": "The geographic area you'd like to work in",
-      "single_choice": "One choice only — \"Anywhere in France\" already covers all areas",
-      "salary_title": "Target salary (optional)",
-      "salary_subtitle": "Your desired gross annual salary",
-      "salary_placeholder": "E.g. 55000",
-      "salary_suffix": "€ gross / year",
-      "salary_hint": "You can change this at any time",
-      "note": "No worries, you'll be able to change all these preferences at any time from your profile.",
-      "previous": "Previous",
-      "continue": "Continue",
-      "error_required": "Please select at least one option for each required category.",
-      "error_generic": "Saving your preferences failed. Please try again."
-    },
-    "contract_types": {
-      "CDI": "Permanent (CDI)",
-      "CDD": "Fixed-term (CDD)",
-      "Freelance": "Freelance",
-      "Intérim": "Temporary"
-    },
-    "remote_options": {
-      "Sur site": "On-site",
-      "Hybride": "Hybrid",
-      "Full remote": "Full remote"
-    },
-    "mobility_options": {
-      "France entière": "Anywhere in France",
-      "Région uniquement": "Region only",
-      "Ville uniquement": "City only"
+      "continue": "Finish",
+      "error_generic": "Updating the profile failed. Please try again.",
+      "headline": "Headline / current title"
     }
+  },
+  "cvAnalyzing": {
+    "title": "Analyzing {filename}…",
+    "duration_notice": "This can take up to 5 minutes.",
+    "step_read": "Reading your CV",
+    "step_extract": "Extracting your skills and experience",
+    "step_generate": "Generating your profile"
+  },
+  "cvOptimizing": {
+    "title": "Adapting your CV…",
+    "duration_notice": "This can take up to 30 seconds.",
+    "step_read": "Reading your current CV",
+    "step_compare": "Comparing against the offer's requirements",
+    "step_generate": "Generating your optimized CV"
+  },
+  "cvOptimize": {
+    "page_title": "Adapt my CV — {title}",
+    "back": "← Back to the offer",
+    "loading": "Loading…",
+    "error_title": "The optimization failed",
+    "error_text": "Something went wrong while generating this. You can try again.",
+    "retry_button": "Retry",
+    "comparison_title": "Current CV vs optimized CV",
+    "view_side_by_side": "Side-by-side view",
+    "view_changes_only": "Changes only",
+    "legend_added": "Addition",
+    "legend_modified": "Modification",
+    "current_cv_label": "Current CV",
+    "optimized_cv_label": "CV optimized for this offer",
+    "headline_title": "Profile headline",
+    "summary_title": "Professional summary",
+    "experiences_title": "Experience",
+    "skills_title": "Skills",
+    "empty_changes_title": "No changes suggested",
+    "empty_changes_text": "Your CV already matches this offer well, so no change was judged useful.",
+    "impact_title": "Estimated ATS impact",
+    "impact_before": "Before",
+    "impact_after": "After",
+    "impact_gain": "+{delta} points from the suggested changes",
+    "impact_none": "No estimated gain for this offer",
+    "changes_title": "Change details",
+    "changes_additions": "Additions",
+    "changes_modifications": "Modifications",
+    "advice_title": "Advice",
+    "template_label": "CV layout",
+    "template_sobre": "Sober",
+    "template_sobre_desc": "Clean, white background",
+    "template_visuelle": "Visual",
+    "template_visuelle_desc": "Bye Bye Boss colored banner",
+    "confirm_button": "Download this CV format",
+    "confirm_note": "This records your choice to use this version for this application, and downloads the CV as a PDF.",
+    "confirmed": "Variant created for this application",
+    "download_again_button": "Download the PDF again",
+    "apply_button": "Apply to the listing →",
+    "confirm_success": "CV variant created and downloaded.",
+    "confirm_error": "Couldn't save this variant right now.",
+    "pdf_download_error": "The PDF download failed. Please try again."
+  },
+  "profileCv": {
+    "title": "CV",
+    "subtitle": "Your personal information and CV, as used for matching.",
+    "email": "Email",
+    "location": "Location",
+    "availability": "Availability",
+    "your_cv": "Your CV",
+    "download": "Download",
+    "reupload": "Import a new CV",
+    "reupload_success": "Your profile has been updated.",
+    "last_update": "Last update",
+    "total_experience": "Total experience",
+    "edit_fields": "Edit my CV online",
+    "updated_today": "Today",
+    "updated_yesterday": "Yesterday",
+    "updated_days": "{days} days ago",
+    "saved": "Saved",
+    "save_error": "The update failed. Please try again.",
+    "upload_error": "Importing the CV failed. Please try again.",
+    "download_full": "Download your CV",
+    "download_error": "Downloading the CV failed. Please try again.",
+    "download_named": "Download my CV: {filename}",
+    "key_skills": "Key skills",
+    "key_skills_hint": "Automatically detected from your CV — they represent only part of your profile.",
+    "edit": "Edit",
+    "edit_title": "Edit my CV",
+    "edit_subtitle": "Update the information extracted from your CV.",
+    "edit_saved": "Your CV has been updated.",
+    "professional_section_title": "Your professional profile",
+    "professional_section_subtitle": "Generated by our AI from your CV.",
+    "identified_roles_title": "Identified roles",
+    "domains_title": "Domains",
+    "skills_detected_title": "Detected skills",
+    "updated_badge": "Updated"
+  },
+  "settings": {
+    "subtitle": "Subscription, notifications, and account information.",
+    "subscription": "Subscription",
+    "subscription_sub": "CV rescoring is limited to once every rolling 24h on the free plan.",
+    "plan_free": "Free plan",
+    "current_plan": "Current plan",
+    "plan_detail": "Manual CV rescoring limited to once / 24h",
+    "upgrade": "Go Premium",
+    "notifications": "Notifications",
+    "notifications_sub": "Get alerted when a new job matches your profile well.",
+    "loading": "Loading…",
+    "notifications_load_error": "Couldn't load your notification preferences.",
+    "notifications_save_error": "Couldn't save this change.",
+    "notifications_saved": "Preference saved.",
+    "channel_email": "Email",
+    "email_sub": "Get an email notification when a high-compatibility offer is detected.",
+    "discord_sub": "Get your alerts in a Discord channel, via a webhook you create yourself.",
+    "whatsapp_sub": "Get your alerts directly on WhatsApp.",
+    "channel_active": "Active",
+    "channel_inactive": "Inactive",
+    "activate": "Activate",
+    "update": "Update",
+    "deactivate": "Deactivate",
+    "test_send_label": "Test sending",
+    "test_send_sub": "Get a brief right now on your active channels, without waiting for the daily send.",
+    "test_send_button": "Send a test",
+    "test_send_success": "Successfully sent on: {channels}",
+    "test_send_error": "The test send failed.",
+    "frequency_label": "Frequency",
+    "frequency_fixed_hint": "Fixed to one daily send, around 8:30 AM.",
+    "frequency_daily": "Daily digest",
+    "account": "Account",
+    "delete_account": "Delete my account",
+    "delete_title": "Delete my account",
+    "delete_warning": "This is permanent and cannot be undone. The following will be deleted:",
+    "delete_items": [
+      "your account and profile",
+      "your imported CV",
+      "your offers and their analyses",
+      "your optimised CVs",
+      "your preferences and notifications"
+    ],
+    "delete_confirm_label": "To confirm, type your email address ({email})",
+    "delete_cancel": "Cancel",
+    "delete_confirm_button": "Delete permanently",
+    "delete_error": "Deleting the account failed. Please try again."
+  },
+  "availability": {
+    "opt_immediate": "Immediately",
+    "opt_date": "Starting on",
+    "opt_notice": "Currently employed (notice period of)",
+    "opt_unavailable": "Not available",
+    "months": "{count} month(s)",
+    "info_immediate": "You're available immediately.",
+    "info_date": "You're available starting on {date}.",
+    "info_notice": "You're currently employed, with a {months}-month notice period.",
+    "info_unavailable": "You're not available at the moment.",
+    "display": {
+      "immediate": "Available immediately",
+      "date": "Available from {date}",
+      "notice": "Currently employed ({months}-month notice)",
+      "unavailable": "Not available"
+    },
+    "info_date_pending": "Pick a date to continue.",
+    "info_notice_pending": "Pick your notice period to continue.",
+    "months_placeholder": "Choose…"
+  },
+  "location": {
+    "all_districts": "all districts"
+  },
+  "cookies": {
+    "banner_title": "Your privacy, your choices",
+    "banner_text": "We use cookies that are essential for the site to work (sign-in, language). With your consent, we also load the Google sign-in service.",
+    "learn_more": "Learn more",
+    "accept": "Accept",
+    "refuse": "Refuse",
+    "manage": "Manage my cookies"
+  },
+  "legal": {
+    "updated": "Last updated:"
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "A question, a problem, a request about your data? Write to us and we'll get back to you as soon as possible.",
+    "name": "Name",
+    "name_placeholder": "Your name",
+    "email": "Email",
+    "topic": "Topic",
+    "topics": {
+      "question": "A question",
+      "personal_data": "Personal data (GDPR)",
+      "problem": "A technical problem",
+      "partnership": "Partnership",
+      "other": "Other"
+    },
+    "message": "Message",
+    "message_placeholder": "Write your message here…",
+    "submit": "Send message",
+    "success_title": "Message sent ✅",
+    "success": "Thanks, your message has been sent. We'll get back to you as soon as possible.",
+    "send_another": "Send another message",
+    "error": "We couldn't send your message right now. Please try again in a moment.",
+    "too_many": "Too many messages sent. Please try again in a few minutes.",
+    "name_required": "Name required",
+    "message_required": "Message required",
+    "message_short": "10 characters minimum"
+  },
+  "unsubscribe": {
+    "title": "Bye Bye Boss announcements",
+    "meta_title": "Unsubscribe from announcements",
+    "intro": "Announcements are the few information e-mails sent by the team (new features, important changes). Your job alerts are not affected.",
+    "loading": "Checking your link…",
+    "ready": "Stop receiving announcements at",
+    "button": "Stop receiving announcements",
+    "working": "Unsubscribing…",
+    "done_title": "All done",
+    "done": "You will no longer receive our announcements. Your job alerts and account e-mails continue as usual.",
+    "already_title": "Already unsubscribed",
+    "already": "This address already no longer receives announcements. Nothing else to do.",
+    "invalid_title": "Invalid link",
+    "invalid": "This unsubscribe link is invalid or has expired. Use the link at the bottom of the latest e-mail you received, or contact us.",
+    "error": "We could not process your request right now. Please try again in a moment.",
+    "contact": "Contact us",
+    "home": "Back to home"
   }
 }

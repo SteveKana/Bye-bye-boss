@@ -3,7 +3,7 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 
 definePageMeta({ layout: 'auth' })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 useHead({ title: computed(() => `${t('register.submit')} · Bye Bye Boss`) })
 
 const auth = useAuthStore()
@@ -11,18 +11,39 @@ const toast = useToast()
 const v = useValidators()
 const loading = ref(false)
 
-const schema = computed(() => yup.object({ email: v.email(), password: v.password() }))
+const schema = computed(() =>
+  yup.object({
+    first_name: v.firstName(),
+    last_name: v.lastName(),
+    email: v.email(),
+    password: v.password(),
+    confirm: v.passwordConfirm('password'),
+  })
+)
 const { defineField, handleSubmit, errors } = useForm({ validationSchema: schema })
+const [firstName] = defineField('first_name')
+const [lastName] = defineField('last_name')
 const [email] = defineField('email')
 const [password] = defineField('password')
+const [confirm] = defineField('confirm')
 
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true
   try {
-    await auth.register({ email: values.email, password: values.password })
+    await auth.register({
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      password: values.password,
+      locale: locale.value,
+    })
+    // register() signs the user straight in (see stores/auth.js) -- on to
+    // CV upload immediately, no "check your email" detour.
     await navigateTo('/onboarding/upload')
   } catch (err) {
-    toast.error(err.message || t('register.error'))
+    toast.error(
+      err?.code === 'conflict' ? t('register.email_taken') : err?.message || t('register.error')
+    )
   } finally {
     loading.value = false
   }
@@ -31,10 +52,26 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div>
-    <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">{{ $t('register.title') }}</h1>
-    <p class="mb-7 text-gray-500">{{ $t('register.subtitle') }}</p>
+    <h1 class="mb-1.5 text-2xl font-black text-ink">{{ $t('register.title') }}</h1>
+    <p class="mb-7 text-ink/60">{{ $t('register.subtitle') }}</p>
 
     <form novalidate @submit.prevent="onSubmit">
+      <div class="mb-4 grid gap-4 sm:grid-cols-2">
+        <UiInput
+          v-model="firstName"
+          :label="$t('common.first_name')"
+          icon="👤"
+          autocomplete="given-name"
+          :error="errors.first_name"
+        />
+        <UiInput
+          v-model="lastName"
+          :label="$t('common.last_name')"
+          icon="👤"
+          autocomplete="family-name"
+          :error="errors.last_name"
+        />
+      </div>
       <div class="mb-4">
         <UiInput
           v-model="email"
@@ -46,7 +83,7 @@ const onSubmit = handleSubmit(async (values) => {
           :error="errors.email"
         />
       </div>
-      <div class="mb-5">
+      <div class="mb-4">
         <UiInput
           v-model="password"
           :label="$t('common.password')"
@@ -56,6 +93,16 @@ const onSubmit = handleSubmit(async (values) => {
           autocomplete="new-password"
           :hint="$t('register.password_hint')"
           :error="errors.password"
+        />
+      </div>
+      <div class="mb-5">
+        <UiInput
+          v-model="confirm"
+          :label="$t('reset.confirm_password')"
+          type="password"
+          icon="🔒"
+          autocomplete="new-password"
+          :error="errors.confirm"
         />
       </div>
 

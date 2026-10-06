@@ -1,0 +1,453 @@
+<script setup>
+definePageMeta({ layout: 'app', middleware: ['auth', 'onboarding-complete'] })
+const { t } = useI18n()
+useHead({ title: computed(() => `${t('app.nav.profile')} · Bye Bye Boss`) })
+
+const onboarding = useOnboardingStore()
+const toast = useToast()
+const { pictureUrl } = useUserDisplay()
+
+const loading = ref(true)
+const reuploading = ref(false)
+const reuploadFilename = ref('')
+const fileInput = ref(null)
+const editingAvailability = ref(false)
+const availabilityJustSaved = ref(false)
+
+const profile = computed(() => onboarding.profile)
+
+const initials = computed(() => {
+  const f = profile.value?.first_name?.[0] || ''
+  const l = profile.value?.last_name?.[0] || ''
+  return (f + l).toUpperCase() || '?'
+})
+
+const updatedAgo = computed(() => {
+  // cv_analyzed_at is when the CV was last actually (re-)parsed -- not
+  // profile.updated_at, which the backend bumps on ANY change to the
+  // profile row (e.g. saving preferences), and would otherwise make this
+  // label read "Aujourd'hui" without the CV itself having changed.
+  if (!profile.value?.cv_analyzed_at) return ''
+  const days = Math.floor((Date.now() - new Date(profile.value.cv_analyzed_at)) / 86400000)
+  if (days <= 0) return t('profileCv.updated_today')
+  if (days === 1) return t('profileCv.updated_yesterday')
+  return t('profileCv.updated_days', { days })
+})
+
+const hasProfessionalSynthesis = computed(() => {
+  if (!profile.value) return false
+  return !!(
+    profile.value.professional_summary ||
+    profile.value.identified_roles?.length ||
+    profile.value.domains?.length
+  )
+})
+
+const availabilityLabel = computed(() => {
+  if (!profile.value) return ''
+  const status = profile.value.availability_status || 'immediate'
+  if (status === 'date' && profile.value.availability_date) {
+    const formatted = new Date(profile.value.availability_date).toLocaleDateString('fr-FR')
+    return t('availability.display.date', { date: formatted })
+  }
+  if (status === 'notice') {
+    return t('availability.display.notice', { months: profile.value.notice_period_months })
+  }
+  return t(`availability.display.${status}`)
+})
+
+// A homepage re-import (see stores/onboarding.js's reuploadFromHomepage)
+// carries over which fields actually changed, so they can be highlighted
+// here instead of repeating the whole CV back at the candidate. Plain
+// membership check -- the list is short and this runs per render, not per
+// keystroke.
+function isUpdated(field) {
+  return onboarding.recentlyUpdatedFields.includes(field)
+}
+
+// Stacks a green highlight onto a field's own text classes -- used for the
+// inline editable fields (name, headline, email, total experience).
+function highlightClass(field, base) {
+  return isUpdated(field) ? `${base} rounded bg-success-light px-1 py-0.5` : base
+}
+
+onMounted(async () => {
+  try {
+    await onboarding.fetchProfile()
+  } catch (err) {
+    if (!isNoProfileError(err)) {
+      toast.error(t('common.load_error'))
+      return
+    }
+    // No CV imported yet -- send the user to the importer instead of
+    // showing an empty profile page.
+    await navigateTo('/onboarding/upload')
+    return
+  } finally {
+    loading.value = false
+  }
+})
+
+async function saveField(field, value) {
+  try {
+    await onboarding.updateProfile({ [field]: value })
+    // No success toast here on purpose: ProfileEditableField already gives
+    // its own inline pencil→checkmark confirmation right at the field
+    // itself. Stacking a toast on top of that was reported as confusing --
+    // two confirmations firing for one action.
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.save_error'))
+  }
+}
+
+async function saveAvailability({ status, date, noticeMonths }) {
+  try {
+    await onboarding.updateProfile({
+      availability_status: status,
+      availability_date: date,
+      notice_period_months: noticeMonths,
+    })
+    // No toast here either, same reasoning as saveField -- the inline
+    // "✓ Enregistré" badge next to the field is the confirmation.
+    availabilityJustSaved.value = true
+    setTimeout(() => (availabilityJustSaved.value = false), 2000)
+    // Collapse back to the compact pencil view, like every other editable
+    // field does after a save -- safe now that commit only fires once the
+    // choice is actually complete (immediate/unavailable picked directly,
+    // or a date/notice length chosen), never on a bare radio click.
+    editingAvailability.value = false
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.save_error'))
+  }
+}
+
+function triggerReupload() {
+  fileInput.value?.click()
+}
+
+async function onReupload(event) {
+  const file = event.target.files?.[0]
+  event.target.value = ''
+  if (!file) return
+  reuploadFilename.value = file.name
+  reuploading.value = true
+  try {
+    // The upload endpoint already persists the freshly extracted profile
+    // (it's what /onboarding/verification would just re-save unchanged if
+    // nothing were edited), so a reimport from this page can land straight
+    // back here instead of detouring through the onboarding verification
+    // step again -- everything stays editable inline below.
+    // uploadCvWithDiff also refreshes recentlyUpdatedFields, so whatever
+    // actually changed gets highlighted right here, same as a reimport
+    // triggered from the homepage (see stores/onboarding.js).
+    await onboarding.uploadCvWithDiff(file)
+    toast.success(t('profileCv.reupload_success'))
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.upload_error'))
+  } finally {
+    reuploading.value = false
+  }
+}
+
+// The original CV file isn't stored server-side (only the text extracted
+// from it), so there is nothing to download yet -- honest placeholder
+// rather than a broken download.
+const downloading = ref(false)
+async function downloadCv() {
+  downloading.value = true
+  try {
+    const blob = await useApi()('cv/download', { responseType: 'blob' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = profile.value?.cv_filename || 'cv.pdf'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    toast.error(err?.message || t('profileCv.download_error'))
+  } finally {
+    downloading.value = false
+  }
+}
+</script>
+
+<template>
+  <div v-if="!loading && profile">
+    <div class="mb-6">
+      <h1 class="text-2xl font-black text-ink">{{ $t('profileCv.title') }}</h1>
+      <p class="mt-1 text-sm text-ink/60">{{ $t('profileCv.subtitle') }}</p>
+    </div>
+
+    <!-- CV summary -- kept first so the CV itself (and the reimport action)
+         is the first thing found on this page, ahead of the editable fields
+         below it. -->
+    <UiCard class="mb-4">
+      <h2 class="mb-3 text-base font-bold text-ink">{{ $t('profileCv.your_cv') }}</h2>
+
+      <!-- Row 1: download, alone, filename in the label -->
+      <UiButton
+        v-if="profile.cv_filename"
+        variant="secondary"
+        size="sm"
+        class="mb-3 w-full justify-center sm:w-auto"
+        :loading="downloading"
+        @click="downloadCv"
+      >
+        ⬇ {{ $t('profileCv.download_named', { filename: profile.cv_filename }) }}
+      </UiButton>
+
+      <CvAnalyzingProgress v-if="reuploading" class="mb-4" :filename="reuploadFilename" />
+
+      <div class="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div>
+          <div class="text-[11.5px] text-ink/60">{{ $t('profileCv.last_update') }}</div>
+          <div class="text-lg font-black text-ink">{{ updatedAgo }}</div>
+        </div>
+        <div>
+          <div class="text-[11.5px] text-ink/60">{{ $t('profileCv.total_experience') }}</div>
+          <div
+            class="inline-block rounded text-lg font-black text-ink"
+            :class="isUpdated('total_experience') && 'bg-success-light px-1'"
+          >
+            {{ profile.total_experience || '—' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom row: reimport + edit-fields link, "Ou" sitting between them.
+           Placed last so it never competes with the CV data above it for
+           attention -- these are actions on the CV, not part of its content. -->
+      <div class="flex flex-wrap items-center gap-3">
+        <UiButton variant="primary" size="sm" :loading="reuploading" @click="triggerReupload">
+          ⬆ {{ $t('profileCv.reupload') }}
+        </UiButton>
+        <span class="text-sm text-ink/50">{{ $t('common.or') }}</span>
+        <NuxtLink
+          to="/profile/edit"
+          class="inline-flex items-center gap-1.5 rounded-xl bg-brand px-3.5 py-2 text-sm font-bold text-white hover:bg-brand-dark"
+        >
+          {{ $t('profileCv.edit_fields') }} →
+        </NuxtLink>
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".pdf,.docx"
+          class="hidden"
+          @change="onReupload"
+        />
+      </div>
+    </UiCard>
+
+    <!-- Identity -->
+    <UiCard class="mb-4">
+      <div class="mb-1 flex items-center gap-3.5">
+        <UiAvatar
+          :picture-url="pictureUrl"
+          :initials="initials"
+          circle-class="h-14 w-14 text-lg font-extrabold text-white"
+        />
+        <div>
+          <ProfileEditableField
+            :model-value="`${profile.first_name || ''} ${profile.last_name || ''}`.trim()"
+            :text-class="highlightClass('name', 'text-[17px] font-black text-ink')"
+            @commit="
+              (v) => {
+                const [first, ...rest] = v.split(' ')
+                saveField('first_name', first)
+                if (rest.length) saveField('last_name', rest.join(' '))
+              }
+            "
+          />
+          <ProfileEditableField
+            :model-value="profile.headline || ''"
+            :text-class="highlightClass('headline', 'text-[13px] text-ink/60')"
+            class="mt-0.5"
+            @commit="(v) => saveField('headline', v)"
+          />
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <ProfileEditableField
+          :label="$t('profileCv.email')"
+          :model-value="profile.email || ''"
+          :text-class="highlightClass('email', 'text-[13.5px] font-semibold text-ink')"
+          @commit="(v) => saveField('email', v)"
+        />
+        <div>
+          <div class="mb-1 text-[11px] text-ink/50">{{ $t('profileCv.location') }}</div>
+          <!-- Class passed straight to the component (not a wrapping div) so
+               the highlight lands on its own root element, which is capped
+               at max-w-xs -- a wrapper wound up wider than that and left a
+               big blank green rectangle past the actual input. -->
+          <ProfileCityAutocomplete
+            :model-value="profile.location || ''"
+            :class="isUpdated('location') && 'rounded-xl bg-success-light ring-2 ring-success/40'"
+            @commit="(v) => saveField('location', v)"
+          />
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="mb-1 flex items-center gap-2 text-[11px] text-ink/50">
+          {{ $t('profileCv.availability') }}
+          <Transition name="fade">
+            <span
+              v-if="availabilityJustSaved"
+              class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[11px] font-bold text-success-text"
+            >
+              ✓ {{ $t('profileCv.saved') }}
+            </span>
+          </Transition>
+        </div>
+        <ProfileAvailabilityField
+          v-if="editingAvailability"
+          :status="profile.availability_status"
+          :date="profile.availability_date"
+          :notice-months="profile.notice_period_months"
+          @commit="saveAvailability"
+        />
+        <span
+          v-else
+          class="inline-flex cursor-pointer items-center gap-1.5 rounded px-1 py-0.5 text-[13.5px] font-semibold text-ink"
+          :class="isUpdated('availability') && 'bg-success-light'"
+          @click="editingAvailability = true"
+        >
+          {{ availabilityLabel }}
+          <button
+            type="button"
+            class="flex h-5 w-5 items-center justify-center rounded text-ink/50 hover:bg-brand-light hover:text-brand"
+            :aria-label="$t('profileCv.edit')"
+          >
+            ✎
+          </button>
+        </span>
+      </div>
+    </UiCard>
+
+    <!-- Professional synthesis, generated from the CV -- read-only, absent
+         until the candidate (re)imports a CV processed with this feature. -->
+    <UiCard v-if="hasProfessionalSynthesis" class="mb-4">
+      <h2 class="text-base font-bold text-ink">
+        {{ $t('profileCv.professional_section_title') }}
+      </h2>
+      <p class="mb-3 mt-1 text-xs text-ink/50">
+        {{ $t('profileCv.professional_section_subtitle') }}
+      </p>
+
+      <!-- The headline itself is already shown (and editable) right under
+           the name at the top of the page -- repeating it here as a plain
+           heading was a pure duplicate, so only the summary paragraph
+           (which doesn't appear anywhere else) stays in this section. -->
+      <p
+        v-if="profile.professional_summary"
+        class="mt-1 rounded text-[13.5px] text-ink/70"
+        :class="isUpdated('professional_summary') && 'bg-success-light px-1.5 py-1'"
+      >
+        {{ profile.professional_summary }}
+      </p>
+
+      <div v-if="profile.identified_roles?.length" class="mt-4">
+        <h4
+          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60"
+        >
+          {{ $t('profileCv.identified_roles_title') }}
+          <span
+            v-if="isUpdated('identified_roles')"
+            class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-success-text"
+          >
+            ✓ {{ $t('profileCv.updated_badge') }}
+          </span>
+        </h4>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="role in profile.identified_roles"
+            :key="role"
+            class="rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
+          >
+            {{ role }}
+          </span>
+        </div>
+      </div>
+
+      <div v-if="profile.domains?.length" class="mt-4">
+        <h4
+          class="mb-2 flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60"
+        >
+          {{ $t('profileCv.domains_title') }}
+          <span
+            v-if="isUpdated('domains')"
+            class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal text-success-text"
+          >
+            ✓ {{ $t('profileCv.updated_badge') }}
+          </span>
+        </h4>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="domain in profile.domains"
+            :key="domain"
+            class="rounded-full bg-lav px-3 py-1 text-xs font-semibold text-ink/80"
+          >
+            {{ domain }}
+          </span>
+        </div>
+      </div>
+    </UiCard>
+
+    <!-- Skills, grouped by category when the CV synthesis provided one;
+         falls back to the flat list for profiles not yet reprocessed. -->
+    <UiCard v-if="profile.skill_categories?.length || profile.skills?.length" class="mb-4">
+      <h2 class="mb-3 flex items-center gap-2 text-base font-bold text-ink">
+        {{ $t('profileCv.skills_detected_title') }}
+        <span
+          v-if="isUpdated('skills')"
+          class="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-0.5 text-[11px] font-bold text-success-text"
+        >
+          ✓ {{ $t('profileCv.updated_badge') }}
+        </span>
+      </h2>
+
+      <div v-if="profile.skill_categories?.length">
+        <div v-for="cat in profile.skill_categories" :key="cat.category" class="mb-4 last:mb-0">
+          <h4 class="mb-2 text-[11.5px] font-bold uppercase tracking-wide text-ink/60">
+            {{ cat.category }}
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            <span
+              v-for="skill in cat.skills"
+              :key="skill"
+              class="rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
+            >
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="flex flex-wrap gap-2">
+          <span
+            v-for="s in profile.skills"
+            :key="s"
+            class="rounded-full border-2 border-ink bg-lav px-3 py-1 text-xs font-bold text-ink"
+          >
+            {{ s }}
+          </span>
+        </div>
+        <p class="mt-2 text-xs text-ink/50">{{ $t('profileCv.key_skills_hint') }}</p>
+      </div>
+    </UiCard>
+  </div>
+</template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

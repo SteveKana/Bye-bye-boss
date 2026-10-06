@@ -24,7 +24,7 @@ const nav = computed(() => {
 
     <main class="flex flex-1 flex-col overflow-y-auto bg-white">
       <div class="flex items-center justify-end gap-4 px-6 py-5 sm:px-10">
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-ink/60">
           <span v-if="nav.text">{{ $t(nav.text) }} </span>
           <NuxtLink :to="nav.to" class="font-semibold text-brand hover:underline">
             {{ $t(nav.label) }}

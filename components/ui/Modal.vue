@@ -11,6 +11,10 @@ const props = defineProps({
   size: { type: String, default: 'md' },
   // When true, backdrop click / Escape do not close the modal.
   persistent: { type: Boolean, default: false },
+  // Override the default body padding -- e.g. '' for content (like
+  // CvAnalyzingProgress) that already draws its own bordered/colored box and
+  // would otherwise sit inside a second, redundant white-padded frame.
+  bodyClass: { type: String, default: 'px-5 py-4' },
 })
 
 const emit = defineEmits(['update:modelValue', 'close'])
@@ -62,20 +66,20 @@ onBeforeUnmount(() => {
           <div class="absolute inset-0 bg-navy/50 backdrop-blur-sm" @click="close" />
 
           <div
-            class="relative z-10 w-full overflow-hidden rounded-lg bg-white shadow-card"
+            class="relative z-10 w-full overflow-hidden rounded-[22px] border-[2.5px] border-ink bg-white"
             :class="sizes[size]"
           >
             <header
               v-if="title || $slots.header"
-              class="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4"
+              class="flex items-start justify-between gap-4 border-b-2 border-ink/10 px-5 py-4"
             >
               <slot name="header">
-                <h2 :id="titleId" class="text-lg font-bold text-gray-900">{{ title }}</h2>
+                <h2 :id="titleId" class="text-lg font-black text-ink">{{ title }}</h2>
               </slot>
               <button
                 v-if="!persistent"
                 type="button"
-                class="shrink-0 text-gray-400 hover:text-gray-600"
+                class="shrink-0 text-ink/60 hover:text-gray-600"
                 aria-label="Fermer"
                 @click="close"
               >
@@ -83,11 +87,11 @@ onBeforeUnmount(() => {
               </button>
             </header>
 
-            <div class="px-5 py-4">
+            <div :class="bodyClass">
               <slot />
             </div>
 
-            <footer v-if="$slots.footer" class="border-t border-gray-100 px-5 py-4">
+            <footer v-if="$slots.footer" class="border-t-2 border-ink/10 px-5 py-4">
               <slot name="footer" :close="close" />
             </footer>
           </div>

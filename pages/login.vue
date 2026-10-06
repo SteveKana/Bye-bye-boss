@@ -22,7 +22,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     await auth.login(values.email, values.password)
     const redirect = route.query.redirect
-    await navigateTo(typeof redirect === 'string' ? redirect : '/')
+    await navigateTo(typeof redirect === 'string' ? redirect : '/dashboard')
   } catch (err) {
     toast.error(err.message || t('login.error'))
   } finally {
@@ -33,8 +33,8 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div>
-    <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">{{ $t('login.title') }}</h1>
-    <p class="mb-7 text-gray-500">{{ $t('login.subtitle') }}</p>
+    <h1 class="mb-1.5 text-2xl font-black text-ink">{{ $t('login.title') }}</h1>
+    <p class="mb-7 text-ink/60">{{ $t('login.subtitle') }}</p>
 
     <form novalidate @submit.prevent="onSubmit">
       <div class="mb-4">

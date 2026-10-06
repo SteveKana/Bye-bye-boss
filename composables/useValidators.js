@@ -14,6 +14,10 @@ export function useValidators() {
   const email = () =>
     yup.string().required(t('validation.email_required')).email(t('validation.email_invalid'))
 
+  const firstName = () => yup.string().trim().required(t('validation.first_name_required')).max(80)
+
+  const lastName = () => yup.string().trim().required(t('validation.last_name_required')).max(80)
+
   // New passwords: enforce the minimum length.
   const password = () =>
     yup.string().required(t('validation.password_required')).min(8, t('validation.password_min'))
@@ -27,5 +31,5 @@ export function useValidators() {
       .required(t('validation.confirm_required'))
       .oneOf([yup.ref(field)], t('validation.password_mismatch'))
 
-  return { email, password, passwordRequired, passwordConfirm }
+  return { email, firstName, lastName, password, passwordRequired, passwordConfirm }
 }

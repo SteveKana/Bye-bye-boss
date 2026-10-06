@@ -36,7 +36,7 @@ const normalized = computed(() =>
 
 <template>
   <div class="w-full">
-    <label v-if="label" :for="inputId" class="mb-1.5 block text-sm font-semibold text-gray-900">
+    <label v-if="label" :for="inputId" class="mb-1.5 block text-sm font-extrabold text-ink">
       {{ label }}
       <span v-if="required" class="text-danger" aria-hidden="true">*</span>
     </label>
@@ -49,8 +49,8 @@ const normalized = computed(() =>
       :disabled="disabled"
       :aria-invalid="!!error"
       :aria-describedby="describedBy"
-      class="ui-select w-full appearance-none rounded-md border-[1.5px] bg-white py-3 pl-3.5 pr-9 text-base text-gray-900 outline-none transition focus:shadow-focus-ring disabled:cursor-not-allowed disabled:bg-gray-50"
-      :class="error ? 'border-danger focus:border-danger' : 'border-gray-200 focus:border-brand'"
+      class="ui-select w-full appearance-none rounded-2xl border-2 bg-white py-3 pl-3.5 pr-9 text-base text-ink outline-none transition focus:shadow-focus-ring disabled:cursor-not-allowed disabled:bg-lav/40"
+      :class="error ? 'border-danger focus:border-danger' : 'border-ink focus:border-brand'"
       @change="$emit('update:modelValue', $event.target.value)"
     >
       <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
@@ -62,7 +62,7 @@ const normalized = computed(() =>
     <p v-if="error" :id="`${inputId}-error`" class="mt-1.5 text-sm text-danger">
       {{ error }}
     </p>
-    <p v-else-if="hint" :id="`${inputId}-hint`" class="mt-1.5 text-sm text-gray-500">
+    <p v-else-if="hint" :id="`${inputId}-hint`" class="mt-1.5 text-sm text-ink/60">
       {{ hint }}
     </p>
   </div>

@@ -61,7 +61,7 @@ watch(finished, (done) => {
 
 <template>
   <ClientOnly>
-    <span class="tabular-nums" :class="finished ? 'text-success-text' : 'text-gray-700'">
+    <span class="tabular-nums" :class="finished ? 'text-success-text' : 'text-ink'">
       <slot
         :hours="parts.hours"
         :minutes="parts.minutes"
@@ -73,7 +73,7 @@ watch(finished, (done) => {
       </slot>
     </span>
     <template #fallback>
-      <span class="tabular-nums text-gray-400">--:--:--</span>
+      <span class="tabular-nums text-ink/60">--:--:--</span>
     </template>
   </ClientOnly>
 </template>

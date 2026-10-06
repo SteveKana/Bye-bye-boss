@@ -5,9 +5,9 @@ defineProps({
 </script>
 
 <template>
-  <div class="mt-4 flex items-center justify-center gap-2 text-center text-xs text-gray-400">
+  <div class="mt-4 flex items-center justify-center gap-2 text-center text-xs text-ink/50">
     <span
-      class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-gray-300 text-[11px]"
+      class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-ink/40 text-[11px]"
       aria-hidden="true"
     >
       🛡

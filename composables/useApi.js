@@ -32,12 +32,30 @@ export function useApi() {
 
 // Turn an ofetch error into a plain Error carrying the backend's
 // {code, message, details} when present.
+//
+// When there's no envelope -- a network failure with no response at all
+// (dropped connection, server mid-restart: ofetch's own message for this is
+// a raw, technical, English string like `[POST] "https://...": <no
+// response> Load failed`), or an error response from something other than
+// our own API (a proxy/gateway page, not JSON) -- that raw message must
+// never reach the user. Every call site shows `err.message || t('...')`,
+// so an empty message is enough to trigger each one's own localized
+// generic fallback, with no per-call-site change needed. The original
+// error is kept on `.cause` and logged here so it's still visible in the
+// console for debugging, just not shown to the user.
 export function toApiError(err) {
   const envelope = err?.data?.error
-  if (!envelope) return err
+  const status = err?.response?.status ?? err?.status ?? null
+  if (!envelope) {
+    console.error('API request failed with no usable error envelope', err)
+    const error = new Error()
+    error.status = status
+    error.cause = err
+    return error
+  }
   const error = new Error(envelope.message || 'Request failed')
   error.code = envelope.code
   error.details = envelope.details ?? null
-  error.status = err?.response?.status ?? err?.status ?? null
+  error.status = status
   return error
 }

@@ -35,7 +35,7 @@ const describedBy = computed(() => {
 
 <template>
   <div class="w-full">
-    <label v-if="label" :for="inputId" class="mb-1.5 block text-sm font-semibold text-gray-900">
+    <label v-if="label" :for="inputId" class="mb-1.5 block text-sm font-extrabold text-ink">
       {{ label }}
       <span v-if="required" class="text-danger" aria-hidden="true">*</span>
     </label>
@@ -43,7 +43,7 @@ const describedBy = computed(() => {
     <div class="relative">
       <span
         v-if="icon"
-        class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400"
+        class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink/60"
         aria-hidden="true"
       >
         {{ icon }}
@@ -60,9 +60,9 @@ const describedBy = computed(() => {
         :autocomplete="autocomplete"
         :aria-invalid="!!error"
         :aria-describedby="describedBy"
-        class="w-full rounded-md border-[1.5px] bg-white py-3 text-base text-gray-900 outline-none transition placeholder:text-gray-400 focus:shadow-focus-ring disabled:cursor-not-allowed disabled:bg-gray-50"
+        class="w-full rounded-2xl border-2 bg-white py-3 text-base text-ink outline-none transition placeholder:text-ink/40 focus:shadow-focus-ring disabled:cursor-not-allowed disabled:bg-lav/40"
         :class="[
-          error ? 'border-danger focus:border-danger' : 'border-gray-200 focus:border-brand',
+          error ? 'border-danger focus:border-danger' : 'border-ink focus:border-brand',
           icon ? 'pl-10' : 'pl-3.5',
           isPassword ? 'pr-10' : 'pr-3.5',
         ]"
@@ -72,7 +72,7 @@ const describedBy = computed(() => {
       <button
         v-if="isPassword"
         type="button"
-        class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 hover:text-gray-600"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-ink/60 hover:text-gray-600"
         :aria-label="showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
         @click="showPassword = !showPassword"
       >
@@ -83,7 +83,7 @@ const describedBy = computed(() => {
     <p v-if="error" :id="`${inputId}-error`" class="mt-1.5 text-sm text-danger">
       {{ error }}
     </p>
-    <p v-else-if="hint" :id="`${inputId}-hint`" class="mt-1.5 text-sm text-gray-500">
+    <p v-else-if="hint" :id="`${inputId}-hint`" class="mt-1.5 text-sm text-ink/60">
       {{ hint }}
     </p>
   </div>

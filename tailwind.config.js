@@ -13,15 +13,23 @@ export default {
           DEFAULT: '#0F0B2E',
           light: '#1C1147',
         },
+        // Playful palette (2026-10-05 redesign): thick ink outlines + bright
+        // sun / blush / lavender blocks.
+        ink: '#16122E',
+        sun: { DEFAULT: '#FFD93D', light: '#FFF3B8' },
+        blush: '#FFB4C6',
+        lav: '#E4E0FF',
         success: { DEFAULT: '#10B981', text: '#16A34A', light: '#DCFCE7' },
         danger: { DEFAULT: '#DC2626', light: '#FEE2E2' },
         warning: { DEFAULT: '#F59E0B', light: '#FFEDD5' },
         // Score accents used by the auth preview widget (from the mockups).
+        // "regret" tokens removed 2026-10-03 (Steve: masquer toute mention
+        // à l'indice de regret côté front) -- bg-score-regret/text-preview-
+        // regret are no longer referenced anywhere.
         score: {
           ats: '#5B3FE8',
           career: '#00C48C',
           potential: '#22D3EE',
-          regret: '#FF6B6B',
         },
         // Landing product-preview accents (the landing mockup uses its own
         // score palette, different from the auth panel above).
@@ -29,7 +37,6 @@ export default {
           ats: '#00C48C',
           career: '#2D9CDB',
           potential: '#9B51E0',
-          regret: '#FFB547',
         },
       },
       fontFamily: {
@@ -47,11 +54,11 @@ export default {
         '2xl': '22px',
       },
       borderRadius: {
-        sm: '6px',
-        DEFAULT: '8px',
-        md: '10px',
-        lg: '12px',
-        xl: '20px',
+        sm: '8px',
+        DEFAULT: '12px',
+        md: '14px',
+        lg: '18px',
+        xl: '24px',
         full: '9999px',
       },
       boxShadow: {

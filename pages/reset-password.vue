@@ -3,7 +3,7 @@ import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 
 definePageMeta({ layout: 'auth' })
-const { t } = useI18n()
+const { t, locale } = useI18n()
 useHead({ title: computed(() => `${t('reset.request_title')} · Bye Bye Boss`) })
 
 const auth = useAuthStore()
@@ -12,6 +12,7 @@ const toast = useToast()
 const v = useValidators()
 const loading = ref(false)
 const requested = ref(false)
+const requestedEmail = ref('')
 
 // A token in the URL means the user followed a reset link → confirm mode.
 const token = computed(() => (typeof route.query.token === 'string' ? route.query.token : ''))
@@ -29,7 +30,8 @@ const [email] = defineRequestField('email')
 const onRequest = handleRequest(async (values) => {
   loading.value = true
   try {
-    await auth.requestPasswordReset(values.email)
+    await auth.requestPasswordReset(values.email, locale.value)
+    requestedEmail.value = values.email
     requested.value = true
   } catch (err) {
     toast.error(err.message || t('reset.request_error'))
@@ -68,8 +70,8 @@ const onConfirm = handleConfirm(async (values) => {
   <div>
     <!-- Confirm mode: the user arrived from a reset link -->
     <template v-if="isConfirm">
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">{{ $t('reset.confirm_title') }}</h1>
-      <p class="mb-7 text-gray-500">{{ $t('reset.confirm_subtitle') }}</p>
+      <h1 class="mb-1.5 text-2xl font-black text-ink">{{ $t('reset.confirm_title') }}</h1>
+      <p class="mb-7 text-ink/60">{{ $t('reset.confirm_subtitle') }}</p>
 
       <form novalidate @submit.prevent="onConfirm">
         <div class="mb-4">
@@ -101,11 +103,12 @@ const onConfirm = handleConfirm(async (values) => {
 
     <!-- Request mode: ask for the account email -->
     <template v-else>
-      <h1 class="mb-1.5 text-2xl font-extrabold text-gray-900">{{ $t('reset.request_title') }}</h1>
-      <p class="mb-7 text-gray-500">{{ $t('reset.request_subtitle') }}</p>
+      <h1 class="mb-1.5 text-2xl font-black text-ink">{{ $t('reset.request_title') }}</h1>
+      <p class="mb-7 text-ink/60">{{ $t('reset.request_subtitle') }}</p>
 
-      <div v-if="requested" class="rounded-md bg-success-light px-4 py-3 text-sm text-success-text">
-        {{ $t('reset.requested') }}
+      <div v-if="requested" class="rounded-xl bg-success-light px-4 py-3 text-sm text-success-text">
+        {{ $t('reset.requested_intro') }}<strong class="break-all">{{ requestedEmail }}</strong
+        >{{ $t('reset.requested_end') }}
       </div>
 
       <form v-else novalidate @submit.prevent="onRequest">

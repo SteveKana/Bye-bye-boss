@@ -40,9 +40,37 @@ export const useAuthStore = defineStore('auth', () => {
     await fetchMe()
   }
 
+  // idToken is the credential Google Identity Services hands back in the
+  // browser (see AuthSocialButtons.vue) -- the backend verifies it, then
+  // either logs into or creates the matching account by email. Returns
+  // isNewUser so the caller can send a brand-new signup into onboarding
+  // (CV upload) instead of the dashboard.
+  async function loginWithGoogle(idToken) {
+    const result = await useApi()(
+      'auth/google',
+      { method: 'POST', body: { id_token: idToken } },
+      false
+    )
+    setTokens(result)
+    await fetchMe()
+    return { isNewUser: result.is_new_user }
+  }
+
+  // Registering signs the user straight in, same as login/loginWithGoogle --
+  // email verification is informational only, not a gate (Steve's call), so
+  // there's nothing to wait on before the account is fully usable.
   async function register(payload) {
-    await useApi()('auth/register', { method: 'POST', body: payload }, false)
-    await login(payload.email, payload.password)
+    const tokens = await useApi()('auth/register', { method: 'POST', body: payload }, false)
+    setTokens(tokens)
+    await fetchMe()
+  }
+
+  function verifyEmail(token) {
+    return useApi()('auth/verify-email', { method: 'POST', body: { token } }, false)
+  }
+
+  function resendVerification(email, locale) {
+    return useApi()('auth/resend-verification', { method: 'POST', body: { email, locale } }, false)
   }
 
   // Called by useApi on a 401. Returns whether a fresh access token was obtained.
@@ -62,8 +90,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function requestPasswordReset(email) {
-    return useApi()('auth/reset-password/request', { method: 'POST', body: { email } }, false)
+  function requestPasswordReset(email, locale) {
+    return useApi()(
+      'auth/reset-password/request',
+      { method: 'POST', body: { email, locale } },
+      false
+    )
   }
 
   function confirmPasswordReset(token, newPassword) {
@@ -74,7 +106,28 @@ export const useAuthStore = defineStore('auth', () => {
     )
   }
 
+  async function updateProfile(payload) {
+    user.value = await useApi()('auth/me', { method: 'PATCH', body: payload })
+    return user.value
+  }
+
+  function changePassword(currentPassword, newPassword) {
+    return useApi()('auth/change-password', {
+      method: 'POST',
+      body: { current_password: currentPassword, new_password: newPassword },
+    })
+  }
+
   function logout() {
+    clear()
+  }
+
+  // Permanently deletes the account and all its data (DELETE /auth/me). The
+  // caller re-types their own email as the explicit confirmation. On
+  // success the local session is cleared too -- the old tokens are dead
+  // anyway.
+  async function deleteAccount(email) {
+    await useApi()('auth/me', { method: 'DELETE', body: { email } })
     clear()
   }
 
@@ -84,13 +137,19 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isAdmin,
     login,
+    loginWithGoogle,
     register,
     refresh,
     fetchMe,
     logout,
     requestPasswordReset,
     confirmPasswordReset,
+    verifyEmail,
+    resendVerification,
+    updateProfile,
+    changePassword,
     setTokens,
     clear,
+    deleteAccount,
   }
 })
