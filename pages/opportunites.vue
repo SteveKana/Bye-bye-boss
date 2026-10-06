@@ -846,12 +846,9 @@ function selectSort(value) {
               <div
                 class="flex shrink-0 flex-wrap items-center justify-between gap-3 sm:flex-col sm:items-end sm:gap-2 sm:pt-6"
               >
-                <p
-                  v-if="offer.isPending"
-                  class="rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-extrabold text-ink"
-                >
+                <AppPendingTag v-if="offer.isPending" size="md">
                   {{ $t('dashboard.analysis_pending') }}
-                </p>
+                </AppPendingTag>
                 <div v-else class="flex items-end gap-3.5">
                   <div class="text-center">
                     <p class="text-[10px] font-medium text-ink/50">Career</p>
