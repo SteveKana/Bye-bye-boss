@@ -60,6 +60,12 @@ export default defineNuxtConfig({
     },
   },
 
+  // The admin area is a client-side app behind a login: no server rendering.
+  routeRules: {
+    '/admin': { ssr: false },
+    '/admin/**': { ssr: false },
+  },
+
   nitro: {
     devProxy: {
       // Dev only: forward API calls to the backend. In prod, set

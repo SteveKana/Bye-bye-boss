@@ -742,5 +742,23 @@
     "name_required": "Name required",
     "message_required": "Message required",
     "message_short": "10 characters minimum"
+  },
+  "unsubscribe": {
+    "title": "Bye Bye Boss announcements",
+    "meta_title": "Unsubscribe from announcements",
+    "intro": "Announcements are the few information e-mails sent by the team (new features, important changes). Your job alerts are not affected.",
+    "loading": "Checking your link…",
+    "ready": "Stop receiving announcements at",
+    "button": "Stop receiving announcements",
+    "working": "Unsubscribing…",
+    "done_title": "All done",
+    "done": "You will no longer receive our announcements. Your job alerts and account e-mails continue as usual.",
+    "already_title": "Already unsubscribed",
+    "already": "This address already no longer receives announcements. Nothing else to do.",
+    "invalid_title": "Invalid link",
+    "invalid": "This unsubscribe link is invalid or has expired. Use the link at the bottom of the latest e-mail you received, or contact us.",
+    "error": "We could not process your request right now. Please try again in a moment.",
+    "contact": "Contact us",
+    "home": "Back to home"
   }
 }

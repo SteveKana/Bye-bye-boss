@@ -3,6 +3,9 @@
 // large screens; on mobile a top bar (logo + profile button) and a floating
 // pill navigation at the bottom. Used by the dashboard and profile pages.
 const route = useRoute()
+const auth = useAuthStore()
+const mounted = useMounted()
+const showAdmin = computed(() => mounted.value && auth.isAdmin)
 
 // Most pages read comfortably at the narrower centered width below, but a
 // page with its own two-column grid (an offer list + a right info panel,
@@ -47,14 +50,24 @@ const isActive = (to) => route.path === to || route.path.startsWith(`${to}/`)
         <UiLogoMark :size="30" />
         Bye Bye Boss
       </NuxtLink>
-      <NuxtLink
-        to="/profile"
-        :aria-label="$t('app.nav.profile')"
-        class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-white text-ink"
-        :class="isActive('/profile') ? 'bg-sun' : ''"
-      >
-        <AppNavIcon name="user" />
-      </NuxtLink>
+      <div class="flex items-center gap-2">
+        <NuxtLink
+          v-if="showAdmin"
+          to="/admin"
+          aria-label="Administration"
+          class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-white text-ink"
+        >
+          <AppNavIcon name="shield" />
+        </NuxtLink>
+        <NuxtLink
+          to="/profile"
+          :aria-label="$t('app.nav.profile')"
+          class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-white text-ink"
+          :class="isActive('/profile') ? 'bg-sun' : ''"
+        >
+          <AppNavIcon name="user" />
+        </NuxtLink>
+      </div>
     </header>
 
     <main class="relative z-10 flex-1 overflow-x-hidden overflow-y-auto pt-16 lg:pt-0">
