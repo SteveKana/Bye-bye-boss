@@ -8,6 +8,7 @@ const route = useRoute()
 const STEP_BY_PATH = {
   '/onboarding/upload': 1,
   '/onboarding/verification': 2,
+  '/onboarding/preferences': 3,
 }
 const currentStep = computed(() => STEP_BY_PATH[route.path] || 1)
 </script>

@@ -167,6 +167,7 @@
       "opportunities": "Opportunités",
       "applications": "Candidatures",
       "profile": "CV",
+      "preferences": "Préférences",
       "settings": "Paramètres"
     },
     "soon": "bientôt",
@@ -200,7 +201,9 @@
     "offer_hidden": "Offre masquée",
     "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres.",
     "empty_today": "Pas de nouvelles offres pour le moment",
-    "empty_filtered": "Aucune offre ne correspond à ces filtres."
+    "empty_filtered": "Aucune offre ne correspond à ces filtres.",
+    "hidden_by_filters": "{count} offre du jour masquée par vos filtres | {count} offres du jour masquées par vos filtres",
+    "show_all": "Tout afficher"
   },
   "opportunites": {
     "ats_filter_label": "Score ATS minimum",
@@ -259,8 +262,7 @@
     "location_city": "Ville",
     "location_city_placeholder": "Ex. Lyon, Saint-Ouen…",
     "location_region": "Région",
-    "location_region_any": "Toutes les régions",
-    "location_region_hint": "Les offres dont la région n'est pas indiquée par leur source sont masquées quand une région est choisie."
+    "location_region_any": "Toutes les régions"
   },
   "opportunity": {
     "back": "← Retour au tableau de bord",
@@ -491,7 +493,8 @@
   "onboarding": {
     "steps": {
       "upload": "Import CV",
-      "verification": "Vérification"
+      "verification": "Vérification",
+      "preferences": "Zone & contrat"
     },
     "upload": {
       "title": "Importez votre CV",
@@ -540,9 +543,17 @@
       "location": "Localisation",
       "availability": "Disponibilité",
       "previous": "Précédent",
-      "continue": "Terminer",
+      "continue": "Continuer",
       "error_generic": "La mise à jour du profil a échoué. Merci de réessayer.",
       "headline": "Titre / poste actuel"
+    },
+    "preferences": {
+      "title": "Où et quel contrat cherchez-vous ?",
+      "subtitle": "Nous n'analyserons que les offres de votre zone et du contrat voulu. Vous pourrez les changer à tout moment.",
+      "note": "Pas d'inquiétude : télétravail et salaire se règlent dans la page Préférences, et tout reste modifiable.",
+      "previous": "Précédent",
+      "continue": "Terminer",
+      "error_generic": "L'enregistrement de vos préférences a échoué. Merci de réessayer."
     }
   },
   "cvAnalyzing": {
@@ -761,5 +772,59 @@
     "error": "Impossible de traiter votre demande pour le moment. Réessayez dans quelques instants.",
     "contact": "Nous contacter",
     "home": "Retour à l'accueil"
+  },
+  "preferencesPage": {
+    "title": "Préférences",
+    "subtitle": "Zone, contrat, type de travail et salaire. Ils servent à choisir les offres qui vous sont proposées chaque jour.",
+    "save": "Enregistrer",
+    "saved": "Préférences enregistrées",
+    "applies_note": "Vos préférences s'appliquent dès la prochaine analyse, demain à 8h.",
+    "error_generic": "L'enregistrement de vos préférences a échoué. Merci de réessayer."
+  },
+  "preferencesForm": {
+    "zone_title": "Zone géographique",
+    "zone_subtitle": "La zone où vous êtes prêt(e) à travailler. Nous analysons uniquement les offres de cette zone.",
+    "zone_all": "France entière",
+    "zone_some": "Certaines régions",
+    "regions_title": "Vos régions",
+    "regions_count": "{count} choisie(s)",
+    "regions_hint": "Vous pouvez en cocher plusieurs. « Outre-mer » regroupe Guadeloupe, Martinique, Guyane, La Réunion et Mayotte.",
+    "unknown_region": "Inclure les offres dont la région n'est pas indiquée",
+    "unknown_region_hint": "Certaines offres ne précisent pas leur région. Activé, vous ne les manquez pas ; désactivé, elles sont écartées.",
+    "contract_title": "Type de contrat",
+    "contract_subtitle": "Plusieurs choix possibles. Rien de coché = tous les contrats.",
+    "contract_hint": "Une offre dont le contrat n'est pas identifié reste proposée.",
+    "remote_title": "Type de travail",
+    "remote_subtitle": "Plusieurs choix possibles. Rien de coché = tous les types.",
+    "remote_hint": "« Full remote » et « Hybride » sont reconnus d'après le texte de l'offre (« 2 jours de télétravail », « hybride »…). « Sur site » regroupe tout le reste, y compris les offres qui ne disent rien du télétravail.",
+    "salary_title": "Salaire",
+    "salary_subtitle": "Votre salaire annuel brut minimum. Laissez vide pour ne pas filtrer.",
+    "salary_placeholder": "Ex. 45000",
+    "salary_suffix": "€ / an",
+    "daily_rate_placeholder": "Ex. 500",
+    "daily_rate_suffix": "€ / jour (TJM)",
+    "daily_rate_hint": "Le TJM n'apparaît que si « Freelance » est coché.",
+    "salary_hint": "Beaucoup d'offres n'indiquent pas de salaire : elles restent proposées. Seules les offres dont le salaire est affiché et inférieur au vôtre sont écartées.",
+    "error_regions": "Choisissez au moins une région, ou « France entière »."
+  },
+  "searchFilters": {
+    "overseas": "Outre-mer",
+    "unknown_region": "Inclure les offres sans région indiquée",
+    "salary_min": "Salaire annuel brut minimum (€)",
+    "tjm_min": "TJM minimum (€/jour)",
+    "salary_hint": "Les offres qui n'indiquent aucun salaire restent affichées.",
+    "contracts": {
+      "CDI": "CDI",
+      "CDD": "CDD",
+      "Freelance": "Freelance",
+      "Intérim": "Intérim",
+      "Stage": "Stage",
+      "Alternance": "Alternance"
+    },
+    "remotes": {
+      "Sur site": "Sur site",
+      "Hybride": "Hybride",
+      "Full remote": "Full remote"
+    }
   }
 }

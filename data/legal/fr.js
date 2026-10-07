@@ -92,7 +92,8 @@ export default {
             list: [
               '**Compte** : adresse email, prénom, nom, mot de passe (stocké sous forme chiffrée, jamais en clair). Si vous vous connectez avec Google : votre identifiant Google, votre email, votre nom et votre photo de profil.',
               '**CV et profil** : le fichier de CV que vous importez, son texte, et les informations qui en sont extraites (expériences, compétences, formations, langues, certifications, localisation, résumé).',
-              '**Disponibilité** : immédiate, date de début ou préavis. Les comptes plus anciens peuvent aussi conserver des préférences de recherche saisies auparavant (types de contrat, télétravail, mobilité, prétentions salariales ou tarif journalier) ; elles ne sont plus utilisées.',
+              '**Disponibilité** : immédiate, date de début ou préavis.',
+              '**Préférences de recherche** : zone géographique (régions), types de contrat, type de travail (sur site, hybride, full remote), salaire annuel minimum ou tarif journalier. Elles servent à choisir les offres qui vous sont proposées et à pré-remplir vos filtres.',
               '**Résultats** : offres qui vous sont proposées, scores de compatibilité, et suivi de vos candidatures.',
               '**Notifications** : vos choix d’alertes ; votre numéro WhatsApp et/ou le lien du webhook Discord uniquement si vous activez ces canaux.',
               '**Liste d’attente** : votre adresse email si vous la laissez sur la page d’accueil.',

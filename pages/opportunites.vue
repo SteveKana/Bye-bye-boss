@@ -87,45 +87,21 @@ const hasScoredOffers = computed(() => matchedOffers.value.some((o) => !o.isPend
 // banner itself picks the freshest one.
 const scoreDates = computed(() => matchedOffers.value.map((o) => o.computedAt))
 
-// Contrat / télétravail / localisation are real filters the candidate turns
-// on themselves (Steve, 2026-10-05) -- nothing is pre-selected from a saved
-// profile anymore, so the page first shows every recent offer matching the
-// CV. An empty choice means "don't restrict".
-const CONTRACT_CHOICES = ['Freelance', 'CDI', 'CDD', 'Intérim', 'Stage', 'Alternance']
+// Contrat / télétravail / localisation / salaire are real filters. They start
+// from the candidate's saved search preferences (Préférences page, onboarding
+// step 3) and can be removed here without touching those preferences; a
+// candidate with no saved preferences starts with nothing selected. An empty
+// choice means "don't restrict". The choice lists and the région / salary
+// tests are shared with the Dashboard (composables/useSearchFilters.js).
 const selectedContracts = ref([])
 // Each offer is exactly one of: Full remote (flagged by the backend), Hybride
 // (the description spells out a split of days -- "2 jours de télétravail",
 // "3 jours sur site"... -- or says "hybride"), or Sur site (everything else,
 // including offers that say nothing about remote work).
-const REMOTE_CHOICES = ['Full remote', 'Hybride', 'Sur site']
 const selectedRemote = ref([])
-function remoteModeOf(offer) {
-  if (offer.isFullRemote) return 'Full remote'
-  if (offer.isHybrid) return 'Hybride'
-  return 'Sur site'
-}
-const REGION_CHOICES = [
-  'Auvergne-Rhône-Alpes',
-  'Bourgogne-Franche-Comté',
-  'Bretagne',
-  'Centre-Val de Loire',
-  'Corse',
-  'Grand Est',
-  'Hauts-de-France',
-  'Île-de-France',
-  'Normandie',
-  'Nouvelle-Aquitaine',
-  'Occitanie',
-  'Pays de la Loire',
-  "Provence-Alpes-Côte d'Azur",
-  'Guadeloupe',
-  'Martinique',
-  'Guyane',
-  'La Réunion',
-  'Mayotte',
-]
+const selectedRegions = ref([])
+const includeUnknownRegion = ref(true)
 const cityQuery = ref('')
-const regionQuery = ref('')
 function normalizeText(value) {
   return (value || '')
     .normalize('NFD')
@@ -134,7 +110,8 @@ function normalizeText(value) {
     .trim()
 }
 function toggleChoice(kind, value) {
-  const list = kind === 'contract' ? selectedContracts : selectedRemote
+  const list =
+    kind === 'contract' ? selectedContracts : kind === 'region' ? selectedRegions : selectedRemote
   list.value = list.value.includes(value)
     ? list.value.filter((v) => v !== value)
     : [...list.value, value]
@@ -186,7 +163,7 @@ function resetFilters() {
   selectedContracts.value = []
   selectedRemote.value = []
   cityQuery.value = ''
-  regionQuery.value = ''
+  selectedRegions.value = []
   minAts.value = DEFAULT_MIN_ATS
   salaryMin.value = 0
   tjmMin.value = 0
@@ -209,11 +186,11 @@ const activeFilterChips = computed(() => {
   for (const r of selectedRemote.value) {
     chips.push({ key: `remote-${r}`, label: r, clear: () => toggleChoice('remote', r) })
   }
-  if (regionQuery.value) {
+  for (const r of selectedRegions.value) {
     chips.push({
-      key: 'region',
-      label: regionQuery.value,
-      clear: () => (regionQuery.value = ''),
+      key: `region-${r}`,
+      label: r === OVERSEAS_CHOICE ? t('searchFilters.overseas') : r,
+      clear: () => toggleChoice('region', r),
     })
   }
   if (cityQuery.value) {
@@ -266,7 +243,7 @@ const filteredOffers = computed(() =>
     if (selectedRemote.value.length && !selectedRemote.value.includes(remoteModeOf(offer))) {
       return false
     }
-    if (regionQuery.value && offer.region !== regionQuery.value) return false
+    if (!regionMatches(offer, selectedRegions.value, includeUnknownRegion.value)) return false
     if (cityQuery.value && !normalizeText(offer.loc).includes(normalizeText(cityQuery.value))) {
       return false
     }
@@ -333,7 +310,8 @@ watch(
     selectedContracts,
     selectedRemote,
     cityQuery,
-    regionQuery,
+    selectedRegions,
+    includeUnknownRegion,
   ],
   () => {
     page.value = 1
@@ -378,6 +356,29 @@ function tagsFor(offer) {
 // regretColorClass removed 2026-10-03 (Steve: masquer toute mention à
 // l'indice de regret côté front) -- was only used by the card score
 // cluster below, also removed.
+
+// Pre-fill the filters from the saved search preferences (once). The
+// profile is loaded by the onboarding-complete middleware; the watcher also
+// covers a late arrival. A candidate who never saved preferences keeps empty
+// filters, as before.
+const onboarding = useOnboardingStore()
+let prefilled = false
+watch(
+  () => onboarding.profile,
+  (profile) => {
+    if (prefilled || !profile) return
+    prefilled = true
+    if (!profileHasPreferences(profile)) return
+    selectedContracts.value = [...(profile.contract_types || [])]
+    selectedRemote.value = [...(profile.remote_preferences || [])]
+    selectedRegions.value = choicesFromRegions(profile.mobility_regions)
+    includeUnknownRegion.value = profile.include_unknown_region !== false
+    // The sliders stop at their maximum: a higher target is kept at the top.
+    salaryMin.value = Math.min(profile.salary_target || 0, SALARY_SLIDER_MAX)
+    tjmMin.value = Math.min(profile.daily_rate || 0, TJM_SLIDER_MAX)
+  },
+  { immediate: true }
+)
 
 onMounted(async () => {
   try {
@@ -449,7 +450,7 @@ function selectSort(value) {
                 v-for="c in CONTRACT_CHOICES"
                 :key="c"
                 :model-value="selectedContracts.includes(c)"
-                :label="c"
+                :label="$t(`searchFilters.contracts.${c}`)"
                 @update:model-value="toggleChoice('contract', c)"
               />
             </div>
@@ -461,7 +462,7 @@ function selectSort(value) {
                 v-for="r in REMOTE_CHOICES"
                 :key="r"
                 :model-value="selectedRemote.includes(r)"
-                :label="r"
+                :label="$t(`searchFilters.remotes.${r}`)"
                 @update:model-value="toggleChoice('remote', r)"
               />
             </div>
@@ -469,7 +470,7 @@ function selectSort(value) {
 
           <AppFilterMenu
             :label="$t('opportunites.location_filter')"
-            :count="Number(!!cityQuery) + Number(!!regionQuery)"
+            :count="Number(!!cityQuery) + selectedRegions.length"
           >
             <div class="flex flex-col gap-3">
               <label class="flex flex-col gap-1 text-xs font-bold text-ink">
@@ -481,19 +482,22 @@ function selectSort(value) {
                   class="rounded-xl border-2 border-ink bg-white px-3 py-2 text-sm font-medium text-ink placeholder:text-ink/40"
                 />
               </label>
-              <label class="flex flex-col gap-1 text-xs font-bold text-ink">
+              <div class="flex flex-col gap-1 text-xs font-bold text-ink">
                 {{ $t('opportunites.location_region') }}
-                <select
-                  v-model="regionQuery"
-                  class="rounded-xl border-2 border-ink bg-white px-3 py-2 text-sm font-medium text-ink"
-                >
-                  <option value="">{{ $t('opportunites.location_region_any') }}</option>
-                  <option v-for="r in REGION_CHOICES" :key="r" :value="r">{{ r }}</option>
-                </select>
-              </label>
-              <p class="text-[11px] leading-snug text-ink/50">
-                {{ $t('opportunites.location_region_hint') }}
-              </p>
+                <div class="flex max-h-56 flex-col gap-2 overflow-y-auto pr-1 pt-1">
+                  <UiCheckbox
+                    v-for="r in REGION_CHOICES"
+                    :key="r"
+                    :model-value="selectedRegions.includes(r)"
+                    :label="r === OVERSEAS_CHOICE ? $t('searchFilters.overseas') : r"
+                    @update:model-value="toggleChoice('region', r)"
+                  />
+                </div>
+              </div>
+              <UiCheckbox
+                v-model="includeUnknownRegion"
+                :label="$t('searchFilters.unknown_region')"
+              />
             </div>
           </AppFilterMenu>
 
