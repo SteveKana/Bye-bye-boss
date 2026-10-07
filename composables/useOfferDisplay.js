@@ -82,6 +82,10 @@ export function useOfferDisplay() {
     // freelance/portage is the closest fit for the kind of missions this
     // platform's search keywords target.
     if (text.includes('contract')) return 'Freelance'
+    // Adzuna sometimes gives only "full_time", with no permanent/contract:
+    // read as a CDI (Steve, 2026-10-07). Checked last so "contract,
+    // full_time" stays a Freelance mission.
+    if (/full[_\s-]?time/.test(text)) return 'CDI'
     return rawLabel
   }
 
