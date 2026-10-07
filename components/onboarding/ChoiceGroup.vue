@@ -6,6 +6,9 @@ const props = defineProps({
   options: { type: Array, required: true }, // [{ value, label }]
   multiple: { type: Boolean, default: false },
   columns: { type: Number, default: 3 },
+  // Columns below the `sm` breakpoint (defaults to `columns`): long labels such
+  // as régions need fewer columns on a phone.
+  mobileColumns: { type: Number, default: 0 },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -27,7 +30,10 @@ function toggle(value) {
 </script>
 
 <template>
-  <div class="grid gap-3" :style="{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }">
+  <div
+    class="choice-grid grid gap-3"
+    :style="{ '--cols': columns, '--cols-sm': mobileColumns || columns }"
+  >
     <button
       v-for="opt in options"
       :key="opt.value"
@@ -47,3 +53,14 @@ function toggle(value) {
     </button>
   </div>
 </template>
+
+<style scoped>
+.choice-grid {
+  grid-template-columns: repeat(var(--cols-sm), minmax(0, 1fr));
+}
+@media (min-width: 640px) {
+  .choice-grid {
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  }
+}
+</style>

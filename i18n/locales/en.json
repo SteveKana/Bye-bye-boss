@@ -167,6 +167,7 @@
       "opportunities": "Opportunities",
       "applications": "Applications",
       "profile": "CV",
+      "preferences": "Preferences",
       "settings": "Settings"
     },
     "soon": "soon",
@@ -200,7 +201,9 @@
     "offer_hidden": "Offer hidden",
     "empty": "No opportunities yet. We're analyzing your profile to find the best matches for you.",
     "empty_today": "No new offers for now",
-    "empty_filtered": "No offers match these filters."
+    "empty_filtered": "No offers match these filters.",
+    "hidden_by_filters": "{count} of today's offers hidden by your filters | {count} of today's offers hidden by your filters",
+    "show_all": "Show all"
   },
   "opportunites": {
     "ats_filter_label": "Minimum ATS score",
@@ -259,8 +262,7 @@
     "location_city": "City",
     "location_city_placeholder": "E.g. Lyon, Paris…",
     "location_region": "Region",
-    "location_region_any": "All regions",
-    "location_region_hint": "Offers whose source gives no region are hidden when a region is chosen."
+    "location_region_any": "All regions"
   },
   "opportunity": {
     "back": "← Back to dashboard",
@@ -491,7 +493,8 @@
   "onboarding": {
     "steps": {
       "upload": "Import CV",
-      "verification": "Verification"
+      "verification": "Verification",
+      "preferences": "Area & contract"
     },
     "upload": {
       "title": "Import your CV",
@@ -540,9 +543,17 @@
       "location": "Location",
       "availability": "Availability",
       "previous": "Previous",
-      "continue": "Finish",
+      "continue": "Continue",
       "error_generic": "Updating the profile failed. Please try again.",
       "headline": "Headline / current title"
+    },
+    "preferences": {
+      "title": "Where and which contract are you looking for?",
+      "subtitle": "We will only analyse offers in your area and for the contract you want. You can change them at any time.",
+      "note": "No worries: remote work and salary are set in the Preferences page, and everything stays editable.",
+      "previous": "Previous",
+      "continue": "Finish",
+      "error_generic": "Saving your preferences failed. Please try again."
     }
   },
   "cvAnalyzing": {
@@ -761,5 +772,59 @@
     "error": "We could not process your request right now. Please try again in a moment.",
     "contact": "Contact us",
     "home": "Back to home"
+  },
+  "preferencesPage": {
+    "title": "Preferences",
+    "subtitle": "Area, contract, work type and salary. They decide which offers are picked for you every day.",
+    "save": "Save",
+    "saved": "Preferences saved",
+    "applies_note": "Your preferences apply from the next analysis, tomorrow at 8am.",
+    "error_generic": "Saving your preferences failed. Please try again."
+  },
+  "preferencesForm": {
+    "zone_title": "Geographic area",
+    "zone_subtitle": "The area where you are ready to work. We only analyse offers in this area.",
+    "zone_all": "All of France",
+    "zone_some": "Some regions",
+    "regions_title": "Your regions",
+    "regions_count": "{count} selected",
+    "regions_hint": "You can tick several. “Overseas” groups Guadeloupe, Martinique, Guyane, La Réunion and Mayotte.",
+    "unknown_region": "Include offers whose region is not stated",
+    "unknown_region_hint": "Some offers do not state their region. On, you do not miss them; off, they are left out.",
+    "contract_title": "Contract type",
+    "contract_subtitle": "Several choices possible. Nothing ticked = all contracts.",
+    "contract_hint": "An offer whose contract is not identified is still proposed.",
+    "remote_title": "Work type",
+    "remote_subtitle": "Several choices possible. Nothing ticked = all types.",
+    "remote_hint": "“Full remote” and “Hybrid” are recognised from the offer text (“2 days remote”, “hybrid”…). “On site” covers everything else, including offers that say nothing about remote work.",
+    "salary_title": "Salary",
+    "salary_subtitle": "Your minimum gross annual salary. Leave empty to not filter.",
+    "salary_placeholder": "E.g. 45000",
+    "salary_suffix": "€ / year",
+    "daily_rate_placeholder": "E.g. 500",
+    "daily_rate_suffix": "€ / day (TJM)",
+    "daily_rate_hint": "The daily rate only appears if “Freelance” is ticked.",
+    "salary_hint": "Many offers state no salary: they are still proposed. Only offers showing a salary below yours are left out.",
+    "error_regions": "Choose at least one region, or “All of France”."
+  },
+  "searchFilters": {
+    "overseas": "Overseas",
+    "unknown_region": "Include offers with no region stated",
+    "salary_min": "Minimum gross annual salary (€)",
+    "tjm_min": "Minimum daily rate (€/day)",
+    "salary_hint": "Offers that state no salary stay visible.",
+    "contracts": {
+      "CDI": "CDI",
+      "CDD": "CDD",
+      "Freelance": "Freelance",
+      "Intérim": "Temp work",
+      "Stage": "Internship",
+      "Alternance": "Apprenticeship"
+    },
+    "remotes": {
+      "Sur site": "On site",
+      "Hybride": "Hybrid",
+      "Full remote": "Full remote"
+    }
   }
 }

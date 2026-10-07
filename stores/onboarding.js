@@ -38,6 +38,14 @@ export const useOnboardingStore = defineStore('onboarding', () => {
     return profile.value
   }
 
+  // Search preferences (zone, contract, work type, salary) -- the last step of
+  // onboarding and the Préférences page. The API answers with the whole
+  // profile, which is cached like for updateProfile.
+  async function updatePreferences(payload) {
+    profile.value = await useApi()('cv/profile/preferences', { method: 'PUT', body: payload })
+    return profile.value
+  }
+
   function reset() {
     profile.value = null
   }
@@ -128,6 +136,7 @@ export const useOnboardingStore = defineStore('onboarding', () => {
     uploadCvWithDiff,
     fetchProfile,
     updateProfile,
+    updatePreferences,
     reuploadFromHomepage,
     reset,
   }

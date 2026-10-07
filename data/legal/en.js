@@ -90,7 +90,8 @@ export default {
             list: [
               '**Account**: email address, first name, last name, password (stored in encrypted form, never in clear text). If you sign in with Google: your Google identifier, email, name and profile picture.',
               '**CV and profile**: the CV file you upload, its text, and the information extracted from it (experience, skills, education, languages, certifications, location, summary).',
-              '**Availability**: immediate, start date or notice period. Older accounts may also keep search preferences entered earlier (contract types, remote work, mobility, salary expectations or daily rate); they are no longer used.',
+              '**Availability**: immediate, start date or notice period.',
+              '**Search preferences**: geographic area (regions), contract types, work type (on site, hybrid, full remote), minimum annual salary or daily rate. They are used to choose the offers proposed to you and to pre-fill your filters.',
               '**Results**: the offers shown to you, compatibility scores, and the tracking of your applications.',
               '**Notifications**: your alert choices; your WhatsApp number and/or Discord webhook link only if you enable those channels.',
               '**Waitlist**: your email address if you leave it on the home page.',

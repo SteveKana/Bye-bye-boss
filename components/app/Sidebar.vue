@@ -12,6 +12,7 @@ const baseItems = [
   { key: 'app.nav.applications', to: '/candidatures', icon: 'file' },
   { divider: true },
   { key: 'app.nav.profile', to: '/profile', icon: 'user' },
+  { key: 'app.nav.preferences', to: '/preferences', icon: 'sliders' },
   { key: 'app.nav.settings', to: '/settings', icon: 'gear' },
 ]
 // Admins also get a link to the monitoring area (French only, admin-only).
