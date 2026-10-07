@@ -29,7 +29,7 @@ const columns = [
   { key: 'verified', label: 'E-mail confirmé' },
   { key: 'profile_status', label: 'Profil' },
   { key: 'last_seen', label: 'Dernière activité' },
-  { key: 'alerts_enabled', label: 'Alertes' },
+  { key: 'channels', label: 'Canaux' },
   { key: 'applications', label: 'Candidatures' },
 ]
 
@@ -40,8 +40,9 @@ function sortValue(u, key) {
     case 'profile_status':
       return PROFILE[u.profile_status]?.rank ?? -1
     case 'verified':
-    case 'alerts_enabled':
       return u[key] ? 1 : 0
+    case 'channels':
+      return (u.channels || []).length
     case 'created_at':
     case 'last_seen':
       return u[key] ? new Date(u[key]).getTime() : -1
@@ -158,10 +159,15 @@ const ariaSort = (key) =>
               {{ u.last_seen ? timeAgo(u.last_seen, +now) : 'Jamais' }}
             </td>
             <td>
-              <AdminPill
-                :state="u.alerts_enabled ? 'ok' : 'info'"
-                :text="u.alerts_enabled ? 'Activées' : 'Non activées'"
-              />
+              <span v-if="u.channels?.length" class="flex flex-wrap gap-1">
+                <AdminPill
+                  v-for="c in u.channels"
+                  :key="c"
+                  state="ok"
+                  :text="CHANNEL_LABELS[c] || c"
+                />
+              </span>
+              <AdminPill v-else state="info" text="Aucun" />
             </td>
             <td>{{ fmtInt(u.applications) }}</td>
           </tr>
