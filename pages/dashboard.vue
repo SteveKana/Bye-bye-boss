@@ -149,6 +149,10 @@ function openOffer(offer) {
 
     <!-- Top opportunities -->
     <section>
+      <!-- Full-width banner; the list and the "Comprendre nos scores" block
+           sit side by side underneath, so the block starts at the same
+           height as the first offer (Steve, 2026-10-07). Under xl the block
+           simply follows the list instead of disappearing. -->
       <div class="mb-4 rounded-[22px] border-[2.5px] border-ink bg-sun px-5 py-4">
         <div class="flex items-center gap-2">
           <span
@@ -164,177 +168,185 @@ function openOffer(offer) {
         <p class="mt-1 text-[13px] font-semibold text-ink/70">{{ $t('dashboard.top_sub') }}</p>
       </div>
 
-      <ul class="space-y-3">
-        <li
-          v-for="offer in topOffers"
-          :key="offer.id"
-          class="group flex cursor-pointer items-start gap-3 rounded-[22px] border-[2.5px] border-ink bg-white px-3 py-3.5 transition hover:-translate-y-0.5 hover:bg-lav/40 sm:gap-4 sm:px-4"
-          role="button"
-          tabindex="0"
-          @click="openOffer(offer)"
-          @keydown.enter="openOffer(offer)"
-          @keydown.space.prevent="openOffer(offer)"
-        >
-          <span
-            class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-lav text-xs font-black text-ink"
-          >
-            {{ offer.rank }}
-          </span>
-          <span
-            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border-2 border-ink text-[11px] font-extrabold text-white"
-            :style="{ background: offer.bg }"
-          >
-            {{ offer.logo }}
-          </span>
-
-          <div class="min-w-0 flex-1">
-            <!-- The row stays compact: title (2 lines max), company/location,
-            then short badges. blockingMessage (a full free-form sentence) is
-            not shown here, it lives on the opportunity detail page. -->
-            <div class="line-clamp-2 text-sm font-extrabold text-ink">{{ offer.title }}</div>
-            <div class="text-[12.5px] font-medium text-ink/60">
-              {{ offer.company }} · {{ offer.loc }}
-            </div>
-            <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <AppFitBadge :fit="offer.fit" />
-              <AppPendingTag v-if="offer.isPending">
-                {{ $t('dashboard.analysis_pending') }}
-              </AppPendingTag>
+      <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
+        <div>
+          <ul class="space-y-3">
+            <li
+              v-for="offer in topOffers"
+              :key="offer.id"
+              class="group flex cursor-pointer items-start gap-3 rounded-[22px] border-[2.5px] border-ink bg-white px-3 py-3.5 transition hover:-translate-y-0.5 hover:bg-lav/40 sm:gap-4 sm:px-4"
+              role="button"
+              tabindex="0"
+              @click="openOffer(offer)"
+              @keydown.enter="openOffer(offer)"
+              @keydown.space.prevent="openOffer(offer)"
+            >
               <span
-                v-if="offer.contractTag"
-                class="inline-block rounded-full border-2 border-ink bg-lav px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
+                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-lav text-xs font-black text-ink"
               >
-                {{ offer.contractTag }}
+                {{ offer.rank }}
               </span>
               <span
-                v-if="offer.publishedAgo"
-                class="inline-flex items-center gap-0.5 text-[11px] font-medium text-ink/50"
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border-2 border-ink text-[11px] font-extrabold text-white"
+                :style="{ background: offer.bg }"
               >
-                {{ offer.publishedAgo }}
-                <!-- Adzuna's published date is the date its crawler last (re-)
-                     indexed the listing, not necessarily the true original
-                     posting date on the source job board. France Travail's own
-                     dateActualisation doesn't have this issue, so the hint is
-                     Adzuna-only. -->
-                <UiWarningHint
-                  v-if="offer.source === 'adzuna'"
-                  :message="$t('common.stale_source_warning')"
+                {{ offer.logo }}
+              </span>
+
+              <div class="min-w-0 flex-1">
+                <!-- The row stays compact: title (2 lines max), company/location,
+                then short badges. blockingMessage (a full free-form sentence) is
+                not shown here, it lives on the opportunity detail page. -->
+                <div class="line-clamp-2 text-sm font-extrabold text-ink">{{ offer.title }}</div>
+                <div class="text-[12.5px] font-medium text-ink/60">
+                  {{ offer.company }} · {{ offer.loc }}
+                </div>
+                <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <AppFitBadge :fit="offer.fit" />
+                  <AppPendingTag v-if="offer.isPending">
+                    {{ $t('dashboard.analysis_pending') }}
+                  </AppPendingTag>
+                  <span
+                    v-if="offer.contractTag"
+                    class="inline-block rounded-full border-2 border-ink bg-lav px-2.5 py-0.5 text-[10px] font-extrabold text-ink"
+                  >
+                    {{ offer.contractTag }}
+                  </span>
+                  <span
+                    v-if="offer.publishedAgo"
+                    class="inline-flex items-center gap-0.5 text-[11px] font-medium text-ink/50"
+                  >
+                    {{ offer.publishedAgo }}
+                    <!-- Adzuna's published date is the date its crawler last (re-)
+                         indexed the listing, not necessarily the true original
+                         posting date on the source job board. France Travail's own
+                         dateActualisation doesn't have this issue, so the hint is
+                         Adzuna-only. -->
+                    <UiWarningHint
+                      v-if="offer.source === 'adzuna'"
+                      :message="$t('common.stale_source_warning')"
+                    />
+                  </span>
+                </div>
+              </div>
+
+              <div v-if="!offer.isPending" class="hidden shrink-0 gap-2 sm:flex">
+                <div
+                  class="min-w-[56px] rounded-2xl border-2 border-ink bg-white px-2 py-1 text-center"
+                >
+                  <div class="text-[10px] font-bold text-ink/60">Career</div>
+                  <div class="text-sm font-black text-ink">{{ offer.scores.career }}</div>
+                </div>
+                <div
+                  class="min-w-[56px] rounded-2xl border-2 border-ink bg-white px-2 py-1 text-center"
+                >
+                  <div class="text-[10px] font-bold text-ink/60">ATS</div>
+                  <div class="text-sm font-black text-ink">{{ offer.scores.ats }}</div>
+                </div>
+                <div
+                  class="min-w-[56px] rounded-2xl border-2 border-ink bg-lav px-2 py-1 text-center"
+                >
+                  <div class="text-[10px] font-bold text-ink/60">Potential</div>
+                  <div class="text-sm font-black text-brand">{{ offer.scores.potential }}</div>
+                </div>
+              </div>
+              <!-- Mobile: one pill with the potential score only -->
+              <span
+                v-if="!offer.isPending"
+                class="shrink-0 rounded-full border-2 border-ink bg-lav px-2.5 py-1 text-sm font-black text-brand sm:hidden"
+              >
+                {{ offer.scores.potential }}
+              </span>
+
+              <button
+                class="shrink-0 rounded-full p-1.5 text-ink/40 transition hover:bg-danger-light hover:text-danger"
+                :aria-label="$t('dashboard.reject')"
+                @click.stop="reject(offer)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-4 w-4"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </li>
+          </ul>
+
+          <div v-if="loadingOpportunities">
+            <!-- role="status"/aria-live: the only part of this loading state a
+                 screen reader needs to hear -- the skeleton rows below are pure
+                 visual filler (aria-hidden). -->
+            <div
+              role="status"
+              aria-live="polite"
+              class="flex flex-col items-center gap-2 py-6 text-center"
+            >
+              <svg
+                class="h-5 w-5 animate-spin text-brand"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
                 />
-              </span>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+              <p class="text-sm font-bold text-ink">{{ $t('dashboard.loading') }}</p>
+              <p class="max-w-sm text-[12.5px] text-ink/50">{{ $t('dashboard.loading_sub') }}</p>
             </div>
+
+            <!-- Skeleton rows: same shape as a real offer row so the layout
+                 doesn't jump once real offers arrive. -->
+            <ul class="mt-2 space-y-3" aria-hidden="true">
+              <li
+                v-for="n in TOP_COUNT"
+                :key="n"
+                class="flex items-center gap-4 rounded-[22px] border-[2.5px] border-ink/20 bg-white px-4 py-3.5"
+              >
+                <span class="h-7 w-7 shrink-0 animate-pulse rounded-full bg-lav"></span>
+                <span class="h-11 w-11 shrink-0 animate-pulse rounded-[14px] bg-lav"></span>
+                <div class="min-w-0 flex-1 space-y-2 py-0.5">
+                  <div class="h-3.5 w-2/5 animate-pulse rounded bg-lav"></div>
+                  <div class="h-3 w-3/5 animate-pulse rounded bg-lav"></div>
+                  <div class="h-4 w-24 animate-pulse rounded-full bg-lav"></div>
+                </div>
+              </li>
+            </ul>
           </div>
-
-          <div v-if="!offer.isPending" class="hidden shrink-0 gap-2 sm:flex">
-            <div
-              class="min-w-[56px] rounded-2xl border-2 border-ink bg-white px-2 py-1 text-center"
-            >
-              <div class="text-[10px] font-bold text-ink/60">Career</div>
-              <div class="text-sm font-black text-ink">{{ offer.scores.career }}</div>
-            </div>
-            <div
-              class="min-w-[56px] rounded-2xl border-2 border-ink bg-white px-2 py-1 text-center"
-            >
-              <div class="text-[10px] font-bold text-ink/60">ATS</div>
-              <div class="text-sm font-black text-ink">{{ offer.scores.ats }}</div>
-            </div>
-            <div class="min-w-[56px] rounded-2xl border-2 border-ink bg-lav px-2 py-1 text-center">
-              <div class="text-[10px] font-bold text-ink/60">Potential</div>
-              <div class="text-sm font-black text-brand">{{ offer.scores.potential }}</div>
-            </div>
-          </div>
-          <!-- Mobile: one pill with the potential score only -->
-          <span
-            v-if="!offer.isPending"
-            class="shrink-0 rounded-full border-2 border-ink bg-lav px-2.5 py-1 text-sm font-black text-brand sm:hidden"
+          <p
+            v-else-if="!topOffers.length"
+            class="rounded-[22px] border-[2.5px] border-dashed border-ink/40 bg-white/70 py-8 text-center text-sm font-semibold text-ink/60"
           >
-            {{ offer.scores.potential }}
-          </span>
+            {{ hasHistory ? $t('dashboard.empty_today') : $t('dashboard.empty') }}
+          </p>
 
-          <button
-            class="shrink-0 rounded-full p-1.5 text-ink/40 transition hover:bg-danger-light hover:text-danger"
-            :aria-label="$t('dashboard.reject')"
-            @click.stop="reject(offer)"
+          <NuxtLink
+            to="/opportunites"
+            class="mt-5 block w-full text-center text-sm font-extrabold text-brand hover:underline"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="h-4 w-4"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </li>
-      </ul>
-
-      <div v-if="loadingOpportunities">
-        <!-- role="status"/aria-live: the only part of this loading state a
-             screen reader needs to hear -- the skeleton rows below are pure
-             visual filler (aria-hidden). -->
-        <div
-          role="status"
-          aria-live="polite"
-          class="flex flex-col items-center gap-2 py-6 text-center"
-        >
-          <svg
-            class="h-5 w-5 animate-spin text-brand"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            />
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
-          </svg>
-          <p class="text-sm font-bold text-ink">{{ $t('dashboard.loading') }}</p>
-          <p class="max-w-sm text-[12.5px] text-ink/50">{{ $t('dashboard.loading_sub') }}</p>
+            {{ $t('dashboard.see_all') }} →
+          </NuxtLink>
         </div>
 
-        <!-- Skeleton rows: same shape as a real offer row so the layout
-             doesn't jump once real offers arrive. -->
-        <ul class="mt-2 space-y-3" aria-hidden="true">
-          <li
-            v-for="n in TOP_COUNT"
-            :key="n"
-            class="flex items-center gap-4 rounded-[22px] border-[2.5px] border-ink/20 bg-white px-4 py-3.5"
-          >
-            <span class="h-7 w-7 shrink-0 animate-pulse rounded-full bg-lav"></span>
-            <span class="h-11 w-11 shrink-0 animate-pulse rounded-[14px] bg-lav"></span>
-            <div class="min-w-0 flex-1 space-y-2 py-0.5">
-              <div class="h-3.5 w-2/5 animate-pulse rounded bg-lav"></div>
-              <div class="h-3 w-3/5 animate-pulse rounded bg-lav"></div>
-              <div class="h-4 w-24 animate-pulse rounded-full bg-lav"></div>
-            </div>
-          </li>
-        </ul>
+        <AppScoresHelp />
       </div>
-      <p
-        v-else-if="!topOffers.length"
-        class="rounded-[22px] border-[2.5px] border-dashed border-ink/40 bg-white/70 py-8 text-center text-sm font-semibold text-ink/60"
-      >
-        {{ hasHistory ? $t('dashboard.empty_today') : $t('dashboard.empty') }}
-      </p>
-
-      <NuxtLink
-        to="/opportunites"
-        class="mt-5 block w-full text-center text-sm font-extrabold text-brand hover:underline"
-      >
-        {{ $t('dashboard.see_all') }} →
-      </NuxtLink>
     </section>
   </div>
 </template>
