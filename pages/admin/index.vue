@@ -67,6 +67,16 @@ const alertItems = computed(() =>
   }))
 )
 
+// Accounts per configured alert channel. An account with several channels is
+// counted in each, so the lines can add up to more than the number of accounts.
+const channelItems = computed(() => {
+  const c = tiles.value?.channels_configured || {}
+  return [
+    ...Object.keys(CHANNEL_LABELS).map((k) => ({ label: CHANNEL_LABELS[k], value: c[k] ?? 0 })),
+    { label: 'Aucun', value: c.none ?? 0 },
+  ]
+})
+
 const JOB_STATE = {
   ok: { state: 'ok', label: 'OK' },
   error: { state: 'bad', label: 'Erreur' },
@@ -190,6 +200,20 @@ const JOB_STATE = {
             :items="alertItems"
             :label-width="90"
             aria-label="Alertes envoyées par canal"
+          />
+        </AdminCard>
+      </div>
+
+      <div class="grid gap-3 lg:grid-cols-2">
+        <AdminCard
+          title="Moyens de notification configurés"
+          :subtitle="`Sur ${plural(tiles.users_total, 'compte', 'comptes')} · un compte peut avoir plusieurs moyens`"
+        >
+          <AdminHBars
+            :items="channelItems"
+            :label-width="90"
+            color="#6b4fd8"
+            aria-label="Comptes par moyen de notification"
           />
         </AdminCard>
       </div>
