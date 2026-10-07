@@ -28,8 +28,9 @@ export default defineNuxtRouteMiddleware(async () => {
   }
 
   if (profile.status === 'complete') return
-  // Not finished yet: the verification step is now the last one (it
-  // completes the profile), so that is always where an unfinished profile
-  // goes -- including one re-imported before ever being verified.
+  // Not finished yet: a profile whose CV was already verified only misses
+  // the last step (zone & contract); anything else goes back to the
+  // verification -- including a CV re-imported before ever being verified.
+  if (profile.verification_completed_at) return navigateTo('/onboarding/preferences')
   return navigateTo('/onboarding/verification')
 })

@@ -19,6 +19,13 @@ const loadingOpportunities = ref(true)
 const TOP_COUNT = 5
 const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.dashboardOpportunities))
 
+// Contrat / Télétravail / Localisation / Salaire, pre-filled from the saved
+// preferences. The backend already picked today's offers with those
+// preferences, so these filters rarely hide anything -- but when the
+// candidate tightens one, the page says how many offers it hides instead of
+// looking empty without explanation.
+const filters = useDashboardFilters()
+
 // "Top 5 des opportunités pour vous au jj/mm/aaaa" -- today's date.
 const todayLabel = new Date().toLocaleDateString('fr-FR')
 
@@ -54,12 +61,12 @@ const { pause: stopPolling, resume: startPolling } = useIntervalFn(
       // Same as the initial fetch below -- keep retrying silently rather
       // than surfacing an error toast for what reads as "no offers yet".
     }
-    if (topOffers.value.length > 0) loadingOpportunities.value = false
+    if (todaysOffers.value.length > 0) loadingOpportunities.value = false
     // Keep going while offers are shown without their scores yet -- the
     // scores land when the nightly OpenAI batch finishes (usually within
     // minutes to a few hours, see the loading copy); the 4-minute cap then
     // just stops the polling, the next visit shows them.
-    if (!hasPending.value && topOffers.value.length > 0) stopPolling()
+    if (!hasPending.value && todaysOffers.value.length > 0) stopPolling()
     if (pollAttempts >= MAX_POLL_ATTEMPTS) {
       stopPolling()
       loadingOpportunities.value = false
@@ -72,11 +79,15 @@ const { pause: stopPolling, resume: startPolling } = useIntervalFn(
 // Same order as the backend's answer (best first, offers still being
 // analysed after the scored ones) -- the 5-offer cap is applied by the
 // backend too, this slice is only a safety net.
+const todaysOffers = computed(() => matchedOffers.value.slice(0, TOP_COUNT))
 const topOffers = computed(() =>
-  matchedOffers.value.slice(0, TOP_COUNT).map((offer, index) => ({ ...offer, rank: index + 1 }))
+  todaysOffers.value
+    .filter((offer) => filters.matches(offer))
+    .map((offer, index) => ({ ...offer, rank: index + 1 }))
 )
+const hiddenCount = computed(() => todaysOffers.value.length - topOffers.value.length)
 
-const hasPending = computed(() => topOffers.value.some((offer) => offer.isPending))
+const hasPending = computed(() => todaysOffers.value.some((offer) => offer.isPending))
 
 // The candidate already has offers in their history (/opportunites).
 const hasHistory = computed(() => matching.topOpportunities.length > 0)
@@ -97,7 +108,7 @@ onMounted(async () => {
     // read as "no opportunities yet", same honest empty state as before,
     // not an alarming error toast.
   } finally {
-    if (topOffers.value.length > 0) {
+    if (todaysOffers.value.length > 0) {
       loadingOpportunities.value = false
       // Offers already there but some still without scores: keep refreshing.
       if (hasPending.value) startPolling()
@@ -167,6 +178,8 @@ function openOffer(offer) {
         </div>
         <p class="mt-1 text-[13px] font-semibold text-ink/70">{{ $t('dashboard.top_sub') }}</p>
       </div>
+
+      <AppOfferFiltersBar :filters="filters" class="mb-4" />
 
       <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
         <div>
@@ -331,11 +344,28 @@ function openOffer(offer) {
             </ul>
           </div>
           <p
-            v-else-if="!topOffers.length"
+            v-else-if="!todaysOffers.length"
             class="rounded-[22px] border-[2.5px] border-dashed border-ink/40 bg-white/70 py-8 text-center text-sm font-semibold text-ink/60"
           >
             {{ hasHistory ? $t('dashboard.empty_today') : $t('dashboard.empty') }}
           </p>
+
+          <div
+            v-if="!loadingOpportunities && hiddenCount > 0"
+            class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[22px] border-[2.5px] border-dashed border-ink/40 bg-white/70 px-4 py-3 text-sm font-semibold text-ink/70"
+          >
+            <span aria-hidden="true">🙈</span>
+            <span>{{
+              $t('dashboard.hidden_by_filters', { count: hiddenCount }, hiddenCount)
+            }}</span>
+            <button
+              type="button"
+              class="font-extrabold text-brand hover:underline"
+              @click="filters.reset()"
+            >
+              {{ $t('dashboard.show_all') }}
+            </button>
+          </div>
 
           <NuxtLink
             to="/opportunites"

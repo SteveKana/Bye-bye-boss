@@ -55,8 +55,10 @@ export function useOfferDisplay() {
   function contractTag(rawLabel) {
     if (!rawLabel) return ''
     const text = rawLabel.toLowerCase()
-    if (text.includes('cdi') || text.includes('permanent')) return 'CDI'
-    if (text.includes('cdd')) return 'CDD'
+    if (text.includes('cdi') || text.includes('permanent') || text.includes('durée indéterminée')) {
+      return 'CDI'
+    }
+    if (text.includes('cdd') || text.includes('durée déterminée')) return 'CDD'
     if (text.includes('intérim') || text.includes('interim')) return 'Intérim'
     if (
       text.includes('alternance') ||
