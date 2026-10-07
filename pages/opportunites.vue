@@ -394,39 +394,6 @@ function openOffer(offer) {
   navigateTo(`/opportunity/${offer.id}`)
 }
 
-// "Comprendre nos scores" -- was a `soon` placeholder toast; the blocks it
-// now explains (ATS, Career, Potentiel) already exist as real, computed
-// scores elsewhere on this page, so there was real content to show instead
-// of stalling behind "bientôt disponible". Same labels/short codes as the
-// score cluster on each offer card and on the detail page
-// (opportunity/[id]/index.vue's scoreBlocks) -- kept in sync with those,
-// not a separate vocabulary. The "regret" entry was removed 2026-10-03
-// (Steve: masquer toute mention à l'indice de regret côté front).
-const scoresModalOpen = ref(false)
-const SCORE_EXPLANATIONS = computed(() => [
-  {
-    key: 'career',
-    short: 'CAR',
-    title: t('opportunites.score_career_title'),
-    text: t('opportunites.score_career_text'),
-    badgeClass: 'border-2 border-ink bg-white text-ink',
-  },
-  {
-    key: 'ats',
-    short: 'ATS',
-    title: t('opportunites.score_ats_title'),
-    text: t('opportunites.score_ats_text'),
-    badgeClass: 'border-2 border-ink bg-sun text-ink',
-  },
-  {
-    key: 'potential',
-    short: 'POT',
-    title: t('opportunites.score_potential_title'),
-    text: t('opportunites.score_potential_text'),
-    badgeClass: 'border-2 border-ink bg-lav text-ink',
-  },
-])
-
 // Dropdown open/close, including click-outside -- mirrors the mockup's own
 // toggleDropdown()/outside-click JS, ported to Vue refs instead of DOM
 // classList toggling.
@@ -917,29 +884,7 @@ function selectSort(value) {
 
       <!-- RIGHT PANEL -->
       <aside class="hidden flex-col gap-5 xl:flex">
-        <button
-          type="button"
-          class="flex items-center gap-2 rounded-full border-2 border-ink bg-lav px-4 py-2.5 text-sm font-extrabold text-ink hover:bg-brand-light/70"
-          @click="scoresModalOpen = true"
-        >
-          ℹ️ {{ $t('opportunites.understand_scores') }}
-        </button>
-
-        <UiCard>
-          <h3 class="mb-3 flex items-center gap-2 text-sm font-bold text-ink">
-            🏷️ {{ $t('opportunites.fit_tags_title') }}
-          </h3>
-          <ul class="space-y-3 text-xs text-ink/60">
-            <li>
-              <AppFitBadge fit="very_strong" />
-              <p class="mt-1">{{ $t('opportunites.fit_very_strong_text') }}</p>
-            </li>
-            <li>
-              <AppFitBadge fit="strong" />
-              <p class="mt-1">{{ $t('opportunites.fit_strong_text') }}</p>
-            </li>
-          </ul>
-        </UiCard>
+        <AppScoresHelp />
 
         <div class="rounded-[22px] border-[2.5px] border-ink bg-sun-light p-4">
           <div class="mb-2 flex items-center gap-2 text-amber-600">
@@ -959,27 +904,6 @@ function selectSort(value) {
         </div>
       </aside>
     </div>
-
-    <UiModal v-model="scoresModalOpen" :title="$t('opportunites.understand_scores')" size="lg">
-      <div class="space-y-4">
-        <div
-          v-for="score in SCORE_EXPLANATIONS"
-          :key="score.key"
-          class="flex gap-3 rounded-xl bg-lav/40 p-3.5"
-        >
-          <span
-            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold"
-            :class="score.badgeClass"
-          >
-            {{ score.short }}
-          </span>
-          <div>
-            <p class="text-sm font-bold text-ink">{{ score.title }}</p>
-            <p class="mt-0.5 text-xs leading-relaxed text-ink/60">{{ score.text }}</p>
-          </div>
-        </div>
-      </div>
-    </UiModal>
 
     <UiModal v-model="salaryModalOpen" :title="$t('opportunites.salary_modal_title')" size="sm">
       <div v-if="showsSalarySlider" class="mb-6">
