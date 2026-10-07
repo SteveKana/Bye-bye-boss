@@ -302,6 +302,20 @@ async function openExternalOffer() {
           </div>
         </UiCard>
 
+        <!-- Analysis still running: shown right under the header (not buried
+             below the description) and animated so it visibly looks alive. -->
+        <UiCard v-if="isPending" role="status">
+          <div class="flex flex-col gap-3">
+            <AppPendingTag size="md">{{ $t('dashboard.analysis_pending') }}</AppPendingTag>
+            <p class="text-sm font-semibold text-ink/70">
+              {{ $t('opportunity.analysis_pending') }}
+            </p>
+            <div class="h-1.5 overflow-hidden rounded-full bg-lav" aria-hidden="true">
+              <div class="h-full w-1/3 rounded-full bg-brand motion-safe:animate-pulse" />
+            </div>
+          </div>
+        </UiCard>
+
         <!-- Mobile-only copy of the "Prêt à candidater ?" CTA (see the
              desktop original further down, in the RIGHT COLUMN, now
              lg:hidden). On desktop the two-column grid already puts that
@@ -341,12 +355,7 @@ async function openExternalOffer() {
         </UiCard>
 
         <!-- Scores -->
-        <UiCard v-if="isPending">
-          <p class="text-sm font-semibold text-ink/60">
-            ⏳ {{ $t('opportunity.analysis_pending') }}
-          </p>
-        </UiCard>
-        <UiCard v-else>
+        <UiCard v-if="!isPending">
           <div class="grid grid-cols-2 gap-5 sm:grid-cols-3">
             <div v-for="block in scoreBlocks" :key="block.key">
               <div class="text-[12.5px] font-semibold text-ink/60">{{ block.label }}</div>
