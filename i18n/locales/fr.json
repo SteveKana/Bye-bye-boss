@@ -1,10 +1,10 @@
 {
   "common": {
-    "load_error": "Impossible de charger vos informations pour le moment. Réessayez dans quelques instants.",
+    "load_error": "Impossible de charger tes informations pour le moment. Réessaie dans quelques instants.",
     "or": "ou",
     "email": "Email",
     "password": "Mot de passe",
-    "email_placeholder": "votre{'@'}email.com",
+    "email_placeholder": "ton{'@'}email.com",
     "back_to_login": "Retour à la connexion",
     "undo": "Annuler",
     "first_name": "Prénom",
@@ -21,24 +21,24 @@
   },
   "login": {
     "title": "Bon retour parmi nous 👋",
-    "subtitle": "Connectez-vous à votre compte Bye Bye Boss",
-    "password_placeholder": "Votre mot de passe",
+    "subtitle": "Connecte-toi à ton compte Bye Bye Boss",
+    "password_placeholder": "Ton mot de passe",
     "forgot": "Mot de passe oublié ?",
     "submit": "Se connecter",
     "error": "Connexion impossible",
-    "not_verified": "Votre adresse email n'est pas encore vérifiée."
+    "not_verified": "Ton adresse email n'est pas encore vérifiée."
   },
   "register": {
-    "title": "Créez votre compte",
-    "subtitle": "Commencez votre parcours en quelques secondes.",
-    "password_placeholder": "Créez un mot de passe",
+    "title": "Crée ton compte",
+    "subtitle": "Commence ton parcours en quelques secondes.",
+    "password_placeholder": "Crée un mot de passe",
     "password_hint": "8 caractères minimum.",
     "submit": "Créer mon compte",
     "error": "Inscription impossible",
     "email_taken": "Cette adresse email est déjà utilisée.",
-    "check_email_title": "Vérifiez votre email",
+    "check_email_title": "Vérifie ton email",
     "check_email_intro": "Nous avons envoyé un lien de confirmation à ",
-    "check_email_end": ". Cliquez dessus pour activer votre compte.",
+    "check_email_end": ". Clique dessus pour activer ton compte.",
     "resend": "Renvoyer l'email",
     "resent": "Email de confirmation renvoyé"
   },
@@ -46,19 +46,19 @@
     "title": "Vérification de l'email",
     "verifying": "Vérification en cours…",
     "success_title": "Email vérifié",
-    "success_sub": "Votre compte est activé. Vous pouvez maintenant vous connecter.",
+    "success_sub": "Ton compte est activé. Tu peux maintenant te connecter.",
     "error_title": "Lien invalide ou expiré",
-    "error_sub": "Ce lien de confirmation n'est plus valide. Connectez-vous pour en recevoir un nouveau."
+    "error_sub": "Ce lien de confirmation n'est plus valide. Connecte-toi pour en recevoir un nouveau."
   },
   "reset": {
     "request_title": "Mot de passe oublié ?",
-    "request_subtitle": "Entrez votre email, nous vous enverrons un lien de réinitialisation.",
+    "request_subtitle": "Entre ton email, nous t'enverrons un lien de réinitialisation.",
     "request_submit": "Envoyer le lien",
     "requested_intro": "Si un compte existe pour ",
-    "requested_end": ", un lien de réinitialisation vous sera envoyé.",
+    "requested_end": ", un lien de réinitialisation te sera envoyé.",
     "request_error": "Envoi impossible",
     "confirm_title": "Nouveau mot de passe",
-    "confirm_subtitle": "Choisissez un nouveau mot de passe pour votre compte.",
+    "confirm_subtitle": "Choisis un nouveau mot de passe pour ton compte.",
     "new_password": "Nouveau mot de passe",
     "confirm_password": "Confirmer le mot de passe",
     "confirm_submit": "Réinitialiser le mot de passe",
@@ -77,7 +77,7 @@
     "discord_webhook_required": "L'URL du webhook Discord est requise.",
     "discord_webhook_invalid": "L'URL doit commencer par https://discord.com/api/webhooks/",
     "whatsapp_phone_required": "Le numéro de téléphone est requis.",
-    "whatsapp_phone_invalid": "Entrez un numéro de téléphone français valide, par exemple 06 12 34 56 78."
+    "whatsapp_phone_invalid": "Entre un numéro de téléphone français valide, par exemple 06 12 34 56 78."
   },
   "social": {
     "google": "Continuer avec Google",
@@ -86,14 +86,14 @@
     "google_error": "La connexion avec Google a échoué. Merci de réessayer."
   },
   "security": {
-    "login": "Vos données sont chiffrées et sécurisées",
-    "register": "Vos informations sont sécurisées et confidentielles. Nous ne partageons jamais vos données avec des tiers."
+    "login": "Tes données sont chiffrées et sécurisées",
+    "register": "Tes informations sont sécurisées et confidentielles. Nous ne partageons jamais tes données avec des tiers."
   },
   "brand": {
     "login": {
-      "headline": "Chaque candidature doit vous rapprocher",
+      "headline": "Chaque candidature doit te rapprocher",
       "headline_accent": "du bon poste.",
-      "subtitle": "Bye Bye Boss analyse vos candidatures avec l'IA pour vous aider à viser juste et décrocher plus d'entretiens.",
+      "subtitle": "Bye Bye Boss analyse tes candidatures avec l'IA pour t'aider à viser juste et décrocher plus d'entretiens.",
       "features": {
         "scores": {
           "title": "Scores transparents",
@@ -101,59 +101,57 @@
         },
         "reco": {
           "title": "Recommandations personnalisées",
-          "text": "Des conseils concrets pour optimiser votre candidature."
+          "text": "Des conseils concrets pour optimiser ta candidature."
         },
         "tracking": {
           "title": "Suivi intelligent",
-          "text": "Suivez vos candidatures et vos meilleures opportunités."
+          "text": "Suis tes candidatures et tes meilleures opportunités."
         },
         "secure": {
-          "title": "Vos données sécurisées",
+          "title": "Tes données sécurisées",
           "text": "Confidentialité garantie, jamais partagées."
         }
       }
     },
     "signup": {
-      "headline": "Créez votre compte et boostez votre",
+      "headline": "Crée ton compte et booste ta",
       "headline_accent": "carrière.",
-      "subtitle": "L'IA analyse votre CV pour vous trouver les meilleures opportunités et booster votre carrière.",
+      "subtitle": "L'IA analyse ton CV pour te trouver les meilleures opportunités et booster ta carrière.",
       "features": {
         "cv": {
-          "title": "Analyse intelligente de votre CV",
-          "text": "Notre IA extrait vos compétences, expériences et réalisations clés."
+          "title": "Analyse intelligente de ton CV",
+          "text": "Notre IA extrait tes compétences, expériences et réalisations clés."
         },
         "reco": {
           "title": "Des opportunités 100% pertinentes",
-          "text": "Recevez des offres qui correspondent vraiment à votre profil."
+          "text": "Reçois des offres qui correspondent vraiment à ton profil."
         },
         "time": {
-          "title": "Gagnez du temps",
-          "text": "Concentrez-vous sur les entretiens, pas sur les recherches."
+          "title": "Gagne du temps",
+          "text": "Concentre-toi sur les entretiens, pas sur les recherches."
         },
         "secure": {
-          "title": "Vos données sont sécurisées",
-          "text": "Vos informations sont confidentielles et jamais partagées."
+          "title": "Tes données sont sécurisées",
+          "text": "Tes informations sont confidentielles et jamais partagées."
         }
-      },
-      "proof_title": "Rejoignez déjà plus de 25k utilisateurs",
-      "proof_sub": "qui ont trouvé leur prochain poste"
+      }
     },
     "onboarding": {
       "headline": "Un nouveau CV, de nouvelles",
       "headline_accent": "opportunités à découvrir.",
-      "subtitle": "Importez votre CV à jour et notre IA réanalysera votre profil pour affiner vos correspondances.",
+      "subtitle": "Importe ton CV à jour et notre IA réanalysera ton profil pour affiner tes correspondances.",
       "features": {
         "extract": {
           "title": "Extraction intelligente",
-          "text": "Notre IA détecte automatiquement vos compétences, expériences et formations."
+          "text": "Notre IA détecte automatiquement tes compétences, expériences et formations."
         },
         "verify": {
           "title": "Vérification simple",
-          "text": "Vous pourrez corriger les informations avant de valider."
+          "text": "Tu pourras corriger les informations avant de valider."
         },
         "match": {
           "title": "Un matching à jour",
-          "text": "Vos opportunités sont recalculées à partir de votre profil le plus récent."
+          "text": "Tes opportunités sont recalculées à partir de ton profil le plus récent."
         }
       }
     }
@@ -180,10 +178,10 @@
     "greeting": "Bonjour {name}",
     "alerts": "Activer les alertes",
     "edit": "Modifier",
-    "top_title": "Top 5 des opportunités pour vous au {date}",
-    "top_sub": "Les nouvelles offres qui vous correspondent le mieux, classées par compatibilité avec votre profil.",
-    "loading": "Analyse de votre profil en cours…",
-    "loading_sub": "Vos premières offres arrivent dans quelques instants. Vous recevrez un email dès que leurs scores seront calculés, même si vous quittez la page.",
+    "top_title": "Top 5 des opportunités pour toi au {date}",
+    "top_sub": "Les nouvelles offres qui te correspondent le mieux, classées par compatibilité avec ton profil.",
+    "loading": "Analyse de ton profil en cours…",
+    "loading_sub": "Tes premières offres arrivent dans quelques instants. Tu recevras un email dès que leurs scores seront calculés, même si tu quittes la page.",
     "published_today": "Publiée aujourd'hui",
     "published_yesterday": "Publiée hier",
     "published_days": "Publiée il y a {days} jours",
@@ -199,10 +197,10 @@
     "reject": "Rejeter cette offre",
     "see_all": "Voir toutes les opportunités",
     "offer_hidden": "Offre masquée",
-    "empty": "Aucune opportunité pour l'instant. Nous analysons votre profil pour vous proposer les meilleures offres.",
+    "empty": "Aucune opportunité pour l'instant. Nous analysons ton profil pour te proposer les meilleures offres.",
     "empty_today": "Pas de nouvelles offres pour le moment",
     "empty_filtered": "Aucune offre ne correspond à ces filtres.",
-    "hidden_by_filters": "{count} offre du jour masquée par vos filtres | {count} offres du jour masquées par vos filtres",
+    "hidden_by_filters": "{count} offre du jour masquée par tes filtres | {count} offres du jour masquées par tes filtres",
     "show_all": "Tout afficher"
   },
   "opportunites": {
@@ -230,32 +228,32 @@
     "remove_filter": "Retirer le filtre {label}",
     "clear_all": "Tout effacer",
     "results_found": "{count} offre(s) trouvée(s)",
-    "reasons_title": "Pourquoi cette offre est faite pour vous",
-    "gap_reason": "Un écart identifié sur « {skill} » — consultez le détail pour l'exemple de correction.",
+    "reasons_title": "Pourquoi cette offre est faite pour toi",
+    "gap_reason": "Un écart identifié sur « {skill} » — consulte le détail pour l'exemple de correction.",
     "see_detail": "Voir le détail",
     "pagination_range": "{from}-{to} sur {total} offres",
     "previous_page": "Page précédente",
     "next_page": "Page suivante",
-    "scores_computed": "Tous les scores sont calculés pour votre CV",
+    "scores_computed": "Tous les scores sont calculés pour ton CV",
     "last_updated": "Dernière mise à jour le {date}",
     "next_update": "Prochaine mise à jour le {date}",
     "understand_scores": "Comprendre nos scores",
     "fit_tags_title": "Nos niveaux de compatibilité",
-    "fit_very_strong_text": "Votre CV a toutes les chances de passer les filtres du recruteur pour cette offre (ATS Potential de 95 ou plus).",
-    "fit_strong_text": "Une très bonne adéquation, avec quelques ajustements possibles de votre CV (ATS Potential de 80 à 94).",
-    "alerts_title": "Ne manquez aucune opportunité",
-    "alerts_text": "Recevez une alerte dès qu'une nouvelle offre correspond fortement à votre profil.",
+    "fit_very_strong_text": "Ton CV a toutes les chances de passer les filtres du recruteur pour cette offre (ATS Potential de 95 ou plus).",
+    "fit_strong_text": "Une très bonne adéquation, avec quelques ajustements possibles de ton CV (ATS Potential de 80 à 94).",
+    "alerts_title": "Ne manque aucune opportunité",
+    "alerts_text": "Reçois une alerte dès qu'une nouvelle offre correspond fortement à ton profil.",
     "sort_potential_desc": "Potentiel ATS",
     "sort_career_desc": "Score carrière",
     "tjm_min": "TJM minimum",
     "tjm_min_label": "{amount} €/jour",
     "sort_tjm_desc": "TJM (décroissant)",
     "score_ats_title": "ATS",
-    "score_ats_text": "Votre compatibilité avec les logiciels de tri automatique (ATS) que les recruteurs utilisent pour filtrer les CV avant qu'un humain ne les lise.",
+    "score_ats_text": "Ta compatibilité avec les logiciels de tri automatique (ATS) que les recruteurs utilisent pour filtrer les CV avant qu'un humain ne les lise.",
     "score_career_title": "Career",
-    "score_career_text": "À quel point cette offre correspond à votre profil et à votre trajectoire, indépendamment des filtres automatiques du recruteur.",
+    "score_career_text": "À quel point cette offre correspond à ton profil et à ta trajectoire, indépendamment des filtres automatiques du recruteur.",
     "score_potential_title": "ATS Potentiel",
-    "score_potential_text": "Le score ATS maximal que vous pourriez atteindre pour cette offre en optimisant votre CV (bouton « Adapter mon CV pour cette offre »), pas votre compatibilité actuelle.",
+    "score_potential_text": "Le score ATS maximal que tu pourrais atteindre pour cette offre en optimisant ton CV (bouton « Adapter mon CV pour cette offre »), pas ta compatibilité actuelle.",
     "contract_filter": "Contrat",
     "remote_filter": "Télétravail",
     "location_filter": "Localisation",
@@ -275,32 +273,32 @@
     "score_ats": "ATS",
     "score_career": "Career",
     "score_potential": "ATS Potentiel",
-    "analysis_pending": "L'analyse détaillée de cette offre est en cours : ses scores apparaîtront ici dès qu'elle sera terminée (vous serez prévenu par email).",
+    "analysis_pending": "L'analyse détaillée de cette offre est en cours : ses scores apparaîtront ici dès qu'elle sera terminée (tu seras prévenu par email).",
     "trust_ok_title": "Aucun blocage rédhibitoire identifié",
     "trust_warning_title": "Point(s) de vigilance identifié(s)",
     "requirements_title": "Ce que recherche cette offre",
     "requirements_other_category": "Autres compétences",
-    "matches_title": "Correspondance avec votre CV",
-    "matches_note": "Ce classement reflète la présence explicite de chaque mot-clé dans le texte de votre CV, pas votre niveau réel de maîtrise — un score \"absent\" peut simplement signifier que la compétence n'est pas formulée avec les mots attendus.",
+    "matches_title": "Correspondance avec ton CV",
+    "matches_note": "Ce classement reflète la présence explicite de chaque mot-clé dans le texte de ton CV, pas ton niveau réel de maîtrise — un score \"absent\" peut simplement signifier que la compétence n'est pas formulée avec les mots attendus.",
     "match_group_matched": "Présent dans le CV",
     "match_group_partial": "Mention indirecte, à formuler plus explicitement",
     "match_group_missing": "Absent du texte du CV",
     "explanations_title": "Pourquoi ces scores ?",
     "explain_career_title": "Career Score — {score}/100",
     "explain_ats_title": "ATS Score — {score}/100",
-    "gaps_title": "Écarts à corriger sur votre CV",
-    "gaps_intro": "{count} écart(s) identifié(s) entre le texte de votre CV et les mots-clés attendus par les outils de tri automatique.",
+    "gaps_title": "Écarts à corriger sur ton CV",
+    "gaps_intro": "{count} écart(s) identifié(s) entre le texte de ton CV et les mots-clés attendus par les outils de tri automatique.",
     "gap_why_label": "Pourquoi ça compte :",
     "gap_fix_label": "Exemple de correction :",
-    "actions_title": "Plan d'action pour votre CV",
+    "actions_title": "Plan d'action pour ton CV",
     "description_title": "Description du poste",
     "details_title": "Détails de l'opportunité",
     "detail_contract": "Type de contrat",
     "detail_remote": "Télétravail",
     "detail_published": "Date de publication",
     "ready_title": "Prêt à candidater ?",
-    "ready_text": "Corrigez les {count} écart(s) identifié(s) ci-dessus pour maximiser vos chances.",
-    "ready_text_no_gaps": "Votre profil correspond bien à cette offre.",
+    "ready_text": "Corrige les {count} écart(s) identifié(s) ci-dessus pour maximiser tes chances.",
+    "ready_text_no_gaps": "Ton profil correspond bien à cette offre.",
     "adapt_cv_button": "📄 Adapter mon CV pour cette offre"
   },
   "applicationStatus": {
@@ -311,7 +309,7 @@
     "rejected": "Refusé",
     "withdrawn": "Retiré",
     "messages": {
-      "applied": "Vous avez cliqué sur « Voir l'offre » le {date}",
+      "applied": "Tu as cliqué sur « Voir l'offre » le {date}",
       "interview": "Entretien obtenu le {date}",
       "offer": "Offre reçue le {date}",
       "rejected": "Candidature refusée le {date}",
@@ -321,15 +319,15 @@
   "candidatures": {
     "title": "Candidatures",
     "disclaimer_lead": "Ce suivi reflète un clic sur « Voir l'offre », pas une confirmation de candidature reçue par le recruteur.",
-    "disclaimer_note": "Si vous n'avez finalement pas postulé sur le site de l'entreprise, cette liste ne pourra pas le distinguer pour le moment.",
-    "loading": "Chargement de vos candidatures…",
-    "empty": "Aucune candidature pour l'instant. Cliquez sur \"Voir l'offre →\" sur une opportunité pour qu'elle apparaisse ici.",
+    "disclaimer_note": "Si tu n'as finalement pas postulé sur le site de l'entreprise, cette liste ne pourra pas le distinguer pour le moment.",
+    "loading": "Chargement de tes candidatures…",
+    "empty": "Aucune candidature pour l'instant. Clique sur \"Voir l'offre →\" sur une opportunité pour qu'elle apparaisse ici.",
     "updated": "Statut mis à jour.",
-    "removed": "Retiré de vos candidatures.",
+    "removed": "Retiré de tes candidatures.",
     "update_error": "La mise à jour du statut a échoué. Merci de réessayer."
   },
   "profile": {
-    "subtitle": "Vos informations personnelles, utilisées pour le matching.",
+    "subtitle": "Tes informations personnelles, utilisées pour le matching.",
     "save": "Enregistrer",
     "saved": "Profil mis à jour",
     "save_error": "Enregistrement impossible",
@@ -354,10 +352,10 @@
       "signup": "S'inscrire"
     },
     "hero": {
-      "badge": "L'IA au service de vos décisions de carrière",
+      "badge": "L'IA au service de tes décisions de carrière",
       "title": "Fini de chercher les offres.",
-      "title_accent": "Et si vous vous laissiez trouver ?",
-      "sub": "Chaque jour, nous analysons des centaines d'offres et pour votre profil, nous n'en gardons que les meilleures...",
+      "title_accent": "Et si tu te laissais trouver ?",
+      "sub": "Chaque jour, nous analysons des centaines d'offres et pour ton profil, nous n'en gardons que les meilleures...",
       "cta_primary": "Importer mon CV",
       "cta_primary_note": "Gratuit & sécurisé",
       "cta_secondary": "Voir un exemple",
@@ -378,28 +376,28 @@
       "see_more": "Voir l'analyse complète et les recommandations →"
     },
     "waitlist": {
-      "placeholder": "Votre adresse e-mail",
+      "placeholder": "Ton adresse e-mail",
       "submit": "Me prévenir au lancement",
-      "success": "C'est noté. Vous serez parmi les premiers prévenus. 👋",
-      "error": "Une erreur est survenue. Réessayez dans un instant.",
-      "note": "Gratuit. Sans engagement. Votre email ne sert qu'à vous prévenir de l'ouverture.",
+      "success": "C'est noté. Tu seras parmi les premiers prévenus. 👋",
+      "error": "Une erreur est survenue. Réessaie dans un instant.",
+      "note": "Gratuit. Sans engagement. Ton email ne sert qu'à te prévenir de l'ouverture.",
       "note_cta": "Gratuit. Sans engagement. Aucune offre envoyée avant l'ouverture."
     },
     "why": {
-      "eyebrow": "POURQUOI VOUS N'OBTENEZ PAS D'ENTRETIENS",
-      "title": "Le problème n'est pas toujours votre profil.",
+      "eyebrow": "POURQUOI TU N'OBTIENS PAS D'ENTRETIENS",
+      "title": "Le problème n'est pas toujours ton profil.",
       "cards": {
         "profile": {
           "title": "Bon profil",
-          "text": "Vous avez les compétences et l'expérience nécessaires."
+          "text": "Tu as les compétences et l'expérience nécessaires."
         },
         "ats": {
           "title": "Mauvais ATS",
-          "text": "Votre CV ne met pas assez en valeur vos atouts."
+          "text": "Ton CV ne met pas assez en valeur tes atouts."
         },
         "targeting": {
           "title": "Mauvais ciblage",
-          "text": "Vous postulez à des offres trop éloignées de vos objectifs."
+          "text": "Tu postules à des offres trop éloignées de tes objectifs."
         }
       }
     },
@@ -407,36 +405,36 @@
       "title": "Comment ça marchera au lancement",
       "steps": {
         "upload": {
-          "title": "Déposez votre CV",
-          "text": "Importez votre CV en PDF. Ça prend 30 secondes."
+          "title": "Dépose ton CV",
+          "text": "Importe ton CV en PDF. Ça prend 30 secondes."
         },
         "analyse": {
-          "title": "Notre IA comprend votre profil",
-          "text": "Nous analysons vos compétences, expériences et objectifs en profondeur."
+          "title": "Notre IA comprend ton profil",
+          "text": "Nous analysons tes compétences, expériences et objectifs en profondeur."
         },
         "explore": {
           "title": "Nous analysons les offres",
           "text": "Notre IA explore des milliers d'offres sur plusieurs sources en continu."
         },
         "receive": {
-          "title": "Vous recevez votre sélection",
-          "text": "Chaque soir, par email, les meilleures opportunités qui vous correspondent."
+          "title": "Tu reçois ta sélection",
+          "text": "Chaque soir, par email, les meilleures opportunités qui te correspondent."
         }
       }
     },
     "features": {
       "title": "Chaque soir, un email.",
       "title2": "Pas une plateforme de plus à consulter.",
-      "p1": "Votre sélection du jour arrive directement dans votre boîte mail, avec les scores de chaque offre et leur explication. Vous ouvrez, vous décidez, c'est tout.",
-      "p2": "Le dashboard n'est là que quand vous en avez besoin : postuler avec un CV adapté à l'offre, et suivre vos candidatures.",
-      "mail_label": "Exemple de l'email quotidien que vous recevrez",
-      "mail_greeting": "Bonjour Thomas, voici votre sélection du jour 👋",
-      "mail_sub": "3 nouvelles opportunités correspondent à votre profil.",
+      "p1": "Ta sélection du jour arrive directement dans ta boîte mail, avec les scores de chaque offre et leur explication. Tu ouvres, tu décides, c'est tout.",
+      "p2": "Le dashboard n'est là que quand tu en as besoin : postuler avec un CV adapté à l'offre, et suivre tes candidatures.",
+      "mail_label": "Exemple de l'email quotidien que tu recevras",
+      "mail_greeting": "Bonjour Thomas, voici ta sélection du jour 👋",
+      "mail_sub": "3 nouvelles opportunités correspondent à ton profil.",
       "mail_cta": "Voir l'offre"
     },
     "comparison": {
-      "eyebrow": "LES PLATEFORMES D'EMPLOI VOUS MONTRENT DES OFFRES.",
-      "title": "Nous vous montrons vos chances…",
+      "eyebrow": "LES PLATEFORMES D'EMPLOI TE MONTRENT DES OFFRES.",
+      "title": "Nous te montrons tes chances…",
       "feature": "Fonctionnalité",
       "others": "Autres plateformes",
       "exclusive": "EXCLUSIF",
@@ -450,27 +448,27 @@
       }
     },
     "stats": {
-      "funnel_title": "Nous ferons le tri pour vous",
+      "funnel_title": "Nous ferons le tri pour toi",
       "funnel": {
         "found": "offres trouvées",
         "relevant": "pertinentes",
         "strong": "fortes opportunités",
         "excellent": "excellentes opportunités"
       },
-      "funnel_note": "Exemple de sélection sur un profil type. Gagnez des heures de recherche.",
-      "ats_title": "Votre CV n'est peut-être pas le problème.",
+      "funnel_note": "Exemple de sélection sur un profil type. Gagne des heures de recherche.",
+      "ats_title": "Ton CV n'est peut-être pas le problème.",
       "ats_sub": "Parfois, quelques ajustements suffisent à tout changer.",
       "ats_current": "ATS actuel",
       "ats_potential": "ATS potentiel",
       "ats_btn": "Améliorations suggérées automatiquement"
     },
     "cta": {
-      "title": "Découvrez les offres qui valent votre temps",
-      "sub": "Importez votre CV et laissez notre IA analyser des centaines d'offres pour vous.",
+      "title": "Découvre les offres qui valent ton temps",
+      "sub": "Importe ton CV et laisse notre IA analyser des centaines d'offres pour toi.",
       "button": "Importer mon CV gratuitement",
       "trust_1": "100% confidentiel",
-      "trust_2": "Vos données ne sont jamais partagées",
-      "trust_3": "Supprimez votre compte à tout moment"
+      "trust_2": "Tes données ne sont jamais partagées",
+      "trust_3": "Supprime ton compte à tout moment"
     },
     "footer": {
       "copy": "© 2026 Bye Bye Boss – Tous droits réservés.",
@@ -497,22 +495,22 @@
       "preferences": "Zone & contrat"
     },
     "upload": {
-      "title": "Importez votre CV",
+      "title": "Importe ton CV",
       "subtitle": "Formats acceptés : PDF, DOCX. 5 Mo maximum.",
-      "dropzone_title": "Glissez-déposez votre CV ici",
+      "dropzone_title": "Glisse-dépose ton CV ici",
       "browse": "Parcourir mes fichiers",
       "hint": "PDF ou Word, 5 Mo maximum",
       "remove": "Retirer le fichier",
       "cancel": "Annuler",
       "continue": "Continuer",
       "error_required": "Merci d'importer un CV avant de continuer.",
-      "error_unsupported": "Ce format n'est pas supporté. Utilisez un PDF ou un DOCX.",
+      "error_unsupported": "Ce format n'est pas supporté. Utilise un PDF ou un DOCX.",
       "error_too_large": "Le fichier dépasse 5 Mo.",
       "error_generic": "L'import du CV a échoué. Merci de réessayer."
     },
     "verification": {
-      "title": "Vérifiez les informations extraites",
-      "subtitle": "Nous avons extrait les informations suivantes depuis votre CV. Corrigez si besoin.",
+      "title": "Vérifie les informations extraites",
+      "subtitle": "Nous avons extrait les informations suivantes depuis ton CV. Corrige si besoin.",
       "personal_info": "Informations personnelles",
       "first_name": "Prénom",
       "last_name": "Nom",
@@ -548,34 +546,34 @@
       "headline": "Titre / poste actuel"
     },
     "preferences": {
-      "title": "Où et quel contrat cherchez-vous ?",
-      "subtitle": "Nous n'analyserons que les offres de votre zone et du contrat voulu. Vous pourrez les changer à tout moment.",
+      "title": "Où et quel contrat cherches-tu ?",
+      "subtitle": "Nous n'analyserons que les offres de ta zone et du contrat voulu. Tu pourras les changer à tout moment.",
       "note": "Pas d'inquiétude : télétravail et salaire se règlent dans la page Préférences, et tout reste modifiable.",
       "previous": "Précédent",
       "continue": "Terminer",
-      "error_generic": "L'enregistrement de vos préférences a échoué. Merci de réessayer."
+      "error_generic": "L'enregistrement de tes préférences a échoué. Merci de réessayer."
     }
   },
   "cvAnalyzing": {
     "title": "Analyse de {filename} en cours…",
     "duration_notice": "Ce traitement peut prendre jusqu'à 5 minutes.",
-    "step_read": "Lecture de votre CV",
-    "step_extract": "Extraction de vos compétences et expériences",
-    "step_generate": "Génération de votre profil"
+    "step_read": "Lecture de ton CV",
+    "step_extract": "Extraction de tes compétences et expériences",
+    "step_generate": "Génération de ton profil"
   },
   "cvOptimizing": {
-    "title": "Adaptation de votre CV en cours…",
+    "title": "Adaptation de ton CV en cours…",
     "duration_notice": "Ce traitement peut prendre jusqu'à 30 secondes.",
-    "step_read": "Lecture de votre CV actuel",
+    "step_read": "Lecture de ton CV actuel",
     "step_compare": "Comparaison avec les attentes de l'offre",
-    "step_generate": "Génération de votre CV optimisé"
+    "step_generate": "Génération de ton CV optimisé"
   },
   "cvOptimize": {
     "page_title": "Adapter mon CV — {title}",
     "back": "← Retour à l'offre",
     "loading": "Chargement…",
     "error_title": "L'optimisation a échoué",
-    "error_text": "Une erreur est survenue pendant la génération. Vous pouvez réessayer.",
+    "error_text": "Une erreur est survenue pendant la génération. Tu peux réessayer.",
     "retry_button": "Réessayer",
     "comparison_title": "CV actuel vs CV optimisé",
     "view_side_by_side": "Vue côte à côte",
@@ -589,7 +587,7 @@
     "experiences_title": "Expériences",
     "skills_title": "Compétences",
     "empty_changes_title": "Aucune modification proposée",
-    "empty_changes_text": "Votre CV correspond déjà bien à cette offre, aucun changement n'a été jugé utile.",
+    "empty_changes_text": "Ton CV correspond déjà bien à cette offre, aucun changement n'a été jugé utile.",
     "impact_title": "Impact ATS estimé",
     "impact_before": "Avant",
     "impact_after": "Après",
@@ -605,24 +603,24 @@
     "template_visuelle": "Visuelle",
     "template_visuelle_desc": "Bandeau coloré Bye Bye Boss",
     "confirm_button": "Télécharger ce format du CV",
-    "confirm_note": "Cette action enregistre votre choix d'utiliser cette version pour cette candidature, et télécharge le CV au format PDF.",
+    "confirm_note": "Cette action enregistre ton choix d'utiliser cette version pour cette candidature, et télécharge le CV au format PDF.",
     "confirmed": "Variante créée pour cette candidature",
     "download_again_button": "Télécharger à nouveau le PDF",
     "apply_button": "Postuler à l'offre →",
     "confirm_success": "Variante de CV créée et téléchargée.",
     "confirm_error": "Impossible d'enregistrer cette variante pour le moment.",
-    "pdf_download_error": "Le téléchargement du PDF a échoué. Réessayez."
+    "pdf_download_error": "Le téléchargement du PDF a échoué. Réessaie."
   },
   "profileCv": {
     "title": "CV",
-    "subtitle": "Vos informations personnelles et votre CV, tels qu'utilisés pour le matching.",
+    "subtitle": "Tes informations personnelles et ton CV, tels qu'utilisés pour le matching.",
     "email": "Email",
     "location": "Localisation",
     "availability": "Disponibilité",
-    "your_cv": "Votre CV",
+    "your_cv": "Ton CV",
     "download": "Télécharger",
     "reupload": "Importer un nouveau CV",
-    "reupload_success": "Votre profil a été mis à jour.",
+    "reupload_success": "Ton profil a été mis à jour.",
     "last_update": "Dernière mise à jour",
     "total_experience": "Expérience totale",
     "edit_fields": "Modifier mon CV en ligne",
@@ -632,17 +630,17 @@
     "saved": "Enregistré",
     "save_error": "La mise à jour a échoué. Merci de réessayer.",
     "upload_error": "L'import du CV a échoué. Merci de réessayer.",
-    "download_full": "Télécharger votre CV",
+    "download_full": "Télécharger ton CV",
     "download_error": "Le téléchargement du CV a échoué. Merci de réessayer.",
     "download_named": "Télécharger mon CV : {filename}",
     "key_skills": "Compétences clés",
-    "key_skills_hint": "Détectées automatiquement dans votre CV — elles ne représentent qu'une partie de votre profil.",
+    "key_skills_hint": "Détectées automatiquement dans ton CV — elles ne représentent qu'une partie de ton profil.",
     "edit": "Modifier",
     "edit_title": "Modifier mon CV",
-    "edit_subtitle": "Mettez à jour les informations extraites de votre CV.",
-    "edit_saved": "Votre CV a bien été mis à jour.",
-    "professional_section_title": "Votre profil professionnel",
-    "professional_section_subtitle": "Généré par notre IA à partir de votre CV.",
+    "edit_subtitle": "Mets à jour les informations extraites de ton CV.",
+    "edit_saved": "Ton CV a bien été mis à jour.",
+    "professional_section_title": "Ton profil professionnel",
+    "professional_section_subtitle": "Généré par notre IA à partir de ton CV.",
     "identified_roles_title": "Métiers identifiés",
     "domains_title": "Domaines",
     "skills_detected_title": "Compétences détectées",
@@ -651,28 +649,28 @@
   "settings": {
     "subtitle": "Abonnement, notifications et informations de compte.",
     "subscription": "Abonnement",
-    "subscription_sub": "Le rescoring de votre CV est limité à 1 fois toutes les 24h glissantes en formule gratuite.",
+    "subscription_sub": "Le rescoring de ton CV est limité à 1 fois toutes les 24h glissantes en formule gratuite.",
     "plan_free": "Formule Gratuite",
     "current_plan": "Plan actuel",
     "plan_detail": "Rescoring manuel du CV limité à 1 fois / 24h",
     "upgrade": "Passer Premium",
     "notifications": "Notifications",
-    "notifications_sub": "Soyez alerté quand une nouvelle offre correspond bien à votre profil.",
+    "notifications_sub": "Sois alerté quand une nouvelle offre correspond bien à ton profil.",
     "loading": "Chargement…",
-    "notifications_load_error": "Impossible de charger vos préférences de notification.",
+    "notifications_load_error": "Impossible de charger tes préférences de notification.",
     "notifications_save_error": "Impossible d'enregistrer ce changement.",
     "notifications_saved": "Préférence enregistrée.",
     "channel_email": "E-mail",
     "email_sub": "Recevoir une notification par e-mail quand une offre à forte compatibilité est détectée.",
-    "discord_sub": "Recevez vos alertes sur un salon Discord, via un webhook que vous créez vous-même.",
-    "whatsapp_sub": "Recevez vos alertes directement sur WhatsApp.",
+    "discord_sub": "Reçois tes alertes sur un salon Discord, via un webhook que tu crées toi-même.",
+    "whatsapp_sub": "Reçois tes alertes directement sur WhatsApp.",
     "channel_active": "Actif",
     "channel_inactive": "Inactif",
     "activate": "Activer",
     "update": "Mettre à jour",
     "deactivate": "Désactiver",
     "test_send_label": "Tester l'envoi",
-    "test_send_sub": "Recevez un brief maintenant sur vos canaux actifs, sans attendre l'envoi quotidien.",
+    "test_send_sub": "Reçois un brief maintenant sur tes canaux actifs, sans attendre l'envoi quotidien.",
     "test_send_button": "Envoyer un test",
     "test_send_success": "Envoyé avec succès sur : {channels}",
     "test_send_error": "L'envoi du test a échoué.",
@@ -684,13 +682,13 @@
     "delete_title": "Supprimer mon compte",
     "delete_warning": "Cette action est définitive et ne peut pas être annulée. Seront supprimés :",
     "delete_items": [
-      "votre compte et votre profil",
-      "votre CV importé",
-      "vos offres et leurs analyses",
-      "vos CV optimisés",
-      "vos préférences et notifications"
+      "ton compte et ton profil",
+      "ton CV importé",
+      "tes offres et leurs analyses",
+      "tes CV optimisés",
+      "tes préférences et notifications"
     ],
-    "delete_confirm_label": "Pour confirmer, saisissez votre adresse email ({email})",
+    "delete_confirm_label": "Pour confirmer, saisis ton adresse email ({email})",
     "delete_cancel": "Annuler",
     "delete_confirm_button": "Supprimer définitivement",
     "delete_error": "La suppression du compte a échoué. Merci de réessayer."
@@ -701,26 +699,26 @@
     "opt_notice": "En poste (avec préavis de)",
     "opt_unavailable": "Non disponible",
     "months": "{count} mois",
-    "info_immediate": "Vous êtes disponible immédiatement.",
-    "info_date": "Vous êtes disponible à partir du {date}.",
-    "info_notice": "Vous êtes actuellement en poste, avec un préavis de {months} mois.",
-    "info_unavailable": "Vous n'êtes pas disponible pour le moment.",
+    "info_immediate": "Tu es disponible immédiatement.",
+    "info_date": "Tu es disponible à partir du {date}.",
+    "info_notice": "Tu es actuellement en poste, avec un préavis de {months} mois.",
+    "info_unavailable": "Tu n'es pas disponible pour le moment.",
     "display": {
       "immediate": "Disponible immédiatement",
       "date": "Disponible à partir du {date}",
       "notice": "En poste (préavis de {months} mois)",
       "unavailable": "Non disponible"
     },
-    "info_date_pending": "Choisissez une date pour continuer.",
-    "info_notice_pending": "Choisissez la durée de votre préavis pour continuer.",
+    "info_date_pending": "Choisis une date pour continuer.",
+    "info_notice_pending": "Choisis la durée de ton préavis pour continuer.",
     "months_placeholder": "Choisir…"
   },
   "location": {
     "all_districts": "tous arrondissements"
   },
   "cookies": {
-    "banner_title": "Votre vie privée, vos choix",
-    "banner_text": "Nous utilisons des cookies essentiels au fonctionnement du site (connexion, langue). Avec votre accord, nous chargeons aussi le service de connexion Google.",
+    "banner_title": "Ta vie privée, tes choix",
+    "banner_text": "Nous utilisons des cookies essentiels au fonctionnement du site (connexion, langue). Avec ton accord, nous chargeons aussi le service de connexion Google.",
     "learn_more": "En savoir plus",
     "accept": "Accepter",
     "refuse": "Refuser",
@@ -730,10 +728,10 @@
     "updated": "Dernière mise à jour :"
   },
   "contact": {
-    "title": "Contactez-nous",
-    "intro": "Une question, un problème, une demande liée à vos données ? Écrivez-nous, nous vous répondons dès que possible.",
+    "title": "Contacte-nous",
+    "intro": "Une question, un problème, une demande liée à tes données ? Écris-nous, nous te répondons dès que possible.",
     "name": "Nom",
-    "name_placeholder": "Votre nom",
+    "name_placeholder": "Ton nom",
     "email": "Email",
     "topic": "Sujet",
     "topics": {
@@ -744,13 +742,13 @@
       "other": "Autre"
     },
     "message": "Message",
-    "message_placeholder": "Écrivez votre message ici…",
+    "message_placeholder": "Écris ton message ici…",
     "submit": "Envoyer le message",
     "success_title": "Message envoyé ✅",
-    "success": "Merci, votre message a bien été envoyé. Nous vous répondons dès que possible.",
+    "success": "Merci, ton message a bien été envoyé. Nous te répondons dès que possible.",
     "send_another": "Envoyer un autre message",
-    "error": "Impossible d'envoyer votre message pour le moment. Réessayez dans quelques instants.",
-    "too_many": "Trop de messages envoyés. Réessayez dans quelques minutes.",
+    "error": "Impossible d'envoyer ton message pour le moment. Réessaie dans quelques instants.",
+    "too_many": "Trop de messages envoyés. Réessaie dans quelques minutes.",
     "name_required": "Nom requis",
     "message_required": "Message requis",
     "message_short": "10 caractères minimum"
@@ -758,39 +756,39 @@
   "unsubscribe": {
     "title": "Annonces de Bye Bye Boss",
     "meta_title": "Se désinscrire des annonces",
-    "intro": "Les annonces sont les rares e-mails d'information envoyés par l'équipe (nouveautés, changements importants). Vos alertes d'offres ne sont pas concernées.",
+    "intro": "Les annonces sont les rares e-mails d'information envoyés par l'équipe (nouveautés, changements importants). Tes alertes d'offres ne sont pas concernées.",
     "loading": "Vérification du lien…",
     "ready": "Ne plus recevoir les annonces à l'adresse",
     "button": "Ne plus recevoir les annonces",
     "working": "Désinscription en cours…",
     "done_title": "C'est fait",
-    "done": "Vous ne recevrez plus nos annonces. Vos alertes d'offres et les e-mails liés à votre compte continuent normalement.",
+    "done": "Tu ne recevras plus nos annonces. Tes alertes d'offres et les e-mails liés à ton compte continuent normalement.",
     "already_title": "Déjà désinscrit",
     "already": "Cette adresse ne reçoit déjà plus les annonces. Rien d'autre à faire.",
     "invalid_title": "Lien invalide",
-    "invalid": "Ce lien de désinscription est invalide ou a expiré. Utilisez le lien présent en bas du dernier e-mail reçu, ou écrivez-nous.",
-    "error": "Impossible de traiter votre demande pour le moment. Réessayez dans quelques instants.",
+    "invalid": "Ce lien de désinscription est invalide ou a expiré. Utilise le lien présent en bas du dernier e-mail reçu, ou écris-nous.",
+    "error": "Impossible de traiter ta demande pour le moment. Réessaie dans quelques instants.",
     "contact": "Nous contacter",
     "home": "Retour à l'accueil"
   },
   "preferencesPage": {
     "title": "Préférences",
-    "subtitle": "Zone, contrat, type de travail et salaire. Ils servent à choisir les offres qui vous sont proposées chaque jour.",
+    "subtitle": "Zone, contrat, type de travail et salaire. Ils servent à choisir les offres qui te sont proposées chaque jour.",
     "save": "Enregistrer",
     "saved": "Préférences enregistrées",
-    "applies_note": "Vos préférences s'appliquent dès la prochaine analyse, demain à 8h.",
-    "error_generic": "L'enregistrement de vos préférences a échoué. Merci de réessayer."
+    "applies_note": "Tes préférences s'appliquent dès la prochaine analyse, demain à 8h.",
+    "error_generic": "L'enregistrement de tes préférences a échoué. Merci de réessayer."
   },
   "preferencesForm": {
     "zone_title": "Zone géographique",
-    "zone_subtitle": "La zone où vous êtes prêt(e) à travailler. Nous analysons uniquement les offres de cette zone.",
+    "zone_subtitle": "La zone où tu es prêt(e) à travailler. Nous analysons uniquement les offres de cette zone.",
     "zone_all": "France entière",
     "zone_some": "Certaines régions",
-    "regions_title": "Vos régions",
+    "regions_title": "Tes régions",
     "regions_count": "{count} choisie(s)",
-    "regions_hint": "Vous pouvez en cocher plusieurs. « Outre-mer » regroupe Guadeloupe, Martinique, Guyane, La Réunion et Mayotte.",
+    "regions_hint": "Tu peux en cocher plusieurs. « Outre-mer » regroupe Guadeloupe, Martinique, Guyane, La Réunion et Mayotte.",
     "unknown_region": "Inclure les offres dont la région n'est pas indiquée",
-    "unknown_region_hint": "Certaines offres ne précisent pas leur région. Activé, vous ne les manquez pas ; désactivé, elles sont écartées.",
+    "unknown_region_hint": "Certaines offres ne précisent pas leur région. Activé, tu ne les manques pas ; désactivé, elles sont écartées.",
     "contract_title": "Type de contrat",
     "contract_subtitle": "Plusieurs choix possibles. Rien de coché = tous les contrats.",
     "contract_hint": "Une offre dont le contrat n'est pas identifié reste proposée.",
@@ -798,14 +796,14 @@
     "remote_subtitle": "Plusieurs choix possibles. Rien de coché = tous les types.",
     "remote_hint": "« Full remote » et « Hybride » sont reconnus d'après le texte de l'offre (« 2 jours de télétravail », « hybride »…). « Sur site » regroupe tout le reste, y compris les offres qui ne disent rien du télétravail.",
     "salary_title": "Salaire",
-    "salary_subtitle": "Votre salaire annuel brut minimum. Laissez vide pour ne pas filtrer.",
+    "salary_subtitle": "Ton salaire annuel brut minimum. Laisse vide pour ne pas filtrer.",
     "salary_placeholder": "Ex. 45000",
     "salary_suffix": "€ / an",
     "daily_rate_placeholder": "Ex. 500",
     "daily_rate_suffix": "€ / jour (TJM)",
     "daily_rate_hint": "Le TJM n'apparaît que si « Freelance » est coché.",
-    "salary_hint": "Beaucoup d'offres n'indiquent pas de salaire : elles restent proposées. Seules les offres dont le salaire est affiché et inférieur au vôtre sont écartées.",
-    "error_regions": "Choisissez au moins une région, ou « France entière »."
+    "salary_hint": "Beaucoup d'offres n'indiquent pas de salaire : elles restent proposées. Seules les offres dont le salaire est affiché et inférieur au tien sont écartées.",
+    "error_regions": "Choisis au moins une région, ou « France entière »."
   },
   "searchFilters": {
     "overseas": "Outre-mer",

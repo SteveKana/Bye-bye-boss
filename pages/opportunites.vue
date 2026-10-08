@@ -40,7 +40,7 @@
 // Also from that feedback: the shared app layout centers most pages at a
 // max-w-5xl (1024px) reading width, which is fine for a single list but
 // squeezed this page's two-column grid badly -- the "Pourquoi cette offre
-// est faite pour vous" column had barely enough room and wrapped onto many
+// est faite pour toi" column had barely enough room and wrapped onto many
 // lines. This page now opts into the layout's wider max-w-7xl via
 // `wide: true` (see layouts/app.vue), and the reasoning column's min-width
 // was bumped to 200px to match the mockup exactly.
@@ -322,7 +322,7 @@ watch(totalPages, (total) => {
   if (page.value > total) page.value = total
 })
 
-// "Pourquoi cette offre est faite pour vous" -- built entirely from the
+// "Pourquoi cette offre est faite pour toi" -- built entirely from the
 // LLM's own already-computed analysis (the same career_explanation/
 // ats_gaps used on the detail page's "Pourquoi ces scores ?" and "Écarts à
 // corriger" sections), never invented prose.

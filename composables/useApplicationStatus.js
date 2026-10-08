@@ -48,7 +48,7 @@ export function useApplicationStatus() {
     return new Date(dateStr).toLocaleDateString('fr-FR')
   }
 
-  // What actually happened and when, e.g. "Vous avez cliqué sur « Voir
+  // What actually happened and when, e.g. "Tu as cliqué sur « Voir
   // l'offre » le 22/09/2026" for the auto-tracked "applied" status, or
   // "Entretien obtenu le 22/09/2026" for a manual correction -- more
   // concrete than the bare status label alone. Falls back to the label if

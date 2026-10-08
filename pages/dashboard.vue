@@ -26,7 +26,7 @@ const { matchedOffers, reject } = useMatchedOffers(computed(() => matching.dashb
 // looking empty without explanation.
 const filters = useDashboardFilters()
 
-// "Top 5 des opportunités pour vous au jj/mm/aaaa" -- today's date.
+// "Top 5 des opportunités pour toi au jj/mm/aaaa" -- today's date.
 const todayLabel = new Date().toLocaleDateString('fr-FR')
 
 // A brand-new profile's very first matching run fires in the background
