@@ -2,7 +2,7 @@
 // Left brand panel for the auth screens (playful redesign, 2026-10-05):
 // bright brand violet, thick ink outline, colourful emoji tiles.
 // variant 'login'  -> features + colourful stickers
-// variant 'signup' -> features + social proof (avatars + count)
+// variant 'signup' -> features
 const props = defineProps({
   variant: { type: String, default: 'login' }, // login | signup
 })
@@ -26,7 +26,6 @@ const icons = {
 }
 const keys = computed(() => featureKeys[props.variant] || featureKeys.login)
 
-const avatars = ['🧑🏾', '👨🏻', '👩🏼', '👨🏽', '👩🏾']
 const stickers = [
   { emoji: '🚀', tone: 'bg-sun', rotate: '-rotate-6' },
   { emoji: '⭐', tone: 'bg-blush', rotate: 'rotate-3' },
@@ -90,29 +89,6 @@ const stickers = [
       >
         {{ s.emoji }}
       </span>
-    </div>
-
-    <!-- Signup widget: social proof -->
-    <div v-else-if="variant === 'signup'" class="relative z-10 mt-auto pt-6">
-      <div class="rounded-[22px] border-[2.5px] border-ink bg-white p-4 text-ink">
-        <h4 class="text-sm font-extrabold">{{ $t('brand.signup.proof_title') }}</h4>
-        <p class="mt-0.5 text-[12px] font-medium text-ink/60">{{ $t('brand.signup.proof_sub') }}</p>
-        <div class="mt-3 flex items-center">
-          <span
-            v-for="(a, i) in avatars"
-            :key="i"
-            class="-ml-2 flex h-9 w-9 items-center justify-center rounded-full border-2 border-ink bg-sun-light text-base first:ml-0"
-            aria-hidden="true"
-          >
-            {{ a }}
-          </span>
-          <span
-            class="-ml-2 flex h-9 items-center rounded-full border-2 border-ink bg-sun px-2.5 text-xs font-black"
-          >
-            +25k
-          </span>
-        </div>
-      </div>
     </div>
   </div>
 </template>
