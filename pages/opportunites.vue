@@ -35,7 +35,7 @@
 // Polish pass after the first mockup-fidelity delivery: the funnel/chevron/
 // checkmark icons are now the mockup's real inline SVGs (an emoji had been
 // used as a placeholder and rendered inconsistently across platforms); two
-// sort options were added ("Potentiel ATS", "Score carrière").
+// sort options were added ("ATS Potential", "Score carrière").
 //
 // Also from that feedback: the shared app layout centers most pages at a
 // max-w-5xl (1024px) reading width, which is fine for a single list but
