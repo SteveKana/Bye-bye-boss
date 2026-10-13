@@ -4,7 +4,7 @@
 // two pages can never explain the scores differently (it used to live only
 // in pages/opportunites.vue).
 //
-// The three score blocks (Career, ATS, ATS Potentiel) use the same labels /
+// The three score blocks (Career, ATS, ATS Potential) use the same labels /
 // short codes as the score cluster on each offer card and on the detail page
 // (opportunity/[id]/index.vue's scoreBlocks) -- kept in sync with those, not
 // a separate vocabulary. The "regret" entry was removed 2026-10-03 (Steve:
