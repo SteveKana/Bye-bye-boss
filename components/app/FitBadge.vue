@@ -1,7 +1,7 @@
 <script setup>
-// Compatibility tag of an offer (Steve, 2026-10-04): "Très forte
-// compatibilité" from an ATS potential of 95, "Forte compatibilité" from 80,
-// and nothing at all below that -- `fit` comes from fitLevel() in
+// Compatibility tag of an offer (Steve, 2026-10-04, thresholds updated
+// 2026-10-22): "Très forte compatibilité" from an ATS potential of 97,
+// "Forte compatibilité" from 85, and nothing at all below that -- `fit` comes from fitLevel() in
 // composables/useOfferDisplay.js, so the dashboard, the Opportunités list
 // and the detail page can never label the same match differently.
 defineProps({
