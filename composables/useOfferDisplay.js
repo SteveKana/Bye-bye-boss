@@ -1,12 +1,14 @@
-// Compatibility tags (Steve, 2026-10-04): "Très forte compatibilité" from
-// 95, "Forte compatibilité" from 80 up to 94, and NO tag below 80. Based on
+// Compatibility tags (Steve, 2026-10-04, thresholds raised 2026-10-22 when the
+// scoring model moved to gpt-6-luna, which scores higher than gpt-5 did):
+// "Très forte compatibilité" from 97, "Forte compatibilité" from 85 up to 96,
+// and NO tag below 85. Based on
 // ats_potential rather than career_score: a high career_score alone doesn't
 // mean much if the CV, as it stands, has little chance of getting past the
 // recruiter's ATS software for this offer. Shared between the dashboard,
 // the Opportunités list and the opportunity detail page so the same match
 // is never labelled differently from one view to the next.
-export const VERY_STRONG_FIT_THRESHOLD = 95
-export const STRONG_FIT_THRESHOLD = 80
+export const VERY_STRONG_FIT_THRESHOLD = 97
+export const STRONG_FIT_THRESHOLD = 85
 
 // Default minimum ATS score of the Opportunités page filter. 0 = nothing is
 // hidden: the candidate raises the bar themselves (Steve, 2026-10-05, after
