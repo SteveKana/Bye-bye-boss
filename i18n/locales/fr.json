@@ -771,6 +771,24 @@
     "contact": "Nous contacter",
     "home": "Retour à l'accueil"
   },
+  "market_unsubscribe": {
+    "title": "Veille marché de Bye Bye Boss",
+    "meta_title": "Se désinscrire de la veille marché",
+    "intro": "La veille marché est le mail de synthèse sur les compétences les plus demandées dans ton métier. Tes alertes d'offres ne sont pas concernées.",
+    "loading": "Vérification du lien…",
+    "ready": "Ne plus recevoir la veille marché à l'adresse",
+    "button": "Ne plus recevoir la veille marché",
+    "working": "Désinscription en cours…",
+    "done_title": "C'est fait",
+    "done": "Tu ne recevras plus la veille marché. Tes alertes d'offres et les e-mails liés à ton compte continuent normalement.",
+    "already_title": "Déjà désinscrit",
+    "already": "Cette adresse ne reçoit déjà plus la veille marché. Rien d'autre à faire.",
+    "invalid_title": "Lien invalide",
+    "invalid": "Ce lien de désinscription est invalide ou a expiré. Utilise le lien présent en bas du dernier e-mail reçu, ou écris-nous.",
+    "error": "Impossible de traiter ta demande pour le moment. Réessaie dans quelques instants.",
+    "contact": "Nous contacter",
+    "home": "Retour à l'accueil"
+  },
   "preferencesPage": {
     "title": "Préférences",
     "subtitle": "Zone, contrat, type de travail et salaire. Ils servent à choisir les offres qui te sont proposées chaque jour.",
