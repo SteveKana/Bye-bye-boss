@@ -32,6 +32,8 @@ const columns = [
   { key: 'channels', label: 'Canaux' },
   { key: 'applications', label: 'Candidatures' },
 ]
+// Not sortable: an action, not data.
+const ACTION_COLUMN = 'Veille marché'
 
 function sortValue(u, key) {
   switch (key) {
@@ -77,6 +79,70 @@ function sortBy(key) {
 }
 const ariaSort = (key) =>
   sortKey.value === key ? (sortDir.value === 'asc' ? 'ascending' : 'descending') : 'none'
+
+// ---- Veille marché: preview then send the market-watch e-mail to one profile ----
+const toast = useToast()
+const digestOpen = ref(false)
+const digestUser = ref(null)
+const digestLoading = ref(false)
+const digestSending = ref(false)
+const digestPreview = ref(null) // { ready, reason, subject, html, label, ... }
+const digestError = ref('')
+const ignoreThreshold = ref(false)
+const frameHeight = ref(320)
+
+async function loadDigestPreview() {
+  if (!digestUser.value) return
+  digestLoading.value = true
+  digestError.value = ''
+  try {
+    digestPreview.value = await api('market/admin/digest/preview', {
+      method: 'POST',
+      body: { user_id: digestUser.value.user_id, ignore_threshold: ignoreThreshold.value },
+    })
+  } catch (err) {
+    digestPreview.value = null
+    digestError.value = err?.message || "L'aperçu n'a pas pu être généré."
+  } finally {
+    digestLoading.value = false
+  }
+}
+
+function openDigest(user) {
+  digestUser.value = user
+  digestPreview.value = null
+  digestError.value = ''
+  ignoreThreshold.value = false
+  digestOpen.value = true
+  loadDigestPreview()
+}
+
+async function sendDigest() {
+  digestSending.value = true
+  digestError.value = ''
+  try {
+    const res = await api('market/admin/digest/send', {
+      method: 'POST',
+      body: { user_id: digestUser.value.user_id, ignore_threshold: ignoreThreshold.value },
+    })
+    toast.success(res?.detail || 'Veille marché envoyée')
+    digestOpen.value = false
+  } catch (err) {
+    digestError.value = err?.message || "L'envoi n'a pas pu être effectué."
+  } finally {
+    digestSending.value = false
+  }
+}
+
+function sizeFrame(event) {
+  try {
+    const body = event.target.contentDocument?.body
+    const h = body ? Math.max(body.scrollHeight, body.offsetHeight) : 0
+    if (h) frameHeight.value = Math.min(Math.max(h + 24, 200), 900)
+  } catch {
+    // keep the default height
+  }
+}
 </script>
 
 <template>
@@ -112,7 +178,7 @@ const ariaSort = (key) =>
       </div>
 
       <AdminEmpty v-if="!rows.length">Aucun compte ne correspond à ce filtre.</AdminEmpty>
-      <AdminTable v-else min-width="860px">
+      <AdminTable v-else min-width="980px">
         <thead>
           <tr>
             <th v-for="c in columns" :key="c.key" :aria-sort="ariaSort(c.key)">
@@ -128,6 +194,7 @@ const ariaSort = (key) =>
                 </span>
               </button>
             </th>
+            <th>{{ ACTION_COLUMN }}</th>
           </tr>
         </thead>
         <tbody>
@@ -170,9 +237,86 @@ const ariaSort = (key) =>
               <AdminPill v-else state="info" text="Aucun" />
             </td>
             <td>{{ fmtInt(u.applications) }}</td>
+            <td>
+              <UiButton
+                v-if="u.profile_status === 'complete'"
+                size="sm"
+                variant="secondary"
+                @click="openDigest(u)"
+              >
+                📊 Envoyer
+              </UiButton>
+              <span v-else class="text-xs text-ink/40">Profil incomplet</span>
+            </td>
           </tr>
         </tbody>
       </AdminTable>
     </AdminCard>
+    <UiModal v-model="digestOpen" title="Envoyer la veille marché" size="lg">
+      <p v-if="digestUser" class="text-sm font-semibold text-ink/70">
+        Destinataire : <b class="font-extrabold text-ink">{{ digestUser.email }}</b>
+        <span v-if="digestUser.first_name"> ({{ digestUser.first_name }})</span>
+      </p>
+
+      <p v-if="digestLoading" class="py-8 text-center text-sm font-semibold text-ink/60">
+        Préparation de l'aperçu…
+      </p>
+
+      <AdminNotice v-if="digestError" tone="bad" class="mt-3">{{ digestError }}</AdminNotice>
+
+      <template v-if="digestPreview && !digestLoading">
+        <AdminNotice v-if="!digestPreview.ready" tone="warn" class="mt-3">
+          {{ digestPreview.reason }}
+        </AdminNotice>
+
+        <template v-else>
+          <AdminNotice v-if="digestPreview.below_threshold" tone="warn" class="mt-3">
+            Sous le seuil : {{ digestPreview.offers_analysed }} offres analysées pour «
+            {{ digestPreview.label }} » (seuil {{ digestPreview.min_offers }}). Envoi possible
+            uniquement parce que tu as coché « Envoyer quand même ».
+          </AdminNotice>
+          <div class="mt-3 overflow-hidden rounded-xl border-2 border-ink bg-white">
+            <div
+              class="border-b-2 border-ink bg-lav/40 px-3 py-2 text-xs font-semibold text-ink/70"
+            >
+              Objet : <b class="font-extrabold text-ink">{{ digestPreview.subject }}</b>
+            </div>
+            <iframe
+              :srcdoc="digestPreview.html"
+              sandbox="allow-same-origin"
+              title="Aperçu de la veille marché"
+              class="block w-full border-0"
+              :style="{ height: `${frameHeight}px` }"
+              @load="sizeFrame"
+            />
+          </div>
+        </template>
+
+        <label class="mt-3 flex items-center gap-2 text-sm font-semibold text-ink">
+          <input
+            v-model="ignoreThreshold"
+            type="checkbox"
+            class="h-4 w-4"
+            @change="loadDigestPreview"
+          />
+          Envoyer quand même si le métier a moins d'offres que le seuil
+        </label>
+      </template>
+
+      <template #footer>
+        <div class="flex flex-wrap justify-end gap-2.5">
+          <UiButton variant="secondary" :disabled="digestSending" @click="digestOpen = false">
+            Fermer
+          </UiButton>
+          <UiButton
+            :disabled="!digestPreview?.ready || digestLoading"
+            :loading="digestSending"
+            @click="sendDigest"
+          >
+            Envoyer à ce profil
+          </UiButton>
+        </div>
+      </template>
+    </UiModal>
   </div>
 </template>
