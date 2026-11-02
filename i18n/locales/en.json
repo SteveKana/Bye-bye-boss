@@ -771,6 +771,24 @@
     "contact": "Contact us",
     "home": "Back to home"
   },
+  "market_unsubscribe": {
+    "title": "Bye Bye Boss market watch",
+    "meta_title": "Unsubscribe from the market watch",
+    "intro": "The market watch is the summary e-mail about the skills most in demand in your field. Your job alerts are not affected.",
+    "loading": "Checking your link…",
+    "ready": "Stop receiving the market watch at",
+    "button": "Stop receiving the market watch",
+    "working": "Unsubscribing…",
+    "done_title": "All done",
+    "done": "You will no longer receive the market watch. Your job alerts and account e-mails continue as usual.",
+    "already_title": "Already unsubscribed",
+    "already": "This address already no longer receives the market watch. Nothing else to do.",
+    "invalid_title": "Invalid link",
+    "invalid": "This unsubscribe link is invalid or has expired. Use the link at the bottom of the latest e-mail you received, or contact us.",
+    "error": "We could not process your request right now. Please try again in a moment.",
+    "contact": "Contact us",
+    "home": "Back to home"
+  },
   "preferencesPage": {
     "title": "Preferences",
     "subtitle": "Area, contract, work type and salary. They decide which offers are picked for you every day.",

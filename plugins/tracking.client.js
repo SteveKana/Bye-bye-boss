@@ -5,7 +5,7 @@
 // Everything here is fire-and-forget: a tracking problem must never slow down
 // navigation, break the page, or report itself in a loop.
 
-const SKIPPED_PREFIXES = ['/admin', '/annonces/desinscription']
+const SKIPPED_PREFIXES = ['/admin', '/annonces/desinscription', '/veille-marche/desinscription']
 const ERROR_DEDUPE_MS = 30_000
 const MAX_ERRORS_PER_MINUTE = 10
 const IGNORED_MESSAGES = [
