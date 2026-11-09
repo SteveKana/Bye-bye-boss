@@ -1,7 +1,9 @@
 <script setup>
-// Admin > CV adapté: paste an offer as plain text, get YOUR own CV rewritten
-// for it (same engine as "Adapter mon CV"), preview it, download it as PDF.
-// Nothing is stored: leaving the page loses the result.
+// Admin > CV adapté: give an offer (a link we read, or the text pasted), get
+// YOUR own CV rewritten for it (same engine as "Adapter mon CV"), preview it,
+// download it as PDF. A link only fills the text box -- the admin checks the
+// text before the model is called. Nothing is stored: leaving the page loses
+// the result.
 definePageMeta({ layout: 'admin', middleware: 'admin' })
 useHead({
   title: 'Monitoring · CV adapté — Bye Bye Boss',
@@ -12,7 +14,11 @@ const api = useApi()
 const toast = useToast()
 
 const MIN_CHARS = 100
+const offerUrl = ref('')
 const offerText = ref('')
+const reading = ref(false)
+const readError = ref('')
+const readInfo = ref('')
 const result = ref(null)
 const generating = ref(false)
 const downloading = ref(false)
@@ -25,6 +31,29 @@ const TEMPLATES = [
 
 const canGenerate = computed(() => offerText.value.trim().length >= MIN_CHARS)
 const missing = computed(() => Math.max(0, MIN_CHARS - offerText.value.trim().length))
+
+// Reads the page behind the link and puts its text in the box below, where it
+// can be checked and corrected. When the site refuses, the message says to
+// paste the text instead (the box is right there).
+async function readLink() {
+  reading.value = true
+  readError.value = ''
+  readInfo.value = ''
+  try {
+    const page = await api('matching/admin/offer-from-url', {
+      method: 'POST',
+      body: { url: offerUrl.value },
+    })
+    offerText.value = page.text
+    result.value = null
+    readInfo.value = `Offre lue sur ${page.host}. Vérifie le texte ci-dessous, puis adapte ton CV.`
+  } catch (err) {
+    readError.value =
+      err?.message || "Impossible de lire ce lien : colle le texte de l'annonce ci-dessous."
+  } finally {
+    reading.value = false
+  }
+}
 
 async function generate() {
   generating.value = true
@@ -79,7 +108,31 @@ function bulletClass(status) {
     <AdminHeader />
 
     <div class="grid gap-3 lg:grid-cols-[1fr_1.4fr]">
-      <AdminCard title="Offre" subtitle="Colle ici le texte complet de l'annonce">
+      <AdminCard title="Offre" subtitle="Colle le lien de l'annonce, ou son texte complet">
+        <div class="flex items-end gap-2">
+          <UiInput
+            id="offer-url"
+            v-model="offerUrl"
+            label="Lien de l'offre"
+            placeholder="https://…"
+            type="url"
+            class="flex-1"
+            @keyup.enter="offerUrl.trim() && readLink()"
+          />
+          <UiButton
+            variant="secondary"
+            :loading="reading"
+            :disabled="!offerUrl.trim()"
+            @click="readLink"
+          >
+            Lire l'offre
+          </UiButton>
+        </div>
+        <AdminNotice v-if="readError" tone="bad" class="mt-3">{{ readError }}</AdminNotice>
+        <AdminNotice v-else-if="readInfo" tone="info" class="mt-3">{{ readInfo }}</AdminNotice>
+        <p class="mb-3 mt-3 text-center text-xs font-semibold text-ink/50">
+          ou colle directement le texte
+        </p>
         <UiTextarea
           id="offer-text"
           v-model="offerText"
@@ -109,7 +162,7 @@ function bulletClass(status) {
 
       <AdminCard title="CV adapté" subtitle="Vert : ajouté · Orange : reformulé">
         <AdminEmpty v-if="!result && !generating">
-          Colle une offre puis clique sur « Adapter mon CV ».
+          Donne une offre (lien ou texte) puis clique sur « Adapter mon CV ».
         </AdminEmpty>
         <p v-else-if="generating" class="py-10 text-center text-sm font-semibold text-ink/70">
           Génération en cours…
