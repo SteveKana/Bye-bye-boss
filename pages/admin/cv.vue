@@ -116,11 +116,38 @@ function removeSkill(index) {
   result.value.skills.splice(index, 1)
 }
 
+// Certifications and languages work like skills: tags with a ×, and a small
+// form below to add one.
+const newCertTitle = ref('')
+const newCertPeriod = ref('')
 function addCertification() {
-  result.value.certifications.push({ title: '', issuer_period: '' })
+  const title = newCertTitle.value.trim()
+  const period = newCertPeriod.value.trim()
+  newCertTitle.value = ''
+  newCertPeriod.value = ''
+  if (!title) return
+  const exists = result.value.certifications.some(
+    (c) => c.title.toLowerCase() === title.toLowerCase()
+  )
+  if (!exists) result.value.certifications.push({ title, issuer_period: period })
 }
+function removeCertification(index) {
+  result.value.certifications.splice(index, 1)
+}
+
+const newLanguageName = ref('')
+const newLanguageLevel = ref('')
 function addLanguage() {
-  result.value.languages.push({ name: '', level: '' })
+  const name = newLanguageName.value.trim()
+  const level = newLanguageLevel.value.trim()
+  newLanguageName.value = ''
+  newLanguageLevel.value = ''
+  if (!name) return
+  const exists = result.value.languages.some((l) => l.name.toLowerCase() === name.toLowerCase())
+  if (!exists) result.value.languages.push({ name, level })
+}
+function removeLanguage(index) {
+  result.value.languages.splice(index, 1)
 }
 
 function cancelEdits() {
@@ -147,6 +174,10 @@ const adviceOutdated = computed(() => !!result.value && contentKey() !== adviceB
 // rewritten from the edited CV before leaving the editor. If that fails, the
 // old advice stays and says it dates from the generated version.
 async function finishEditing() {
+  // What was typed in an "add" field but not added yet is not lost.
+  addSkill()
+  addCertification()
+  addLanguage()
   if (!adviceOutdated.value) {
     editing.value = false
     return
@@ -283,6 +314,27 @@ function bulletClass(status) {
         </p>
 
         <div v-else class="space-y-5">
+          <!-- Coordonnées : celles du profil, telles que le PDF les imprime -->
+          <div v-if="result.contact" class="rounded-2xl bg-lav/60 px-3 py-2.5">
+            <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
+              Coordonnées
+            </p>
+            <p class="text-sm font-black text-ink">{{ result.contact.name }}</p>
+            <p class="text-[12.5px] text-ink/80">
+              {{
+                [result.contact.email, result.contact.phone, result.contact.location]
+                  .filter(Boolean)
+                  .join(' · ')
+              }}
+            </p>
+            <p class="mt-1 text-[11px] text-ink/55">
+              Tirées de ton profil, telles qu'elles seront imprimées sur le PDF.
+              <span v-if="!result.contact.phone">
+                Aucun téléphone n'a été repéré dans ton CV importé.
+              </span>
+            </p>
+          </div>
+
           <!-- Lecture -->
           <template v-if="!editing">
             <div>
@@ -356,7 +408,7 @@ function bulletClass(status) {
               <p class="text-[12.5px] text-ink/80">
                 {{
                   result.languages
-                    .map((l) => (l.level ? `${l.name} (${l.level})` : l.name))
+                    .map((l) => (l.level ? `${l.name} : ${l.level}` : l.name))
                     .join(' · ')
                 }}
               </p>
@@ -477,68 +529,96 @@ function bulletClass(status) {
               <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">
                 Certifications
               </p>
-              <div class="space-y-2">
-                <div v-for="(c, i) in result.certifications" :key="i" class="flex gap-2">
-                  <input
-                    v-model="c.title"
-                    type="text"
-                    placeholder="Ex. Prince2 Foundation"
-                    aria-label="Intitulé de la certification"
-                    :class="FIELD"
-                  />
-                  <input
-                    v-model="c.issuer_period"
-                    type="text"
-                    placeholder="Organisme, année"
-                    aria-label="Organisme et année"
-                    :class="FIELD"
-                  />
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="(c, i) in result.certifications"
+                  :key="c.title + i"
+                  class="inline-flex items-center gap-1.5 rounded-2xl bg-lav px-2.5 py-1 text-xs font-semibold text-ink/80"
+                >
+                  {{ c.title }}<template v-if="c.issuer_period"> · {{ c.issuer_period }}</template>
                   <button
                     type="button"
-                    class="shrink-0 rounded-full border-2 border-ink/20 px-2.5 py-1 text-xs font-semibold text-ink/60 hover:border-danger hover:text-danger"
-                    aria-label="Supprimer cette certification"
-                    @click="result.certifications.splice(i, 1)"
+                    class="font-black opacity-60 hover:opacity-100"
+                    :aria-label="`Retirer la certification ${c.title}`"
+                    @click="removeCertification(i)"
                   >
-                    Supprimer
+                    ×
                   </button>
-                </div>
+                </span>
               </div>
-              <UiButton class="mt-2" variant="ghost" size="sm" @click="addCertification">
-                + Ajouter une certification
-              </UiButton>
+              <div class="mt-2 flex gap-2">
+                <input
+                  v-model="newCertTitle"
+                  type="text"
+                  placeholder="Ajouter une certification"
+                  aria-label="Ajouter une certification"
+                  :class="FIELD"
+                  @keyup.enter="addCertification"
+                />
+                <input
+                  v-model="newCertPeriod"
+                  type="text"
+                  placeholder="Organisme, année"
+                  aria-label="Organisme et année de la certification"
+                  :class="FIELD"
+                  @keyup.enter="addCertification"
+                />
+                <UiButton
+                  variant="secondary"
+                  size="sm"
+                  :disabled="!newCertTitle.trim()"
+                  @click="addCertification"
+                >
+                  Ajouter
+                </UiButton>
+              </div>
             </div>
 
             <div>
               <p class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50">Langues</p>
-              <div class="space-y-2">
-                <div v-for="(l, i) in result.languages" :key="i" class="flex gap-2">
-                  <input
-                    v-model="l.name"
-                    type="text"
-                    placeholder="Ex. Anglais"
-                    aria-label="Langue"
-                    :class="FIELD"
-                  />
-                  <input
-                    v-model="l.level"
-                    type="text"
-                    placeholder="Niveau (ex. B2, courant)"
-                    aria-label="Niveau"
-                    :class="FIELD"
-                  />
+              <div class="flex flex-wrap gap-2">
+                <span
+                  v-for="(l, i) in result.languages"
+                  :key="l.name + i"
+                  class="inline-flex items-center gap-1.5 rounded-2xl bg-lav px-2.5 py-1 text-xs font-semibold text-ink/80"
+                >
+                  {{ l.name }}<template v-if="l.level"> : {{ l.level }}</template>
                   <button
                     type="button"
-                    class="shrink-0 rounded-full border-2 border-ink/20 px-2.5 py-1 text-xs font-semibold text-ink/60 hover:border-danger hover:text-danger"
-                    aria-label="Supprimer cette langue"
-                    @click="result.languages.splice(i, 1)"
+                    class="font-black opacity-60 hover:opacity-100"
+                    :aria-label="`Retirer la langue ${l.name}`"
+                    @click="removeLanguage(i)"
                   >
-                    Supprimer
+                    ×
                   </button>
-                </div>
+                </span>
               </div>
-              <UiButton class="mt-2" variant="ghost" size="sm" @click="addLanguage">
-                + Ajouter une langue
-              </UiButton>
+              <div class="mt-2 flex gap-2">
+                <input
+                  v-model="newLanguageName"
+                  type="text"
+                  placeholder="Ajouter une langue"
+                  aria-label="Ajouter une langue"
+                  :class="FIELD"
+                  @keyup.enter="addLanguage"
+                />
+                <input
+                  v-model="newLanguageLevel"
+                  type="text"
+                  placeholder="Niveau (ex. B2, courant)"
+                  aria-label="Niveau de la langue"
+                  :class="FIELD"
+                  @keyup.enter="addLanguage"
+                />
+                <UiButton
+                  variant="secondary"
+                  size="sm"
+                  :disabled="!newLanguageName.trim()"
+                  @click="addLanguage"
+                >
+                  Ajouter
+                </UiButton>
+              </div>
             </div>
           </template>
 
