@@ -231,25 +231,6 @@ function bulletClass(status) {
         </p>
 
         <div v-else class="space-y-5">
-          <AdminNotice v-if="result.advice" tone="info">💡 {{ result.advice }}</AdminNotice>
-
-          <div class="flex flex-wrap items-center gap-2.5">
-            <UiButton v-if="!editing" variant="secondary" @click="editing = true">
-              ✏️ Modifier le CV
-            </UiButton>
-            <template v-else>
-              <UiButton variant="primary" @click="editing = false"
-                >Terminer la modification</UiButton
-              >
-              <UiButton variant="ghost" :disabled="!dirty" @click="cancelEdits">
-                Annuler mes modifications
-              </UiButton>
-            </template>
-            <span v-if="dirty && !editing" class="text-xs font-semibold text-ink/60">
-              CV modifié : le PDF tiendra compte de tes changements.
-            </span>
-          </div>
-
           <!-- Lecture -->
           <template v-if="!editing">
             <div>
@@ -332,10 +313,6 @@ function bulletClass(status) {
 
           <!-- Modification -->
           <template v-else>
-            <p class="text-xs font-medium text-ink/60">
-              Tes changements ne concernent que ce CV adapté : ton profil n'est pas modifié.
-            </p>
-
             <div>
               <label
                 class="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink/50"
@@ -501,7 +478,24 @@ function bulletClass(status) {
             </div>
           </template>
 
+          <AdminNotice v-if="result.advice" tone="info">💡 {{ result.advice }}</AdminNotice>
+
+          <p v-if="editing" class="text-xs font-medium text-ink/60">
+            Tes changements ne concernent que ce CV adapté : ton profil n'est pas modifié.
+          </p>
+
           <div class="flex flex-wrap items-center gap-2.5 border-t border-ink/10 pt-4">
+            <UiButton v-if="!editing" variant="secondary" @click="editing = true">
+              ✏️ Modifier le CV
+            </UiButton>
+            <template v-else>
+              <UiButton variant="secondary" @click="editing = false">
+                Terminer la modification
+              </UiButton>
+              <UiButton variant="ghost" :disabled="!dirty" @click="cancelEdits">
+                Annuler mes modifications
+              </UiButton>
+            </template>
             <div class="flex rounded-full border-2 border-ink bg-white p-0.5 text-xs font-semibold">
               <button
                 v-for="t in TEMPLATES"
@@ -517,6 +511,9 @@ function bulletClass(status) {
             <UiButton variant="primary" :loading="downloading" @click="download">
               Télécharger le PDF
             </UiButton>
+            <span v-if="dirty && !editing" class="text-xs font-semibold text-ink/60">
+              CV modifié : le PDF tiendra compte de tes changements.
+            </span>
           </div>
         </div>
       </AdminCard>
