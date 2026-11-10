@@ -19,6 +19,13 @@ const toast = useToast()
 // from what is on screen; the profile itself is never changed.
 const editing = ref(false)
 const snapshot = ref('') // result as generated, for "Annuler mes modifications"
+// The advice ("Conseil") is written by the model for the CV as generated. When
+// the admin finishes editing and the content changed, it is written again
+// from the edited CV. `adviceBasis` is the content the current advice is for.
+const generatedOffer = ref('')
+const adviceBasis = ref('')
+const adviceStale = ref(false)
+const refreshingAdvice = ref(false)
 const dirty = computed(() => !!result.value && JSON.stringify(result.value) !== snapshot.value)
 
 const MIN_CHARS = 100
@@ -76,6 +83,9 @@ async function generate() {
     generated.languages ??= []
     result.value = generated
     snapshot.value = JSON.stringify(generated)
+    generatedOffer.value = offerText.value
+    adviceBasis.value = contentKey()
+    adviceStale.value = false
     editing.value = false
   } catch (err) {
     error.value = err?.message || 'La génération a échoué, réessaie dans un instant.'
@@ -115,6 +125,48 @@ function addLanguage() {
 
 function cancelEdits() {
   result.value = JSON.parse(snapshot.value)
+  adviceBasis.value = contentKey()
+  adviceStale.value = false
+}
+
+// What the advice depends on: the CV content, ignoring blank rows.
+function contentKey() {
+  const r = pdfPayload()
+  return JSON.stringify([
+    r.headline,
+    r.summary,
+    r.experiences.map((e) => e.bullets.map((b) => b.text)),
+    r.skills.map((s) => s.skill),
+    r.certifications,
+    r.languages,
+  ])
+}
+const adviceOutdated = computed(() => !!result.value && contentKey() !== adviceBasis.value)
+
+// "Terminer la modification": if the CV content changed, the advice is
+// rewritten from the edited CV before leaving the editor. If that fails, the
+// old advice stays and says it dates from the generated version.
+async function finishEditing() {
+  if (!adviceOutdated.value) {
+    editing.value = false
+    return
+  }
+  refreshingAdvice.value = true
+  try {
+    const out = await api('matching/admin/cv-advice', {
+      method: 'POST',
+      body: { offer_text: generatedOffer.value, cv: pdfPayload() },
+    })
+    result.value.advice = out.advice
+    adviceBasis.value = contentKey()
+    adviceStale.value = false
+  } catch (err) {
+    adviceStale.value = true
+    toast.error(err?.message || "Le conseil n'a pas pu être mis à jour.")
+  } finally {
+    refreshingAdvice.value = false
+    editing.value = false
+  }
 }
 
 // What is sent for the PDF: the result without the blank rows left in the
@@ -479,6 +531,12 @@ function bulletClass(status) {
           </template>
 
           <AdminNotice v-if="result.advice" tone="info">💡 {{ result.advice }}</AdminNotice>
+          <p v-if="editing && adviceOutdated" class="text-xs font-medium text-ink/60">
+            Ce conseil sera mis à jour quand tu cliqueras sur « Terminer la modification ».
+          </p>
+          <p v-else-if="adviceStale && adviceOutdated" class="text-xs font-semibold text-warning">
+            Ce conseil date de la version générée : sa mise à jour a échoué.
+          </p>
 
           <p v-if="editing" class="text-xs font-medium text-ink/60">
             Tes changements ne concernent que ce CV adapté : ton profil n'est pas modifié.
@@ -492,10 +550,14 @@ function bulletClass(status) {
                 ✏️ Modifier le CV
               </UiButton>
               <template v-else>
-                <UiButton variant="secondary" @click="editing = false">
+                <UiButton variant="secondary" :loading="refreshingAdvice" @click="finishEditing">
                   Terminer la modification
                 </UiButton>
-                <UiButton variant="ghost" :disabled="!dirty" @click="cancelEdits">
+                <UiButton
+                  variant="ghost"
+                  :disabled="!dirty || refreshingAdvice"
+                  @click="cancelEdits"
+                >
                   Annuler mes modifications
                 </UiButton>
               </template>
