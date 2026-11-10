@@ -313,7 +313,7 @@ function bulletClass(status) {
                       class="rounded px-1.5 py-0.5 text-[12.5px] leading-relaxed"
                       :class="bulletClass(bullet.status)"
                     >
-                      • {{ bullet.text }}
+                      <template v-if="!bullet.context">• </template>{{ bullet.text }}
                       <span v-if="bullet.why" class="block text-[11px] italic opacity-70">
                         {{ bullet.why }}
                       </span>
@@ -395,13 +395,25 @@ function bulletClass(status) {
                   <p class="text-[11.5px] text-ink/60">{{ exp.company }} · {{ exp.period }}</p>
                   <ul class="mt-2 space-y-2">
                     <li v-for="(bullet, j) in exp.bullets" :key="j" class="flex items-start gap-2">
-                      <textarea
-                        v-model="bullet.text"
-                        rows="2"
-                        :class="[FIELD, bulletClass(bullet.status)]"
-                        :aria-label="`Puce ${j + 1} de ${exp.title}`"
-                        @input="touch(bullet)"
-                      />
+                      <div class="min-w-0 flex-1">
+                        <p
+                          v-if="bullet.context && !exp.bullets[j - 1]?.context"
+                          class="mb-1 text-[11px] font-bold uppercase tracking-wide text-ink/50"
+                        >
+                          Description de la mission
+                        </p>
+                        <textarea
+                          v-model="bullet.text"
+                          rows="2"
+                          :class="[FIELD, bulletClass(bullet.status)]"
+                          :aria-label="
+                            bullet.context
+                              ? `Description de la mission de ${exp.title}`
+                              : `Puce ${j + 1} de ${exp.title}`
+                          "
+                          @input="touch(bullet)"
+                        />
+                      </div>
                       <button
                         type="button"
                         class="shrink-0 rounded-full border-2 border-ink/20 px-2.5 py-1 text-xs font-semibold text-ink/60 hover:border-danger hover:text-danger"
