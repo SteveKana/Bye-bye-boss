@@ -231,25 +231,6 @@ function bulletClass(status) {
         </p>
 
         <div v-else class="space-y-5">
-          <AdminNotice v-if="result.advice" tone="info">💡 {{ result.advice }}</AdminNotice>
-
-          <div class="flex flex-wrap items-center gap-2.5">
-            <UiButton v-if="!editing" variant="secondary" @click="editing = true">
-              ✏️ Modifier le CV
-            </UiButton>
-            <template v-else>
-              <UiButton variant="primary" @click="editing = false"
-                >Terminer la modification</UiButton
-              >
-              <UiButton variant="ghost" :disabled="!dirty" @click="cancelEdits">
-                Annuler mes modifications
-              </UiButton>
-            </template>
-            <span v-if="dirty && !editing" class="text-xs font-semibold text-ink/60">
-              CV modifié : le PDF tiendra compte de tes changements.
-            </span>
-          </div>
-
           <!-- Lecture -->
           <template v-if="!editing">
             <div>
@@ -332,10 +313,6 @@ function bulletClass(status) {
 
           <!-- Modification -->
           <template v-else>
-            <p class="text-xs font-medium text-ink/60">
-              Tes changements ne concernent que ce CV adapté : ton profil n'est pas modifié.
-            </p>
-
             <div>
               <label
                 class="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink/50"
@@ -501,23 +478,51 @@ function bulletClass(status) {
             </div>
           </template>
 
-          <div class="flex flex-wrap items-center gap-2.5 border-t border-ink/10 pt-4">
-            <div class="flex rounded-full border-2 border-ink bg-white p-0.5 text-xs font-semibold">
-              <button
-                v-for="t in TEMPLATES"
-                :key="t.key"
-                type="button"
-                class="rounded-full px-3 py-1 transition-colors"
-                :class="template === t.key ? 'bg-brand text-white' : 'text-ink/60 hover:text-ink'"
-                @click="template = t.key"
-              >
-                {{ t.label }}
-              </button>
+          <AdminNotice v-if="result.advice" tone="info">💡 {{ result.advice }}</AdminNotice>
+
+          <p v-if="editing" class="text-xs font-medium text-ink/60">
+            Tes changements ne concernent que ce CV adapté : ton profil n'est pas modifié.
+          </p>
+
+          <div
+            class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-ink/10 pt-4"
+          >
+            <div class="flex flex-wrap items-center gap-2.5">
+              <UiButton v-if="!editing" variant="secondary" @click="editing = true">
+                ✏️ Modifier le CV
+              </UiButton>
+              <template v-else>
+                <UiButton variant="secondary" @click="editing = false">
+                  Terminer la modification
+                </UiButton>
+                <UiButton variant="ghost" :disabled="!dirty" @click="cancelEdits">
+                  Annuler mes modifications
+                </UiButton>
+              </template>
             </div>
-            <UiButton variant="primary" :loading="downloading" @click="download">
-              Télécharger le PDF
-            </UiButton>
+            <div class="ml-auto flex flex-wrap items-center gap-2.5">
+              <div
+                class="flex rounded-full border-2 border-ink bg-white p-0.5 text-xs font-semibold"
+              >
+                <button
+                  v-for="t in TEMPLATES"
+                  :key="t.key"
+                  type="button"
+                  class="rounded-full px-3 py-1 transition-colors"
+                  :class="template === t.key ? 'bg-brand text-white' : 'text-ink/60 hover:text-ink'"
+                  @click="template = t.key"
+                >
+                  {{ t.label }}
+                </button>
+              </div>
+              <UiButton variant="primary" :loading="downloading" @click="download">
+                Télécharger le PDF
+              </UiButton>
+            </div>
           </div>
+          <p v-if="dirty && !editing" class="text-xs font-semibold text-ink/60">
+            CV modifié : le PDF tiendra compte de tes changements.
+          </p>
         </div>
       </AdminCard>
     </div>
