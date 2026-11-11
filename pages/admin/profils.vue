@@ -476,22 +476,22 @@ function reset() {
         </div>
       </div>
 
+      <div v-if="filtering" class="mt-4 flex items-center justify-between gap-3">
+        <p class="text-sm font-extrabold text-ink" aria-live="polite">
+          {{ results.length }} profil{{ results.length > 1 ? 's' : '' }}
+          <span class="font-semibold text-ink/60"> sur {{ profiles.length }} </span>
+        </p>
+        <button
+          type="button"
+          class="text-xs font-extrabold text-ink underline underline-offset-2"
+          @click="reset"
+        >
+          Effacer la recherche
+        </button>
+      </div>
+
       <!-- Results: 784px, the width of the main column of a LinkedIn profile page. -->
       <div class="max-w-[784px]">
-        <div v-if="filtering" class="mt-4 flex items-center justify-between gap-3">
-          <p class="text-sm font-extrabold text-ink" aria-live="polite">
-            {{ results.length }} profil{{ results.length > 1 ? 's' : '' }}
-            <span class="font-semibold text-ink/60"> sur {{ profiles.length }} </span>
-          </p>
-          <button
-            type="button"
-            class="text-xs font-extrabold text-ink underline underline-offset-2"
-            @click="reset"
-          >
-            Effacer la recherche
-          </button>
-        </div>
-
         <AdminEmpty v-if="filtering && !results.length" class="mt-3">
           Aucun profil ne correspond. Essaie moins de mots, ou élargis la zone ou la disponibilité.
         </AdminEmpty>
