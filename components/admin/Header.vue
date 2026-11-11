@@ -19,6 +19,7 @@ const tabs = [
   { to: '/admin/incidents', label: 'Incidents' },
   { to: '/admin/email', label: 'E-mail aux utilisateurs' },
   { to: '/admin/cv', label: 'CV adapté' },
+  { to: '/admin/profils', label: 'Recherche de profils' },
 ]
 const isActive = (to) => (to === '/admin' ? route.path === '/admin' : route.path.startsWith(to))
 </script>
