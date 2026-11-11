@@ -443,9 +443,7 @@ function reset() {
       base de données. Les noms sont remplacés par des trigrammes.
     </AdminNotice>
 
-    <!-- 784px: width of the main column of a LinkedIn profile page. -->
     <AdminCard
-      class="max-w-[784px]"
       title="Recherche de profils"
       subtitle="Un poste ou des compétences, et une zone : la liste se met à jour pendant que tu tapes"
     >
@@ -478,51 +476,54 @@ function reset() {
         </div>
       </div>
 
-      <div v-if="filtering" class="mt-4 flex items-center justify-between gap-3">
-        <p class="text-sm font-extrabold text-ink" aria-live="polite">
-          {{ results.length }} profil{{ results.length > 1 ? 's' : '' }}
-          <span class="font-semibold text-ink/60"> sur {{ profiles.length }} </span>
-        </p>
-        <button
-          type="button"
-          class="text-xs font-extrabold text-ink underline underline-offset-2"
-          @click="reset"
-        >
-          Effacer la recherche
-        </button>
-      </div>
+      <!-- Results: 784px, the width of the main column of a LinkedIn profile page. -->
+      <div class="max-w-[784px]">
+        <div v-if="filtering" class="mt-4 flex items-center justify-between gap-3">
+          <p class="text-sm font-extrabold text-ink" aria-live="polite">
+            {{ results.length }} profil{{ results.length > 1 ? 's' : '' }}
+            <span class="font-semibold text-ink/60"> sur {{ profiles.length }} </span>
+          </p>
+          <button
+            type="button"
+            class="text-xs font-extrabold text-ink underline underline-offset-2"
+            @click="reset"
+          >
+            Effacer la recherche
+          </button>
+        </div>
 
-      <AdminEmpty v-if="filtering && !results.length" class="mt-3">
-        Aucun profil ne correspond. Essaie moins de mots, ou élargis la zone ou la disponibilité.
-      </AdminEmpty>
+        <AdminEmpty v-if="filtering && !results.length" class="mt-3">
+          Aucun profil ne correspond. Essaie moins de mots, ou élargis la zone ou la disponibilité.
+        </AdminEmpty>
 
-      <ul v-else-if="filtering" class="mt-3 space-y-2">
-        <li
-          v-for="p in results"
-          :key="p.id"
-          class="flex items-start gap-4 rounded-2xl border-2 border-ink bg-white p-4"
-        >
-          <UiAvatar
-            :picture-url="p.picture"
-            :initials="p.trigram"
-            circle-class="h-14 w-14 text-sm font-black text-white"
-          />
-          <div class="min-w-0 flex-1 space-y-1.5">
-            <p class="text-[11px] font-black tracking-widest text-ink/50">{{ p.trigram }}</p>
-            <p class="text-base font-black leading-snug text-ink">{{ p.title }}</p>
-            <p class="text-xs font-semibold text-ink/70">📍 {{ p.place }} · {{ p.region }}</p>
-            <div>
-              <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
+        <ul v-else-if="filtering" class="mt-3 space-y-2">
+          <li
+            v-for="p in results"
+            :key="p.id"
+            class="flex items-start gap-4 rounded-2xl border-2 border-ink bg-white p-4"
+          >
+            <UiAvatar
+              :picture-url="p.picture"
+              :initials="p.trigram"
+              circle-class="h-14 w-14 text-sm font-black text-white"
+            />
+            <div class="min-w-0 flex-1 space-y-1.5">
+              <p class="text-[11px] font-black tracking-widest text-ink/50">{{ p.trigram }}</p>
+              <p class="text-base font-black leading-snug text-ink">{{ p.title }}</p>
+              <p class="text-xs font-semibold text-ink/70">📍 {{ p.place }} · {{ p.region }}</p>
+              <div>
+                <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
+              </div>
+              <p class="line-clamp-3 text-[13px] leading-relaxed text-ink/80 sm:line-clamp-none">
+                {{ p.summary }}
+              </p>
+              <p v-if="p.matchedSkills.length" class="text-xs font-semibold text-ink/60">
+                Compétences : {{ p.matchedSkills.join(', ') }}
+              </p>
             </div>
-            <p class="line-clamp-3 text-[13px] leading-relaxed text-ink/80 sm:line-clamp-none">
-              {{ p.summary }}
-            </p>
-            <p v-if="p.matchedSkills.length" class="text-xs font-semibold text-ink/60">
-              Compétences : {{ p.matchedSkills.join(', ') }}
-            </p>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </AdminCard>
   </div>
 </template>
