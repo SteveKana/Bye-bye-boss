@@ -10,7 +10,7 @@ useHead({
 })
 
 const DAY = 24 * 60 * 60 * 1000
-// Availability: immediate | date (starts in `inDays`) | notice (`months`) | no
+// Availability: immediate | date (starts in N days) | notice (N months) | unavailable
 const FAKE = [
   [
     'Camille',
@@ -120,7 +120,7 @@ const FAKE = [
     '75',
     'Île-de-France',
     'men/52',
-    ['no'],
+    ['unavailable'],
   ],
   [
     'Chloé',
@@ -230,7 +230,7 @@ const FAKE = [
     '69',
     'Auvergne-Rhône-Alpes',
     'men/3',
-    ['no'],
+    ['unavailable'],
   ],
   [
     'Océane',
@@ -335,35 +335,40 @@ const profiles = FAKE.map(([first, last, title, skills, city, dept, region, phot
   availability: avail[0],
   availabilityDate: avail[0] === 'date' ? new Date(Date.now() + avail[1] * DAY) : null,
   noticeMonths: avail[0] === 'notice' ? avail[1] : 0,
-  // Days before the person can start (Infinity when not available).
-  daysUntilAvailable:
-    avail[0] === 'immediate'
-      ? 0
-      : avail[0] === 'date'
-        ? avail[1]
-        : avail[0] === 'notice'
-          ? avail[1] * 30
-          : Infinity,
 }))
 
-// Availability filter: "within N days" (a notice period of 1 month = 30 days).
+// Availability filter: the same options as in a candidate's profile
+// (Immédiatement / À partir du / En poste avec préavis de 1, 2 ou 3 mois /
+// Non disponible), plus "Toutes".
 const AVAILABILITY_FILTERS = [
-  { value: 'all', label: 'Toutes', maxDays: Infinity },
-  { value: 'now', label: 'Immédiate', maxDays: 0 },
-  { value: 'm1', label: 'Sous 1 mois', maxDays: 30 },
-  { value: 'm3', label: 'Sous 3 mois', maxDays: 90 },
+  { value: 'all', label: 'Toutes' },
+  { value: 'immediate', label: 'Immédiatement' },
+  { value: 'date', label: 'À partir du' },
+  { value: 'notice-1', label: 'En poste (préavis de 1 mois)' },
+  { value: 'notice-2', label: 'En poste (préavis de 2 mois)' },
+  { value: 'notice-3', label: 'En poste (préavis de 3 mois)' },
+  { value: 'unavailable', label: 'Non disponible' },
 ]
 
-const AVAILABILITY_RANK = { immediate: 0, date: 1, notice: 2, no: 3 }
+function matchesAvailability(p, filter) {
+  if (filter === 'all') return true
+  if (filter.startsWith('notice-')) {
+    return p.availability === 'notice' && p.noticeMonths === Number(filter.slice(7))
+  }
+  return p.availability === filter
+}
 
+const AVAILABILITY_RANK = { immediate: 0, date: 1, notice: 2, unavailable: 3 }
+
+// Same wording as a candidate's profile ("availability.display" in the locales).
 function availabilityPill(p) {
   if (p.availability === 'immediate') return { state: 'ok', text: 'Disponible immédiatement' }
   if (p.availability === 'date') {
-    const day = p.availabilityDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
-    return { state: 'info', text: `Disponible le ${day}` }
+    const day = p.availabilityDate.toLocaleDateString('fr-FR')
+    return { state: 'info', text: `Disponible à partir du ${day}` }
   }
   if (p.availability === 'notice') {
-    return { state: 'warn', text: `Préavis de ${p.noticeMonths} mois` }
+    return { state: 'warn', text: `En poste (préavis de ${p.noticeMonths} mois)` }
   }
   return { state: 'bad', text: 'Non disponible' }
 }
@@ -388,9 +393,8 @@ const zoneTokens = computed(() =>
 // department or region. A title match ranks above a skill-only match.
 const results = computed(() => {
   const found = []
-  const maxDays = AVAILABILITY_FILTERS.find((f) => f.value === availability.value).maxDays
   for (const p of profiles) {
-    if (p.daysUntilAvailable > maxDays) continue
+    if (!matchesAvailability(p, availability.value)) continue
     const place = plain(`${p.city} ${p.dept} ${p.region}`)
     if (!zoneTokens.value.every((t) => place.includes(t))) continue
     const title = plain(p.title)
