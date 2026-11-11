@@ -335,7 +335,24 @@ const profiles = FAKE.map(([first, last, title, skills, city, dept, region, phot
   availability: avail[0],
   availabilityDate: avail[0] === 'date' ? new Date(Date.now() + avail[1] * DAY) : null,
   noticeMonths: avail[0] === 'notice' ? avail[1] : 0,
+  // Days before the person can start (Infinity when not available).
+  daysUntilAvailable:
+    avail[0] === 'immediate'
+      ? 0
+      : avail[0] === 'date'
+        ? avail[1]
+        : avail[0] === 'notice'
+          ? avail[1] * 30
+          : Infinity,
 }))
+
+// Availability filter: "within N days" (a notice period of 1 month = 30 days).
+const AVAILABILITY_FILTERS = [
+  { value: 'all', label: 'Toutes', maxDays: Infinity },
+  { value: 'now', label: 'Immédiate', maxDays: 0 },
+  { value: 'm1', label: 'Sous 1 mois', maxDays: 30 },
+  { value: 'm3', label: 'Sous 3 mois', maxDays: 90 },
+]
 
 const AVAILABILITY_RANK = { immediate: 0, date: 1, notice: 2, no: 3 }
 
@@ -353,6 +370,7 @@ function availabilityPill(p) {
 
 const keywords = ref('')
 const zone = ref('')
+const availability = ref('all')
 
 const keywordTokens = computed(() =>
   plain(keywords.value)
@@ -370,7 +388,9 @@ const zoneTokens = computed(() =>
 // department or region. A title match ranks above a skill-only match.
 const results = computed(() => {
   const found = []
+  const maxDays = AVAILABILITY_FILTERS.find((f) => f.value === availability.value).maxDays
   for (const p of profiles) {
+    if (p.daysUntilAvailable > maxDays) continue
     const place = plain(`${p.city} ${p.dept} ${p.region}`)
     if (!zoneTokens.value.every((t) => place.includes(t))) continue
     const title = plain(p.title)
@@ -398,10 +418,15 @@ const results = computed(() => {
   )
 })
 
-const filtering = computed(() => keywordTokens.value.length > 0 || zoneTokens.value.length > 0)
+// Nothing is listed until the user has typed or chosen something.
+const filtering = computed(
+  () =>
+    keywordTokens.value.length > 0 || zoneTokens.value.length > 0 || availability.value !== 'all'
+)
 function reset() {
   keywords.value = ''
   zone.value = ''
+  availability.value = 'all'
 }
 </script>
 
@@ -437,17 +462,22 @@ function reset() {
             placeholder="Ville, département ou région"
           />
         </div>
+        <div class="w-full sm:w-48">
+          <UiSelect
+            id="profile-availability"
+            v-model="availability"
+            label="Disponibilité"
+            :options="AVAILABILITY_FILTERS"
+          />
+        </div>
       </div>
 
-      <div class="mt-4 flex items-center justify-between gap-3">
+      <div v-if="filtering" class="mt-4 flex items-center justify-between gap-3">
         <p class="text-sm font-extrabold text-ink" aria-live="polite">
           {{ results.length }} profil{{ results.length > 1 ? 's' : '' }}
-          <span v-if="filtering" class="font-semibold text-ink/60">
-            sur {{ profiles.length }}
-          </span>
+          <span class="font-semibold text-ink/60"> sur {{ profiles.length }} </span>
         </p>
         <button
-          v-if="filtering"
           type="button"
           class="text-xs font-extrabold text-ink underline underline-offset-2"
           @click="reset"
@@ -456,11 +486,11 @@ function reset() {
         </button>
       </div>
 
-      <AdminEmpty v-if="!results.length" class="mt-3">
-        Aucun profil ne correspond. Essaie moins de mots, ou élargis la zone.
+      <AdminEmpty v-if="filtering && !results.length" class="mt-3">
+        Aucun profil ne correspond. Essaie moins de mots, ou élargis la zone ou la disponibilité.
       </AdminEmpty>
 
-      <ul v-else class="mt-3 space-y-2">
+      <ul v-else-if="filtering" class="mt-3 space-y-2">
         <li
           v-for="p in results"
           :key="p.id"
