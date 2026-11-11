@@ -443,7 +443,9 @@ function reset() {
       base de données. Les noms sont remplacés par des trigrammes.
     </AdminNotice>
 
+    <!-- 784px: width of the main column of a LinkedIn profile page. -->
     <AdminCard
+      class="max-w-[784px]"
       title="Recherche de profils"
       subtitle="Un poste ou des compétences, et une zone : la liste se met à jour pendant que tu tapes"
     >
