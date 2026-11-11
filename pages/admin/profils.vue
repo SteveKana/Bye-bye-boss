@@ -418,21 +418,25 @@ function reset() {
       title="Recherche de profils"
       subtitle="Un poste ou des compétences, et une zone : la liste se met à jour pendant que tu tapes"
     >
-      <div class="grid gap-3 sm:grid-cols-[1.6fr_1fr]">
+      <div class="flex flex-wrap items-end gap-3">
         <UiInput
           id="profile-keywords"
           v-model="keywords"
           label="Poste ou compétences"
           icon="🔍"
           placeholder="Ex. product owner scrum, SQL, chef de projet…"
+          class="min-w-[16rem] flex-1"
         />
-        <UiInput
-          id="profile-zone"
-          v-model="zone"
-          label="Zone géographique"
-          icon="📍"
-          placeholder="Ville, département ou région"
-        />
+        <!-- Just wide enough for its placeholder ("Ville, département ou région"). -->
+        <div class="w-64 max-w-full">
+          <UiInput
+            id="profile-zone"
+            v-model="zone"
+            label="Zone géographique"
+            icon="📍"
+            placeholder="Ville, département ou région"
+          />
+        </div>
       </div>
 
       <div class="mt-4 flex items-center justify-between gap-3">
