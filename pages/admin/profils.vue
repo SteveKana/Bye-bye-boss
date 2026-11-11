@@ -427,8 +427,8 @@ function reset() {
           placeholder="Ex. product owner scrum, SQL, chef de projet…"
           class="min-w-[16rem] flex-1"
         />
-        <!-- Just wide enough for its placeholder ("Ville, département ou région"). -->
-        <div class="w-64 max-w-full">
+        <!-- Large screens: just wide enough for its placeholder. Mobile: full width. -->
+        <div class="w-full sm:w-64">
           <UiInput
             id="profile-zone"
             v-model="zone"
