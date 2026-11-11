@@ -293,10 +293,39 @@ function trigram(first, last) {
   return (f.slice(0, 1) + l.slice(0, 2)).toUpperCase()
 }
 
+// One short CV-style description per profile, in the same order as FAKE.
+const SUMMARIES = [
+  "Product Owner de 6 ans d'expérience dans le retail, à l'aise entre métiers et équipes techniques. J'anime le backlog, rédige les user stories et pilote les livraisons en Scrum et SAFe.",
+  "Chef de projet IT avec 8 ans d'expérience en pilotage de projets SI de bout en bout : cadrage, planning, suivi des risques et recette. Rigoureux, je sécurise les délais et le budget.",
+  'Data Analyst spécialisée dans la valorisation de la donnée commerciale. Je construis des tableaux de bord Power BI et des analyses SQL qui aident les équipes à décider plus vite.',
+  "Développeur Full Stack de 5 ans d'expérience sur Vue.js et Node.js. J'aime livrer des produits utiles, propres et bien testés, au sein d'équipes agiles.",
+  'Business Analyst qui traduit les besoins métier en spécifications claires. Expérience en banque et assurance : ateliers, modélisation UML, recette et accompagnement des utilisateurs.',
+  "Scrum Master certifié, 4 ans de coaching d'équipes agiles. Je fais progresser la collaboration, la prévisibilité des livraisons et la qualité des cérémonies.",
+  "Responsable marketing digital orientée acquisition : SEO, campagnes Google Ads et suivi des performances. J'ai doublé le trafic organique d'un site e-commerce en un an.",
+  "Ingénieur DevOps passionné d'automatisation : pipelines CI/CD, conteneurs et infrastructure as code. Je fiabilise les déploiements et réduis les temps de mise en production.",
+  'UX/UI Designer attachée à des interfaces simples et accessibles. Je mène des recherches utilisateurs, conçois des maquettes Figma et maintiens un design system partagé.',
+  "Directeur de projet de 12 ans d'expérience sur de grands programmes de migration. Conduite du changement, pilotage budgétaire et gestion de fournisseurs multi-sites.",
+  "Chargée de recrutement spécialisée dans les profils IT et data. Je source, qualifie et accompagne les candidats jusqu'à l'intégration, avec un fort sens du relationnel.",
+  "Data Engineer de 7 ans d'expérience sur des plateformes de données à grande échelle. Je conçois des pipelines fiables sur Python, Spark et BigQuery.",
+  "Product Manager orientée discovery et mesure d'impact. J'aligne vision produit, priorités et feuille de route avec les équipes techniques et les parties prenantes.",
+  "Développeur Back-end Java de 9 ans d'expérience, spécialisé dans les API REST et les systèmes critiques. Souci constant de performance et de maintenabilité.",
+  "Chef de projet digital à l'aise en méthodes agiles. Je cadre les besoins, coordonne les équipes et m'assure d'une recette sereine jusqu'à la mise en ligne.",
+  "Consultant SAP finance avec 6 ans d'expérience sur des déploiements internationaux. Paramétrage, tests de recette et formation des utilisateurs clés.",
+  "Business Developer à l'écoute, forte de 5 ans de prospection BtoB dans le SaaS. J'ouvre de nouveaux comptes et construis des relations durables avec les décideurs.",
+  "Testeur QA passionné par la qualité logicielle. J'automatise les parcours critiques avec Cypress et je structure les campagnes de recette avec les équipes projet.",
+  "Product Owner certifiée, experte du pilotage de roadmap et de la rédaction de user stories. J'apporte de la clarté aux équipes et de la valeur aux utilisateurs.",
+  "Architecte Cloud de 10 ans d'expérience sur Azure et AWS. Je conçois des architectures sécurisées, évolutives et maîtrisées en coûts.",
+  'Data Scientist spécialisée en machine learning et traitement du langage. Je transforme des données brutes en modèles utiles et mesurables pour le métier.',
+  "Chef de projet IT expérimenté en migration et coordination multi-équipes. Je suis les jalons, anticipe les risques et fédère autour d'un planning réaliste.",
+  "Développeuse Front-end sensible à l'accessibilité et à l'expérience utilisateur. J'ai de l'expérience sur Vue.js et React, et un goût prononcé pour le code propre.",
+  "Responsable des systèmes d'information : stratégie, budget, relation avec les fournisseurs et gouvernance ITIL. J'aligne le SI sur les priorités de l'entreprise.",
+]
+
 const profiles = FAKE.map(([first, last, title, skills, city, dept, region, photo, avail], i) => ({
   id: i + 1,
   trigram: trigram(first, last),
   title,
+  summary: SUMMARIES[i],
   skills,
   city,
   dept,
@@ -431,28 +460,24 @@ function reset() {
         <li
           v-for="p in results"
           :key="p.id"
-          class="flex flex-col gap-3 rounded-2xl border-2 border-ink bg-white p-3 sm:flex-row sm:items-center sm:gap-4"
+          class="flex items-start gap-4 rounded-2xl border-2 border-ink bg-white p-4"
         >
-          <div class="flex min-w-0 flex-1 items-center gap-3">
-            <UiAvatar
-              :picture-url="p.picture"
-              :initials="p.trigram"
-              circle-class="h-14 w-14 text-sm font-black text-white"
-            />
-            <div class="min-w-0">
-              <p class="text-[11px] font-black tracking-widest text-ink/50">{{ p.trigram }}</p>
-              <p class="text-sm font-black leading-snug text-ink">{{ p.title }}</p>
-              <p v-if="p.matchedSkills.length" class="mt-0.5 text-xs font-semibold text-ink/60">
-                Compétences : {{ p.matchedSkills.join(', ') }}
-              </p>
+          <UiAvatar
+            :picture-url="p.picture"
+            :initials="p.trigram"
+            circle-class="h-14 w-14 text-sm font-black text-white"
+          />
+          <div class="min-w-0 flex-1 space-y-1.5">
+            <p class="text-[11px] font-black tracking-widest text-ink/50">{{ p.trigram }}</p>
+            <p class="text-base font-black leading-snug text-ink">{{ p.title }}</p>
+            <p class="text-xs font-semibold text-ink/70">📍 {{ p.place }} · {{ p.region }}</p>
+            <div>
+              <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
             </div>
-          </div>
-          <p class="text-xs font-semibold text-ink/70 sm:w-64">
-            📍 {{ p.place }}
-            <span class="block text-ink/55">{{ p.region }}</span>
-          </p>
-          <div class="sm:w-56">
-            <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
+            <p class="text-[13px] leading-relaxed text-ink/80">{{ p.summary }}</p>
+            <p v-if="p.matchedSkills.length" class="text-xs font-semibold text-ink/60">
+              Compétences : {{ p.matchedSkills.join(', ') }}
+            </p>
           </div>
         </li>
       </ul>
