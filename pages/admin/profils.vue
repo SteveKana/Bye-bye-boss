@@ -427,29 +427,32 @@ function reset() {
         Aucun profil ne correspond. Essaie moins de mots, ou élargis la zone.
       </AdminEmpty>
 
-      <ul v-else class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <ul v-else class="mt-3 space-y-2">
         <li
           v-for="p in results"
           :key="p.id"
-          class="flex items-start gap-3 rounded-2xl border-2 border-ink bg-white p-3"
+          class="flex flex-col gap-3 rounded-2xl border-2 border-ink bg-white p-3 sm:flex-row sm:items-center sm:gap-4"
         >
-          <UiAvatar
-            :picture-url="p.picture"
-            :initials="p.trigram"
-            circle-class="h-14 w-14 text-sm font-black text-white"
-          />
-          <div class="min-w-0 flex-1">
-            <p class="text-[11px] font-black tracking-widest text-ink/50">{{ p.trigram }}</p>
-            <p class="text-sm font-black leading-snug text-ink">{{ p.title }}</p>
-            <p class="mt-0.5 text-xs font-semibold text-ink/70">
-              📍 {{ p.place }} · {{ p.region }}
-            </p>
-            <div class="mt-2">
-              <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
+          <div class="flex min-w-0 flex-1 items-center gap-3">
+            <UiAvatar
+              :picture-url="p.picture"
+              :initials="p.trigram"
+              circle-class="h-14 w-14 text-sm font-black text-white"
+            />
+            <div class="min-w-0">
+              <p class="text-[11px] font-black tracking-widest text-ink/50">{{ p.trigram }}</p>
+              <p class="text-sm font-black leading-snug text-ink">{{ p.title }}</p>
+              <p v-if="p.matchedSkills.length" class="mt-0.5 text-xs font-semibold text-ink/60">
+                Compétences : {{ p.matchedSkills.join(', ') }}
+              </p>
             </div>
-            <p v-if="p.matchedSkills.length" class="mt-2 text-xs font-semibold text-ink/60">
-              Compétences : {{ p.matchedSkills.join(', ') }}
-            </p>
+          </div>
+          <p class="text-xs font-semibold text-ink/70 sm:w-64">
+            📍 {{ p.place }}
+            <span class="block text-ink/55">{{ p.region }}</span>
+          </p>
+          <div class="sm:w-56">
+            <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
           </div>
         </li>
       </ul>
