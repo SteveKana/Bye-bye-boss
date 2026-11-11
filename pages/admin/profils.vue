@@ -474,7 +474,9 @@ function reset() {
             <div>
               <AdminPill :state="availabilityPill(p).state" :text="availabilityPill(p).text" />
             </div>
-            <p class="text-[13px] leading-relaxed text-ink/80">{{ p.summary }}</p>
+            <p class="line-clamp-3 text-[13px] leading-relaxed text-ink/80 sm:line-clamp-none">
+              {{ p.summary }}
+            </p>
             <p v-if="p.matchedSkills.length" class="text-xs font-semibold text-ink/60">
               Compétences : {{ p.matchedSkills.join(', ') }}
             </p>
