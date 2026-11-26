@@ -15,11 +15,14 @@ const { t } = useI18n()
 
 const fileInput = ref(null)
 
+// A visitor goes back up to the free CV adaptation form; a signed-in user
+// re-imports a CV.
+const { scrollToElement } = useScrollTo()
 function onCtaClick() {
   if (auth.isAuthenticated) {
     fileInput.value?.click()
   } else {
-    navigateTo('/register')
+    scrollToElement('form')
   }
 }
 
@@ -42,18 +45,10 @@ async function onReupload(event) {
 </script>
 
 <template>
-  <section id="faq" class="px-6 py-16 lg:px-12">
+  <section id="faq" class="px-6 pb-16 pt-8 lg:px-12">
     <div
       class="relative mx-auto max-w-3xl overflow-hidden rounded-[32px] border-[3px] border-ink bg-brand px-8 py-14 text-center text-white shadow-[8px_8px_0_#16122E]"
     >
-      <span
-        class="pointer-events-none absolute -right-12 -top-12 h-24 w-24 rounded-full bg-sun"
-        aria-hidden="true"
-      />
-      <span
-        class="pointer-events-none absolute -bottom-12 -left-12 h-24 w-24 rounded-full bg-blush"
-        aria-hidden="true"
-      />
       <h2 class="relative mb-4 text-2xl font-black leading-snug sm:text-3xl">
         {{ $t('landing.cta.title') }}
       </h2>
@@ -63,7 +58,7 @@ async function onReupload(event) {
         {{ $t('landing.cta.sub') }}
       </p>
       <UiButton variant="sun" size="lg" class="relative" @click="onCtaClick">
-        ⬆ {{ auth.isAuthenticated ? $t('profileCv.reupload') : $t('landing.cta.button') }}
+        ⬆ {{ $t('profileCv.reupload') }}
       </UiButton>
       <input ref="fileInput" type="file" accept=".pdf,.docx" class="hidden" @change="onReupload" />
       <div
