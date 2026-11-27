@@ -57,6 +57,10 @@ export default defineNuxtConfig({
       // empty, AuthSocialButtons just skips rendering the Google button
       // rather than rendering a broken one.
       googleClientId: '',
+      // Cloudflare Turnstile site key (public by nature) for the free CV
+      // adaptation's anti-bot check. Override with NUXT_PUBLIC_TURNSTILE_SITE_KEY.
+      // Left empty, no challenge is shown (the API must not require one either).
+      turnstileSiteKey: '',
     },
   },
 
@@ -64,6 +68,10 @@ export default defineNuxtConfig({
   routeRules: {
     '/admin': { ssr: false },
     '/admin/**': { ssr: false },
+    // The adapted CV lives in the visitor's browser (memory + sessionStorage):
+    // these two pages only make sense on the client.
+    '/adapter-mon-cv/resultat': { ssr: false },
+    '/adapter-mon-cv/inscription': { ssr: false },
   },
 
   nitro: {

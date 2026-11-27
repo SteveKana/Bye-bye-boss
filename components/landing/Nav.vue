@@ -2,10 +2,7 @@
 // Only links to sections that actually exist on the page (Why, Comparison) --
 // the mockup's own nav has placeholder links (Tarifs, Ressources) with no
 // real destination, which we don't want to ship as dead links.
-const links = [
-  { href: '/#pourquoi', key: 'landing.nav.why' },
-  { href: '/#comparatif', key: 'landing.nav.comparison' },
-]
+const links = [{ href: '/#pourquoi', key: 'landing.nav.why' }]
 
 // On the homepage itself the logo's `to="/"` never navigates -- Vue Router
 // doesn't re-run a click to the route you're already on. Scrolled past the
@@ -101,23 +98,13 @@ async function onReupload(event) {
         </NuxtLink>
       </template>
       <template v-else>
-        <!-- Signed-out visitors get "S'inscrire" (Steve, 2026-10-06). Returning
-        users reach the login through the "Déjà un compte ?" link of the
-        signup page. Only one CTA fits comfortably below `sm`, so
-        "Importer mon CV" stays desktop-only. -->
-        <NuxtLink
-          to="/register"
-          class="whitespace-nowrap text-sm font-extrabold text-ink hover:text-brand"
-        >
-          {{ $t('landing.nav.signup') }}
+        <!-- Signed-out visitors: "Se connecter" and "S'inscrire" (new homepage,
+        2026-11: the free CV adaptation is the main action, on the page itself). -->
+        <NuxtLink to="/login" class="whitespace-nowrap text-sm font-bold text-ink hover:text-brand">
+          {{ $t('landing.nav.login') }}
         </NuxtLink>
-        <UiButton
-          variant="primary"
-          size="sm"
-          class="hidden sm:inline-flex"
-          @click="navigateTo('/register')"
-        >
-          {{ $t('landing.nav.cta') }}
+        <UiButton variant="primary" size="sm" @click="navigateTo('/register')">
+          {{ $t('landing.nav.signup') }}
         </UiButton>
       </template>
     </div>
