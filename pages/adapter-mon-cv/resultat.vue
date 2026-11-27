@@ -112,7 +112,9 @@ watch(
           <FreecvCvEditor />
         </div>
 
-        <aside class="flex min-w-0 flex-1 basis-[320px] flex-col gap-5 lg:sticky lg:top-6">
+        <aside
+          class="flex min-w-0 flex-1 basis-[320px] flex-col gap-5 lg:sticky lg:top-3 lg:-m-2 lg:max-h-[calc(100vh-1.5rem)] lg:overflow-y-auto lg:p-2 [&>*]:shrink-0"
+        >
           <div class="flex flex-col gap-3 rounded-[22px] border-[3px] border-ink bg-white p-5">
             <UiButton variant="primary" size="lg" block :loading="downloading" @click="download">
               ⬇ {{ $t('freecv.result.download') }}

@@ -60,20 +60,20 @@ watch(cv, () => store.persist(), { deep: true })
       <span>{{ $t('freecv.result.edit_hint') }}</span>
     </div>
 
-    <!-- Identity -->
-    <div class="flex flex-col gap-1.5 border-b-[3px] border-ink pb-4">
-      <div class="flex flex-wrap gap-x-1 text-[30px] font-black tracking-[-0.4px] text-ink">
+    <!-- Identity: laid out like the printed CV -->
+    <div data-fit-box class="flex flex-col gap-1.5 border-b-[3px] border-ink pb-4">
+      <div class="flex flex-wrap gap-x-2 text-[30px] font-black tracking-[-0.4px] text-ink">
         <FreecvEditableText
           v-model="cv.first_name"
           single
-          class="!w-auto min-w-[3ch] flex-1"
+          fit-width
           :aria-label="$t('common.first_name')"
           :placeholder="$t('common.first_name')"
         />
         <FreecvEditableText
           v-model="cv.last_name"
           single
-          class="!w-auto min-w-[3ch] flex-1"
+          fit-width
           :aria-label="$t('common.last_name')"
           :placeholder="$t('common.last_name')"
         />
@@ -85,31 +85,34 @@ watch(cv, () => store.persist(), { deep: true })
         <FreecvEditableText
           v-model="cv.headline"
           single
-          :aria-label="$t('freecv.result.section_profile')"
+          fit-width
+          shrink
+          :min-size="13"
+          :aria-label="$t('freecv.result.section_headline')"
           @edit="reviewedKey('headline')"
         />
       </div>
       <div class="flex flex-wrap items-center gap-x-1 text-[13px] font-medium text-ink/70">
         <FreecvEditableText
-          v-model="cv.location"
-          single
-          class="!w-auto min-w-[8ch] flex-1"
-          :aria-label="$t('onboarding.verification.location')"
-          :placeholder="$t('onboarding.verification.location')"
-        />
-        <span aria-hidden="true">·</span>
-        <FreecvEditableText
           v-model="cv.email"
           single
-          class="!w-auto min-w-[14ch] flex-[2]"
+          fit-width
           :aria-label="$t('common.email')"
           :placeholder="$t('common.email')"
         />
         <span aria-hidden="true">·</span>
         <FreecvEditableText
+          v-model="cv.location"
+          single
+          fit-width
+          :aria-label="$t('onboarding.verification.location')"
+          :placeholder="$t('onboarding.verification.location')"
+        />
+        <span aria-hidden="true">·</span>
+        <FreecvEditableText
           v-model="cv.phone"
           single
-          class="!w-auto min-w-[10ch] flex-1"
+          fit-width
           aria-label="Tel."
           placeholder="Tel."
         />
@@ -129,11 +132,24 @@ watch(cv, () => store.persist(), { deep: true })
           @edit="reviewedKey('summary')"
         />
       </div>
-      <p v-if="cv.summary_why" class="text-[12.5px] font-medium text-ink/60">
-        {{
-          $t('freecv.result.why_summary', { why: cv.summary_why.replace(/^Pourquoi\s*:\s*/i, '') })
-        }}
-      </p>
+      <div
+        v-if="cv.summary_why"
+        class="flex items-start gap-2.5 rounded-[14px] border-2 border-ink bg-[#F3F1FF] px-3.5 py-2.5 text-sm font-semibold text-ink/80"
+      >
+        <span aria-hidden="true">💡</span>
+        <div class="flex flex-col gap-0.5">
+          <span class="text-[11px] font-black uppercase tracking-[0.08em] text-brand">
+            {{ $t('freecv.result.not_in_pdf') }}
+          </span>
+          <span>
+            {{
+              $t('freecv.result.why_summary', {
+                why: cv.summary_why.replace(/^Pourquoi( ce résumé)?\s*:\s*/i, ''),
+              })
+            }}
+          </span>
+        </div>
+      </div>
     </section>
 
     <!-- Experiences -->
@@ -141,23 +157,25 @@ watch(cv, () => store.persist(), { deep: true })
       <h3 :class="LABEL">{{ $t('freecv.result.section_experiences') }}</h3>
 
       <div v-for="(exp, i) in cv.experiences" :key="i" class="flex flex-col gap-2">
-        <div class="flex flex-wrap items-baseline justify-between gap-x-3">
-          <div class="min-w-[200px] flex-1 text-base font-extrabold">
+        <div class="flex flex-col">
+          <div class="text-base font-extrabold">
             <FreecvEditableText v-model="exp.title" single :aria-label="exp.title" />
           </div>
-          <div class="flex items-baseline gap-1 text-[13px] font-medium text-ink/60">
+          <div class="flex flex-wrap items-baseline gap-x-1 text-[13px] font-medium text-ink/60">
             <FreecvEditableText
               v-model="exp.company"
               single
-              class="!w-auto min-w-[10ch]"
+              fit-width
               :aria-label="exp.company"
+              :placeholder="$t('freecv.result.placeholder_company')"
             />
             <span aria-hidden="true">·</span>
             <FreecvEditableText
               v-model="exp.period"
               single
-              class="!w-auto min-w-[8ch]"
+              fit-width
               :aria-label="exp.period"
+              :placeholder="$t('freecv.result.placeholder_period')"
             />
           </div>
         </div>
@@ -258,17 +276,24 @@ watch(cv, () => store.persist(), { deep: true })
     <section class="flex flex-col gap-2">
       <h3 :class="LABEL">{{ $t('freecv.result.section_formations') }}</h3>
       <div v-for="(f, i) in cv.formations" :key="i" class="flex items-start gap-2">
-        <div class="min-w-0 flex-[2] text-[14px] font-bold">
-          <FreecvEditableText
-            v-model="f.title"
-            :placeholder="$t('freecv.result.placeholder_formation')"
-          />
-        </div>
-        <div class="min-w-0 flex-1 text-[13px] text-ink/70">
-          <FreecvEditableText
-            v-model="f.school_period"
-            :placeholder="$t('freecv.result.placeholder_formation_meta')"
-          />
+        <div class="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-1 text-[14px]">
+          <span class="font-bold">
+            <FreecvEditableText
+              v-model="f.title"
+              single
+              fit-width
+              :placeholder="$t('freecv.result.placeholder_formation')"
+            />
+          </span>
+          <span aria-hidden="true" class="text-ink/50">—</span>
+          <span class="text-[13px] text-ink/70">
+            <FreecvEditableText
+              v-model="f.school_period"
+              single
+              fit-width
+              :placeholder="$t('freecv.result.placeholder_formation_meta')"
+            />
+          </span>
         </div>
         <button
           type="button"
@@ -292,19 +317,24 @@ watch(cv, () => store.persist(), { deep: true })
     <section class="flex flex-col gap-2">
       <h3 :class="LABEL">{{ $t('freecv.result.section_languages') }}</h3>
       <div v-for="(l, i) in cv.languages" :key="i" class="flex items-start gap-2">
-        <div class="min-w-0 flex-1 text-[14px] font-bold">
-          <FreecvEditableText
-            v-model="l.name"
-            single
-            :placeholder="$t('freecv.result.placeholder_language')"
-          />
-        </div>
-        <div class="min-w-0 flex-1 text-[13px] text-ink/70">
-          <FreecvEditableText
-            v-model="l.level"
-            single
-            :placeholder="$t('freecv.result.placeholder_level')"
-          />
+        <div class="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-1 text-[14px]">
+          <span class="font-bold">
+            <FreecvEditableText
+              v-model="l.name"
+              single
+              fit-width
+              :placeholder="$t('freecv.result.placeholder_language')"
+            />
+          </span>
+          <span aria-hidden="true" class="text-ink/50">:</span>
+          <span class="text-[13px] text-ink/70">
+            <FreecvEditableText
+              v-model="l.level"
+              single
+              fit-width
+              :placeholder="$t('freecv.result.placeholder_level')"
+            />
+          </span>
         </div>
         <button
           type="button"
@@ -324,19 +354,24 @@ watch(cv, () => store.persist(), { deep: true })
     <section class="flex flex-col gap-2">
       <h3 :class="LABEL">{{ $t('freecv.result.section_certifications') }}</h3>
       <div v-for="(c, i) in cv.certifications" :key="i" class="flex items-start gap-2">
-        <div class="min-w-0 flex-[2] text-[14px] font-bold">
-          <FreecvEditableText
-            v-model="c.title"
-            single
-            :placeholder="$t('freecv.result.placeholder_cert')"
-          />
-        </div>
-        <div class="min-w-0 flex-1 text-[13px] text-ink/70">
-          <FreecvEditableText
-            v-model="c.issuer_period"
-            single
-            :placeholder="$t('freecv.result.placeholder_cert_meta')"
-          />
+        <div class="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-1 text-[14px]">
+          <span class="font-bold">
+            <FreecvEditableText
+              v-model="c.title"
+              single
+              fit-width
+              :placeholder="$t('freecv.result.placeholder_cert')"
+            />
+          </span>
+          <span aria-hidden="true" class="text-ink/50">—</span>
+          <span class="text-[13px] text-ink/70">
+            <FreecvEditableText
+              v-model="c.issuer_period"
+              single
+              fit-width
+              :placeholder="$t('freecv.result.placeholder_cert_meta')"
+            />
+          </span>
         </div>
         <button
           type="button"
